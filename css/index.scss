@@ -1,0 +1,239 @@
+@import 'base';
+
+#main {
+
+
+}
+
+
+#header {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background-color: #EAF1FF;
+
+  .header_panel {
+	width:1200px;
+	margin:0 auto;
+	@extend .cj-relative;
+
+	.to_home {
+	  @extend .cj-absolute;
+	  left:0;
+	  top:0;
+	}
+	#count_panel {
+	  display:flex;
+	  justify-content: center;
+	  align-items: center;
+	  li {
+		display:inline-block;
+	  }
+	}
+  }
+}
+
+#banner {
+}
+
+#tab {
+  > li {
+	&.active {
+	  background-color: azure;
+	  color: #F00;
+	}
+  }
+
+}
+
+
+#tab_content {
+  .tab_item {
+	.company-list_panel {
+	  max-width: 1712px;
+	  margin: 0 auto;
+	  background: #C4E9FD;
+	  border: 10px solid #045BB0;
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: flex-start;
+	  align-items: flex-start;
+	  padding: 26px 16px 26px 26px;
+	  box-sizing: border-box;
+	}
+  }
+}
+
+
+.company-item {
+  background: #FFF url(../images/company_item_bg.png) no-repeat bottom center;
+  display: block;
+  height: 435px;
+  width: 320px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  position: relative;
+
+  .company_name {
+	position: absolute;
+	height: 46px;
+	width: 100%;
+	left: 0;
+	top: 0;
+	background: #FFF url(../images/company_item_title_bg.png) no-repeat center center;
+	background-size: cover;
+	font-size: 16px;
+	font-weight: bold;
+	color: #FFF;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+
+	> span {
+	  flex-grow: 1;
+	  padding-right: 20px;
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
+
+	&:before {
+	  content: '';
+	  width: 38px;
+	  height: 38px;
+	  display: block;
+	  margin: 0 4px;
+	  background: url(../images/company_item_title_icon.png) no-repeat center center;
+	  background-size: 100%;
+	}
+  }
+
+  .recruit-list {
+	position: absolute;
+	top: 60px;
+	left: 0;
+	width: 100%;
+
+	.recruit-list_panel {
+	  width: 220px;
+	  height: 253px;
+	  margin: 0 auto;
+	  padding: 10px 0;
+	  box-sizing: border-box;
+	  background: #CFE8F5;
+	  border-radius: 4px;
+
+	  .recruit-item {
+		font-size: 14px;
+		width: 180px;
+		height: 36px;
+		line-height: 36px;
+		border-bottom: 1px dashed #7EC8EF;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 0 auto;
+
+		.job-title，.see-more {
+		  white-space: nowrap;
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		}
+
+		.salary {
+		  color: #1D7CD9;
+		  font-weight: bold;
+		}
+
+
+	  }
+	}
+  }
+
+  .hr {
+	position: absolute;
+	top: 166px;
+	left: 0;
+	width: 100%;
+	height: 116px;
+	background-repeat: no-repeat;
+	background-position: center center;
+  }
+
+  .table {
+	position: absolute;
+	top: 272px;
+	left: 0;
+	width: 100%;
+	height: 102px;
+	background: url(../images/pic_table.png) no-repeat center center;
+  }
+
+  .job-seeker {
+	position: absolute;
+	top: 215px;
+	left: 0;
+	width: 100%;
+	height: 182px;
+	background-repeat: no-repeat;
+	background-position: center center;
+  }
+
+  .chair {
+	position: absolute;
+	top: 300px;
+	left: 0;
+	width: 100%;
+	height: 123px;
+	background: url(../images/pic_chair.png) no-repeat center center;
+  }
+
+  .to-chat {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 36px;
+	line-height: 36px;
+	font-size: 16px;
+	font-weight: 700;
+	text-align: center;
+	color: #FFF;
+	background: linear-gradient(180deg, #79E444, #3BB300 9%, #3BB300 52%, #3BB300 90%, #2C8600);
+  }
+
+  //离线企业的显示效果
+  &.offline {
+	.company_name {
+	  background: #FFF url(../images/company_item_title_bg_offline.png) no-repeat center center;
+
+	  &:before {
+		background: url(../images/company_item_title_icon_offline.png) no-repeat center center;
+	  }
+	}
+
+	.recruit-list {
+	  .recruit-list_panel {
+		background: #D7D7D7;
+
+		.recruit-item {
+		  border-bottom: 1px dashed #9E9E9E;
+		  color: #333;
+
+		  .salary {
+			color: #666;
+		  }
+		}
+	  }
+	}
+
+	.job-seeker {
+	  display: none;
+	}
+
+	.to-chat {
+	  background: linear-gradient(180deg, #D8D8D8 0%, #B5B5B5 8.85%, #B5B5B5 52.08%, #B5B5B5 89.58%, #979797 100%);
+	}
+  }
+}
+

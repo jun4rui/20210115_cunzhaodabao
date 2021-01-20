@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <!--<meta content="width=420, user-scalable=no" name="viewport">-->
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title></title>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <link href="node_modules/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+  <script src="node_modules/element-ui/lib/index.js"></script>
+  <script src="node_modules/moment/moment.js"></script>
+  <script src="node_modules/moment/locale/zh-cn.js"></script>
+  <script src="js/common.js"></script>
+  <link rel="stylesheet" href="css/index.css">
+  <script src="js/jquery.danmu.min.js"></script>
+</head>
+<body>
+<!--主内容-->
+<div id="main">
+  <!-- Header -->
+  <div id="header">
+    <div class="header_panel">
+      <a href="#" class="to_home">返回首页</a>
+      <ul id="count_panel">
+        <li>浏览量：<span>999999</span></li>
+        <li>参会企业：<span>88888</span></li>
+        <li>招聘人数：<span>77777</span></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /Header -->
+  <div id="danmu"></div>
+  <script>
+    $('#danmu').danmu({
+      height:             360,  //弹幕区高度
+      width:              640,   //弹幕区宽度
+      zindex:             100,   //弹幕区域z-index属性
+      speed:              7000,      //滚动弹幕的默认速度，这是数值值得是弹幕滚过每672像素所需要的时间（毫秒）
+      sumTime:            65535,   //弹幕流的总时间
+      danmuLoop:          false,   //是否循环播放弹幕
+      defaultFontColor:   '#FFF',   //弹幕的默认颜色
+      fontSizeSmall:      16,     //小弹幕的字号大小
+      FontSizeBig:        24,       //大弹幕的字号大小
+      opacity:            '0.9',			//默认弹幕透明度
+      topBottonDanmuTime: 6000,   // 顶部底部弹幕持续时间（毫秒）
+      SubtitleProtection: false,     //是否字幕保护
+      positionOptimize:   false,         //是否位置优化，位置优化是指像AB站那样弹幕主要漂浮于区域上半部分
+
+      maxCountInScreen: 40,   //屏幕上的最大的显示弹幕数目,弹幕数量过多时,优先加载最新的。
+      maxCountPerSec:   10      //每分秒钟最多的弹幕数目,弹幕数量过多时,优先加载最新的。
+    });
+
+    $("#danmu").danmu("addDanmu",[
+      { text:"这是滚动弹幕" ,color:"white",size:1,position:0,time:2}
+      ,{ text:"这是顶部弹幕" ,color:"yellow" ,size:1,position:1,time:3}
+      ,{ text:"这是底部弹幕" , color:"red" ,size:1,position:2,time:3}
+    ])
+
+    $('#danmu').danmu('danmuStart');
+  </script>
+  <!-- Banner -->
+  <div id="banner">
+    <!--  Tab  -->
+    <ul id="tab">
+      <li @click="currentTab=0" :class="{'active':currentTab===0}">招聘大厅</li>
+      <li @click="currentTab=1" :class="{'active':currentTab===1}">求职大厅</li>
+    </ul>
+    <!--  /Tab  -->
+  </div>
+  <!-- /Banner -->
+  <!-- Tab容器 -->
+  <div id="tab_content">
+    <!-- 招聘大厅 -->
+    <div class="tab_item" v-if="currentTab===0">
+      <h1>招聘大厅</h1>
+      <div class="company-list_panel" v-if="companyList">
+        <!--展位单元-->
+        <div class="company-item" v-for="item in companyList" :class="{'offline': Math.random()>0.5}">
+          <!--TODO 这里离线的条件需要修改，暂时是测试用-->
+          <!--公司名称-->
+          <div class="company_name">
+            <span>{{ item.companyName }}</span>
+          </div>
+          <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
+          <!--职位列表-->
+          <div class="recruit-list">
+            <div class="recruit-list_panel">
+              <div class="recruit-item">
+                <div class="see-more">查看更多</div>
+              </div>
+              <div class="recruit-item" v-if="item.recruitModelList" v-for="(recruitItem, recruitIndex) in item.recruitModelList">
+                <div class="job-title">{{ (parseInt(recruitIndex) + 1) + '. ' + recruitItem.jobTitle }}</div>
+                <div class="salary" v-if="recruitItem.salary==='1000元以下'">1K内</div>
+                <div class="salary" v-if="recruitItem.salary==='1500-2000元'">1.5-2K</div>
+                <div class="salary" v-if="recruitItem.salary==='2000-2500元'">2-2.5K</div>
+                <div class="salary" v-if="recruitItem.salary==='2500-3000元'">2.5-3K</div>
+                <div class="salary" v-if="recruitItem.salary==='3000-3500元'">3-3.5K</div>
+                <div class="salary" v-if="recruitItem.salary==='3500-4000元'">3.5-4K</div>
+                <div class="salary" v-if="recruitItem.salary==='4000-5000元'">4-5K</div>
+                <div class="salary" v-if="recruitItem.salary==='5000-6000元'">5-6K</div>
+                <div class="salary" v-if="recruitItem.salary==='6000-8000元'">6-8K</div>
+                <div class="salary" v-if="recruitItem.salary==='8000-10000元'">8-10K</div>
+                <div class="salary" v-if="recruitItem.salary==='10000-15000元'">10-15K</div>
+                <div class="salary" v-if="recruitItem.salary==='15000元以上'">15K以上</div>
+                <div class="salary" v-if="recruitItem.salary==='面议'">面议</div>
+              </div>
+            </div>
+          </div>
+          <!--HR-->
+          <div class="hr" :style="{backgroundImage:'url(images/pic_hr_'+((parseInt(Math.random()*16))+1)+'.png)'}"></div>
+          <!--Table-->
+          <div class="table"></div>
+          <!--JobSeeker-->
+          <div class="job-seeker" :style="{backgroundImage:'url(images/pic_jobseeker_'+((parseInt(Math.random()*8))+1)+'.png)'}"></div>
+          <!--Chair-->
+          <div class="chair"></div>
+          <!--立即沟通-->
+          <div class="to-chat">立即沟通</div><!--TODO 离线以后这里文字要改成离线状态-->
+        </div>
+        <!--/展位单元-->
+      </div>
+    </div>
+    <!-- /招聘大厅 -->
+    <!-- 求职大厅 -->
+    <div class="tab_item" v-if="currentTab===1">
+      求职大厅
+    </div>
+    <!-- /求职大厅 -->
+  </div>
+  <!-- /Tab容器 -->
+</div>
+<!--/主内容-->
+<script src="index.js"></script>
+</body>
+</html>

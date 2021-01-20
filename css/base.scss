@@ -1,0 +1,557 @@
+/*公用样式*/
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: "Microsoft YaHei", Helvetica, Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  border: 0;
+}
+
+.clear {
+  clear: both;
+}
+
+.clear:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+.hide {
+  display: none !important;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/*浮动*/
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+/*定位*/
+.rela {
+  position: relative;
+}
+
+.abs {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+/*居中*/
+.center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+@mixin center() {
+  text-align: center;
+  margin: 0 auto;
+}
+
+/*分割*/
+.split {
+  li {
+	display: inline;
+
+	&:after {
+	  content: '|';
+	  padding: 0 .5em;
+	}
+
+	&:last-child:after {
+	  content: '';
+	}
+  }
+}
+
+/*文本对齐*/
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.cj-clear {
+  clear: both;
+}
+
+.cj-clear:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+
+.cj-hide {
+  display: none !important;
+}
+
+
+.cj-relative {
+  position: relative;
+}
+
+.cj-absolute {
+  position: absolute;
+}
+
+/*浮动*/
+.cj-pull-left {
+  float: left;
+}
+
+.cj-pull-right {
+  float: right;
+}
+
+.cj-flex {
+  display: flex;
+}
+
+.cj-block {
+  display: block;
+}
+
+.cj-inline-block {
+  display: inline-block;
+}
+
+.cj-label {
+  display: inline-block;
+  margin: 1px;
+}
+
+.cj-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.cj-flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.cj-justify-content-around {
+  justify-content: space-between;
+}
+
+.cj-justify-content-between {
+  justify-content: space-between;
+}
+
+.cj-justify-content-start {
+  justify-content: start;
+}
+
+.cj-justify-content-center {
+  justify-content: center;
+}
+
+.cj-align-items-center {
+  align-items: center;
+}
+
+.cj-align-items-start {
+  align-items: flex-start;
+}
+
+.cj-nobefore:before {
+  content: '' !important;
+  display: none;
+}
+
+.cj-nobefore:after {
+  content: '' !important;
+  display: none;
+}
+
+
+.cj-title {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 2;
+}
+
+.cj-underline {
+  border-bottom: 1px solid #DDD;
+}
+
+.cj-text-bold {
+  font-weight: bold;
+}
+
+.cj-text-nowrap {
+  white-space: nowrap;
+}
+
+.cj-text-normal {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.cj-text-center {
+  text-align: center;
+}
+
+.cj-text-right {
+  text-align: right;
+}
+
+.cj-margin-center {
+  margin: 0 auto;
+}
+
+.cj-padding-1em {
+  padding: 1em;
+}
+
+.cj-table th {
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #EFEFEF;
+}
+
+.cj-table th,
+.cj-table td {
+  border: 1px solid #DDD;
+}
+
+.cj-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cj-ellipsis-multiline {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.cj-w50em {
+  width: 50em;
+}
+
+.cj-w40em {
+  width: 40em;
+}
+
+.cj-w30em {
+  width: 30em;
+}
+
+.cj-w20em {
+  width: 20em;
+}
+
+.cj-w19em {
+  width: 19em;
+}
+
+.cj-w18em {
+  width: 18em;
+}
+
+.cj-w17em {
+  width: 17em;
+}
+
+.cj-w16em {
+  width: 16em;
+}
+
+.cj-w15em {
+  width: 15em;
+}
+
+.cj-w14em {
+  width: 14em;
+}
+
+.cj-w13em {
+  width: 13em;
+}
+
+.cj-w12em {
+  width: 12em;
+}
+
+.cj-w11em {
+  width: 11em;
+}
+
+.cj-w10em {
+  width: 10em;
+}
+
+.cj-w9em {
+  width: 9em;
+}
+
+.cj-w8em {
+  width: 8em;
+}
+
+.cj-w7em {
+  width: 7em;
+}
+
+.cj-w6em {
+  width: 6em;
+}
+
+.cj-w5em {
+  width: 5em;
+}
+
+.cj-w4em {
+  width: 4em;
+}
+
+.cj-w3em {
+  width: 3em;
+}
+
+.cj-w2em {
+  width: 2em;
+}
+
+.cj-w1em {
+  width: 1em;
+}
+
+.cj-w100 {
+  width: 100%;
+}
+
+.cj-w50 {
+  width: 50%;
+}
+
+.cj-w49 {
+  width: 49%;
+}
+
+.cj-w48 {
+  width: 48%;
+}
+
+.cj-w47 {
+  width: 47%;
+}
+
+.cj-w25 {
+  width: 25%;
+}
+
+.cj-w12h {
+  width: 12.5%;
+}
+
+.cj-vw100 {
+  width: 100vw;
+}
+
+.cj-vw50 {
+  width: 50vw;
+}
+
+.cj-vw25 {
+  width: 25vw;
+}
+
+.cj-vw12h {
+  width: 12.5vw;
+}
+
+.cj-require:before {
+  content: '*';
+  display: inline-block;
+  color: red;
+}
+
+.cj-fixed {
+  position: fixed;
+}
+
+.cj-fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.cj-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.cj-cursor-pointer {
+  cursor: pointer;
+}
+
+.cj-hover-boxshadow:hover {
+  box-shadow: inset 1px 1px 6px #000;
+}
+
+
+/*兼容Bootstrap的按钮颜色*/
+.cj-btn {
+  background-color: #FFF;
+  border: 1px solid #666;
+  color: #666;
+}
+
+.cj-btn:hover {
+  background-color: #FFF;
+  border: 1px solid #000;
+  color: #000 !important;
+}
+
+.cj-btn-lv {
+  background-color: #3FBD9A;
+  border: 1px solid #369E81;
+  color: #FFF;
+}
+
+.cj-btn-lv:hover {
+  background-color: #369E81;
+  border: 1px solid #2D846B;
+  color: #FFF;
+}
+
+.cj-btn-lan {
+  background-color: #5592DB;
+  border: 1px solid #4A75B4;
+  color: #FFF;
+}
+
+.cj-btn-lan:hover {
+  background-color: #4A75B4;
+  border: 1px solid #3E6297;
+  color: #FFF;
+}
+
+.cj-btn-zi {
+  background-color: #9A4FB5;
+  border: 1px solid #804297;
+  color: #FFF;
+}
+
+.cj-btn-zi:hover {
+  background-color: #804297;
+  border: 1px solid #653477;
+  color: #FFF;
+}
+
+.cj-btn-cheng {
+  background-color: #DC8329;
+  border: 1px solid #B46B22;
+  color: #FFF;
+}
+
+.cj-btn-cheng:hover {
+  background-color: #B46B22;
+  border: 1px solid #975A1D;
+  color: #FFF;
+}
+
+.cj-btn-hei {
+  background-color: #4C4C4C;
+  border: 1px solid #3A3A3A;
+  color: #FFF;
+}
+
+.cj-btn-hei:hover {
+  background-color: #3A3A3A;
+  border: 1px solid #222;
+  color: #FFF;
+}
+
+.cj-btn-hui {
+  background-color: #BFC3C7;
+  border: 1px solid #ADB1B4;
+  color: #FFF;
+}
+
+.cj-btn-hui:hover {
+  background-color: #ADB1B4;
+  border: 1px solid #9EA1A4;
+  color: #FFF;
+}
+
+/*声明 WebFont*/
+@font-face {
+  font-family: SourceHanSans;
+  src: url('../font/SourceHanSansSC-Normal.eot');
+  src: url('../font/SourceHanSansSC-Normal.eot?#font-spider') format('embedded-opentype'),
+  url('../font/SourceHanSansSC-Normal.woff') format('woff'),
+  url('../font/SourceHanSansSC-Normal.ttf') format('truetype'),
+  url('../font/SourceHanSansSC-Normal.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: SourceHanSerif;
+  src: url('../font/SourceHanSerifCN-Medium.eot');
+  src: url('../font/SourceHanSerifCN-Medium.eot?#font-spider') format('embedded-opentype'),
+  url('../font/SourceHanSerifCN-Medium.woff') format('woff'),
+  url('../font/SourceHanSerifCN-Medium.ttf') format('truetype'),
+  url('../font/SourceHanSerifCN-Medium.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: SourceHanSerifBold;
+  src: url('../font/SourceHanSerifCN-Bold.eot');
+  src: url('../font/SourceHanSerifCN-Bold.eot?#font-spider') format('embedded-opentype'),
+  url('../font/SourceHanSerifCN-Bold.woff') format('woff'),
+  url('../font/SourceHanSerifCN-Bold.ttf') format('truetype'),
+  url('../font/SourceHanSerifCN-Bold.svg') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/*使用选择器指定字体*/
+.cj-font-sourceHanSans {
+  font-family: SourceHanSans, "Microsoft YaHei", Arial, Helvetica, sans-serif;
+}
+
+.cj-font-SourceHanSerif {
+  font-family: SourceHanSerif, "Microsoft YaHei", Arial, Helvetica, sans-serif;
+}
+
+.cj-font-SourceHanSerifBold {
+  font-family: SourceHanSerifBold, "Microsoft YaHei", Arial, Helvetica, sans-serif;
+}
