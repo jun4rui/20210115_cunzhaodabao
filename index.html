@@ -13,7 +13,10 @@
   <script src="node_modules/moment/locale/zh-cn.js"></script>
   <script src="js/common.js"></script>
   <link rel="stylesheet" href="css/index.css">
-  <script src="js/jquery.danmu.min.js"></script>
+  <link rel="stylesheet" href="js/barragerjs/dist/css/barrager.css">
+  <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
+  <!--搜狐pv库，加入returnCitySN对象-->
+  <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 </head>
 <body>
 <!--主内容-->
@@ -23,50 +26,55 @@
     <div class="header_panel">
       <a href="#" class="to_home">返回首页</a>
       <ul id="count_panel">
-        <li>浏览量：<span>999999</span></li>
-        <li>参会企业：<span>88888</span></li>
-        <li>招聘人数：<span>77777</span></li>
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews }}</span>，</li>
+        <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
+        <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
       </ul>
     </div>
   </div>
   <!-- /Header -->
-  <div id="danmu"></div>
-  <script>
-    $('#danmu').danmu({
-      height:             360,  //弹幕区高度
-      width:              640,   //弹幕区宽度
-      zindex:             100,   //弹幕区域z-index属性
-      speed:              7000,      //滚动弹幕的默认速度，这是数值值得是弹幕滚过每672像素所需要的时间（毫秒）
-      sumTime:            65535,   //弹幕流的总时间
-      danmuLoop:          false,   //是否循环播放弹幕
-      defaultFontColor:   '#FFF',   //弹幕的默认颜色
-      fontSizeSmall:      16,     //小弹幕的字号大小
-      FontSizeBig:        24,       //大弹幕的字号大小
-      opacity:            '0.9',			//默认弹幕透明度
-      topBottonDanmuTime: 6000,   // 顶部底部弹幕持续时间（毫秒）
-      SubtitleProtection: false,     //是否字幕保护
-      positionOptimize:   false,         //是否位置优化，位置优化是指像AB站那样弹幕主要漂浮于区域上半部分
-
-      maxCountInScreen: 40,   //屏幕上的最大的显示弹幕数目,弹幕数量过多时,优先加载最新的。
-      maxCountPerSec:   10      //每分秒钟最多的弹幕数目,弹幕数量过多时,优先加载最新的。
-    });
-
-    $("#danmu").danmu("addDanmu",[
-      { text:"这是滚动弹幕" ,color:"white",size:1,position:0,time:2}
-      ,{ text:"这是顶部弹幕" ,color:"yellow" ,size:1,position:1,time:3}
-      ,{ text:"这是底部弹幕" , color:"red" ,size:1,position:2,time:3}
-    ])
-
-    $('#danmu').danmu('danmuStart');
-  </script>
   <!-- Banner -->
   <div id="banner">
-    <!--  Tab  -->
-    <ul id="tab">
-      <li @click="currentTab=0" :class="{'active':currentTab===0}">招聘大厅</li>
-      <li @click="currentTab=1" :class="{'active':currentTab===1}">求职大厅</li>
-    </ul>
-    <!--  /Tab  -->
+    <div class="banner_panel">
+      <!--弹幕区-->
+      <div id="danmu"></div>
+      <!--/弹幕区-->
+      <div class="banner_panel_left cj-pull-left">
+        <!--Tab-->
+        <ul id="tab">
+          <li @click="currentTab=0" :class="{'active':currentTab===0}">招聘大厅</li>
+          <li @click="currentTab=1" :class="{'active':currentTab===1}">求职大厅</li>
+        </ul>
+        <!--/Tab-->
+        <!--Search Panel-->
+        <div id="search_panel">
+          <input type="text">
+          <button type="button">搜索</button>
+        </div>
+        <!--/Search Panel-->
+        <!--Status Switch-->
+        <ul id="status">
+          <li @click="currentStatus=0" :class="{'active':currentStatus===0}">全部企业</li>
+          <li @click="currentStatus=1" :class="{'active':currentStatus===1}">在线企业</li>
+        </ul>
+        <!--/Status Switch-->
+      </div>
+      <div class="banner_panel_right cj-pull-right">
+        <!--登录区-->
+        <ul id="login_panel">
+          <li>个人登陆</li>
+          <li>企业登陆</li>
+        </ul>
+        <!--/登录区-->
+        <!--倒计时区-->
+        <div class="cj-block">
+          3天12时17分
+        </div>
+        <div @click="activityDescDialog=true;">查看邀请函</div>
+        <a href="#">企业订展</a>
+        <!--/倒计时区-->
+      </div>
+    </div>
   </div>
   <!-- /Banner -->
   <!-- Tab容器 -->
@@ -79,12 +87,12 @@
         <div class="company-item" v-for="item in companyList" :class="{'offline': Math.random()>0.5}">
           <!--TODO 这里离线的条件需要修改，暂时是测试用-->
           <!--公司名称-->
-          <div class="company_name">
+          <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
             <span>{{ item.companyName }}</span>
           </div>
           <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
           <!--职位列表-->
-          <div class="recruit-list">
+          <div @click="showRecruitList(item.companyId)" class="recruit-list">
             <div class="recruit-list_panel">
               <div class="recruit-item">
                 <div class="see-more">查看更多</div>
@@ -129,6 +137,54 @@
     <!-- /求职大厅 -->
   </div>
   <!-- /Tab容器 -->
+  <!-- 区域内放置Dialog -->
+  <!-- 企业详情Dialog -->
+  <el-dialog title="公司详情" :visible.sync="companyInfoDialog" width="600px">
+    <div v-if="currentCompanyInfo">
+      LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt=""> <br>
+      公司名称：{{ currentCompanyInfo.companyName }}<br>
+      联系人：{{ currentCompanyInfo.contactPerson }}<br>
+      公司地址：{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-未填写-' }}<br>
+      公司地址(location)：{{ currentCompanyInfo.location ? currentCompanyInfo.location : '-未填写-' }}<br>
+      公司类型：{{ currentCompanyInfo.entProp }}<br>
+      传真：{{ currentCompanyInfo.fax ? currentCompanyInfo.fax : '-未填写-' }}<br>
+      公司类型：{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}<br>
+      公司名称：{{ currentCompanyInfo.componentName }}<br>
+      公司人数：{{ currentCompanyInfo.persons }}<br>
+      联系电话：{{ currentCompanyInfo.phone }}<br>
+      网站：{{ currentCompanyInfo.website }}
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!-- /企业详情Dialog -->
+  <!-- 职位详情Dialog -->
+
+  <!-- /职位详情Dialog -->
+  <!-- 职位列表和投递 -->
+  <el-dialog id="recruit-list_dialog" title="选择面试职位" :visible.sync="recruitListDialog" width="520px">
+    <div v-if="currentRecruitList" v-for="item in currentRecruitList">
+      <el-radio v-model="currentRecruitChecked" :label="item.recruitId" border>{{item.recruitName}}</el-radio>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <span id="recruit-list_submit" @click="recruitListSubmit()">投递简历</span>
+    </div>
+  </el-dialog>
+  <!-- /职位列表和投递 -->
+  <!-- 邀请函Dialog -->
+  <el-dialog title="邀请函" :visible.sync="activityDescDialog" width="600px">
+    <div v-if="activityDesc">
+      <div class="cj-text-center">
+        <h1>{{ activityDesc.postTitle }}</h1>
+        <h4>{{ activityDesc.postDate }}</h4>
+      </div>
+      <div style="text-indent:2em;" v-html="nl2br(activityDesc.postContent)"></div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!-- /邀请函Dialog -->
+  <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
 <script src="index.js"></script>

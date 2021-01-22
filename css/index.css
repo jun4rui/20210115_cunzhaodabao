@@ -532,6 +532,10 @@ ul, li {
   font-family: SourceHanSerifBold, "Microsoft YaHei", Arial, Helvetica, sans-serif;
 }
 
+#main {
+  background-color: #48C0FF;
+}
+
 #header {
   width: 100%;
   height: 40px;
@@ -544,7 +548,14 @@ ul, li {
 }
 #header .header_panel .to_home {
   left: 0;
-  top: 0;
+  top: 7px;
+  font-size: 16px;
+  height: 26px;
+  color: #000;
+  line-height: 28px;
+  text-indent: 30px;
+  background: url(../images/icon_tohome.png) no-repeat left center;
+  background-size: 22px 20px;
 }
 #header .header_panel #count_panel {
   display: flex;
@@ -553,10 +564,62 @@ ul, li {
 }
 #header .header_panel #count_panel li {
   display: inline-block;
+  font-size: 14px;
+  color: #2C75F1;
+  font-weight: bold;
+}
+#header .header_panel #count_panel li span {
+  color: #FF5C00;
 }
 
+#banner {
+  position: relative;
+  width: 100%;
+  height: 532px;
+  background: url(../images/banner.png) no-repeat center center;
+}
+#banner .banner_panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  min-width: 900px;
+  width: 100%;
+  background-color: #F003;
+  padding: 0 118px;
+  box-sizing: border-box;
+}
+
+#tab {
+  padding: 4px 5px;
+  background-color: #FFEDDC;
+  display: inline-block;
+  border-radius: 5px;
+}
+#tab > li {
+  width: 97px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  background-color: #FFC9A2;
+  color: #FF5C00;
+  border-radius: 5px;
+  display: inline-block;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.4s ease-out;
+}
 #tab > li.active {
-  background-color: azure;
+  background-color: #FF7009;
+  color: #FFF;
+}
+
+#status li {
+  display: inline-block;
+  cursor: pointer;
+}
+#status li.active {
   color: #F00;
 }
 
@@ -716,4 +779,72 @@ ul, li {
 }
 .company-item.offline .to-chat {
   background: linear-gradient(180deg, #D8D8D8 0%, #B5B5B5 8.85%, #B5B5B5 52.08%, #B5B5B5 89.58%, #979797 100%);
+}
+
+#danmu {
+  width: 100%;
+  height: 300px;
+  background: #F003;
+  overflow: hidden;
+}
+
+.el-dialog__wrapper > div[role=dialog] {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.el-dialog__wrapper > div[role=dialog] .el-dialog__header {
+  background: url(../images/dialog_title_bg.png) no-repeat center center;
+  height: 60px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.el-dialog__wrapper > div[role=dialog] .el-dialog__header span.el-dialog__title {
+  color: #FFF;
+  font-size: 18px;
+  font-weight: 700;
+}
+.el-dialog__wrapper > div[role=dialog] .el-dialog__header button.el-dialog__headerbtn[aria-label=Close] i.el-dialog__close {
+  width: 20px;
+  height: 20px;
+  background: #FFF;
+  color: #000;
+  line-height: 20px;
+  border-radius: 50%;
+  text-align: center;
+}
+
+#recruit-list_dialog .el-dialog__body {
+  padding: 30px 50px 1px;
+  box-sizing: border-box;
+}
+#recruit-list_dialog .el-dialog__body label.el-radio {
+  width: 420px;
+  height: 50px;
+  border-radius: 7px;
+  margin: 0 auto 10px;
+  padding: 18px 20px 0 20px;
+  background-color: #FFF;
+  box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
+}
+#recruit-list_dialog .el-dialog__body label.el-radio .el-radio__label {
+  font-size: 16px;
+  color: #333;
+}
+#recruit-list_dialog .el-dialog__footer {
+  padding: 30px 20px 40px;
+}
+#recruit-list_dialog #recruit-list_submit {
+  width: 200px;
+  height: 46px;
+  display: block;
+  margin: 0 auto;
+  background: linear-gradient(93.34deg, #2D95F9 0%, #1062E9 100%);
+  box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
+  border-radius: 7px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #FFF;
+  line-height: 46px;
+  text-align: center;
+  cursor: pointer;
 }
