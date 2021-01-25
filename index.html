@@ -160,9 +160,9 @@
               <div class="name">{{ item.personName }}</div>
               <div class="position">{{ item.positionCode?item.positionCode:'-暂无-' }}</div>
               <div class="info">
-                某某某某大学<br>
-                本科/技校<br>
-                地质工程
+                {{item.graduateSchool?item.graduateSchool:'-未登记学校信息-'}}<br>
+                {{item.major?item.major:'-专业未填-'}}/{{item.highestEdu?item.highestEdu+'学历':'-学历未填-'}}<br>
+                {{item.workYears}}年工作经验
               </div>
               <div class="chat-now">立即沟通</div>
               <div class="view-resume">查看简历</div>
