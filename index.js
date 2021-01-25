@@ -1,27 +1,29 @@
 var mainModel = new Vue({
   el:      '#main',
   data:    {
-    currentTab:         1,       //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
-    currentStatus:      0,       //表示当前status选择第几个，{0:全部企业,1:在线企业}
-    companyId:          null,    //企业ID，企业登陆以后会有值
-    activityId:         null,    //展会ID
-    activityInfo:       null,    //展会信息
-    activityPattern:    null,    //展会模式
-    activityTime:       null,    //展会时间
-    activityRecord:     null,    //展会统计数据
-    activityDesc:       null,    //展会邀请函内容
-    activityDescDialog: false,   //邀请函显示开关
-    companyInfoDialog:  false,   //企业详情显示开关（可关注企业）
-    recruitListDialog:  false,   //职位列表显示开关（投递简历用）
-    companyList:        null,    //企业列表（包括职位）
-    danmuList:          [],      //弹幕列表
-    danmuNum:           50,      //每次加载弹幕数量
-    reloading:          false,   //是否在装弹？
+    currentTab:         1,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
+    currentStatus:      0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
+    companyId:          null,   //企业ID，企业登陆以后会有值
+    activityId:         null,   //展会ID
+    activityInfo:       null,   //展会信息
+    activityPattern:    null,   //展会模式
+    activityTime:       null,   //展会时间
+    activityRecord:     null,   //展会统计数据
+    activityDesc:       null,   //展会邀请函内容
+    activityDescDialog: false,  //邀请函显示开关
+    companyInfoDialog:  false,  //企业详情显示开关（可关注企业）
+    recruitListDialog:  false,  //职位列表显示开关（投递简历用）
+    resumeInfoDialog:   false,  //简历信息显示开关
+    companyList:        null,   //企业列表（包括职位）
+    danmuList:          [],     //弹幕列表
+    danmuNum:           50,     //每次加载弹幕数量
+    reloading:          false,  //是否在装弹？
 
-    currentCompanyInfo:  null,//当前企业（信息）
-    currentRecruitList:  null,//当前（企业）职位列表
-    currentRecruitChecked:'',  //当前职位选择了谁
-    currentPositionInfo: null,//当前职位（信息）
+    currentCompanyInfo:    null,//当前企业（信息）
+    currentRecruitList:    null,//当前（企业）职位列表
+    currentRecruitChecked: '',  //当前职位选择了谁
+    currentPositionInfo:   null,//当前职位（信息）
+    currentResumeInfo:     null,//当前简历
 
     jobSeekerList: null,    //求职责列表
     currentRegion: ''       //当前地区（默认空字符串表示全部
@@ -205,13 +207,42 @@ var mainModel = new Vue({
     },
 
     //在弹出职位列表Dialog窗口投递简历
-    recruitListSubmit: function(){
+    recruitListSubmit: function() {
       //TODO 检查用户是否登陆，登陆以后才能投递职位
       //TODO 进行职位投递操作
-      console.log('投递了职位: ',this.currentRecruitChecked);
+      console.log('投递了职位: ', this.currentRecruitChecked);
       //清空当前职位选择
       this.currentRecruitChecked = '';
-      this.recruitListDialog = false;
+      this.recruitListDialog     = false;
+    },
+
+    //查看用户简历
+    viewResume: function(inCvId) {
+      console.log(`viewResume: ${inCvId}`);
+      inCvId = 1413408;//TODO cvid先写死
+      if (!inCvId) {
+        this.$message.error('未找到该简历');
+        return false;
+      }
+      //清空当前简历变量
+      this.currentResumeInfo = null;
+      //打开当前简历展现dialog
+      this.resumeInfoDialog  = true;
+      //从接口获取简历信息到当前简历变量
+      //调用接口获取展会详情
+      $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
+        // console.table(response.data);
+        if (response.errCode === '00') {
+          if (response.data === null) {
+            this.$message.error('未找到任何信息');
+            this.resumeInfoDialog = false;
+          } else {
+            this.currentResumeInfo = response.data;
+          }
+        } else {
+          this.$message.error(response.errMsg);
+        }
+      }.bind(this));
     }
 
   },
@@ -225,6 +256,9 @@ var mainModel = new Vue({
     /*装载弹幕*/
     this.reloading = true;
     this.getDanmuList();//加载弹幕列表
+    /*TODO 一些数据要定时进行刷新*/
+    // 入场求职者的状态
+    // 企业和职位状态
   },
   mounted: function() {
     //全自动弹幕发射机器

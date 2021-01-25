@@ -494,6 +494,14 @@
 	  .online_status {
 		background: linear-gradient(122.94deg, #B6C7DD 0%, #5F80AC 100%);
 		border-radius: 0px 10px 0px 30px;
+
+		&.online {
+		  display: none;
+		}
+
+		&.offline {
+		  display: block;
+		}
 	  }
 
 	  .chat-now {
@@ -511,7 +519,7 @@
 
 	.name {
 	  position: absolute;
-	  top: 100px;
+	  top: 102px;
 	  left: 20px;
 	  width: 80px;
 	  font-size: 14px;
@@ -587,6 +595,14 @@
 
 	  background: linear-gradient(122.94deg, #FFA41B 0%, #FF5C00 100%);
 	  border-radius: 0 10px 0 30px;
+
+	  &.online {
+		display: block;
+	  }
+
+	  &.offline {
+		display: none;
+	  }
 	}
   }
 }

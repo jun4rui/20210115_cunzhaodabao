@@ -26,7 +26,7 @@
     <div class="header_panel">
       <a href="#" class="to_home">返回首页</a>
       <ul id="count_panel">
-        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews }}</span>，</li>
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews?activityRecord.pageviews:0 }}</span>，</li>
         <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
         <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
       </ul>
@@ -155,28 +155,18 @@
           <div id="job-seeker_list">
             <!--TODO 这里判断在线的要写算法，这里是随机数-->
             <div class="job-seeker_item" :class="{'offline':(Math.random()*2)<1}" v-if="jobSeekerList" v-for="item in jobSeekerList">
-              <div class="online_status">在线</div><!--TODO 这里在线离线要手动识别-->
-              <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='女'?'woman':'man')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
-              <div class="name">{{ item.personName }}</div>
-              <div class="position">{{ item.positionCode?item.positionCode:'-暂无-' }}</div>
+              <div class="online_status online">在线</div>
+              <div class="online_status offline">离线</div>
+              <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
+              <div class="name">{{ item.personName }}{{item.genderCode}}</div>
+              <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
               <div class="info">
-                {{item.graduateSchool?item.graduateSchool:'-未登记学校信息-'}}<br>
-                {{item.major?item.major:'-专业未填-'}}/{{item.highestEdu?item.highestEdu+'学历':'-学历未填-'}}<br>
-                {{item.workYears}}年工作经验
+                {{ item.graduateSchool ? item.graduateSchool : '-未登记学校信息-' }}<br>
+                {{ item.major ? item.major : '-专业未填-' }}/{{ item.highestEdu ? item.highestEdu + '学历' : '-学历未填-' }}<br>
+                {{ item.workYears }}年工作经验
               </div>
               <div class="chat-now">立即沟通</div>
-              <div class="view-resume">查看简历</div>
-              <!--
-              cvId: "1510314"
-              investCv: null
-              lastUpdateDate: "2021-01-22 00:00:00"
-              personId: "3410605"
-              personName: "彭昭峰"
-              positionCode: "审计专员/助理"
-              -->
-              <!--最后刷新时间：{{ item.lastUpdateDate }}<br>-->
-              <!--简历ID：{{ item.cvId }}<br>-->
-              <!--投递过简历吗？：{{ item.investCv ? item.investCv : '-没投递-' }}<br>-->
+              <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
             </div>
           </div>
           <!-- /在线求职者列表 -->
@@ -236,6 +226,97 @@
     </span>
   </el-dialog>
   <!-- /邀请函Dialog -->
+  <!--简历详情Dialog-->
+  <el-dialog title="简历详情" :visible.sync="resumeInfoDialog" width="600px">
+    <div v-if="currentResumeInfo">
+      <div class="cj-text-center">
+        <div v-if="currentResumeInfo.jobPerson">
+          姓名：{{ currentResumeInfo.jobPerson.personName }} <br>
+          性别：{{ currentResumeInfo.jobPerson.genderCode === '01' ? '男性' : '女性' }} <br>
+          年龄：{{ currentResumeInfo.jobPerson.age }}岁 <br>
+          经验：{{ currentResumeInfo.jobPerson.workYears }}年工作经验 <br>
+          学历：{{ currentResumeInfo.jobPerson.highestEdu }} <br>
+          生日：{{ (currentResumeInfo.jobPerson.dob ? currentResumeInfo.jobPerson.dob.substr(0, 10) : '') }} <br>
+          现居地：{{ currentResumeInfo.jobPerson.currLocCode }} <br>
+          身高：{{ currentResumeInfo.jobPerson.height }} <br>
+          手机：{{ currentResumeInfo.jobPerson.mobilePhone }} <br>
+          固话：{{ currentResumeInfo.jobPerson.phone }} <br>
+          E-mail：{{ currentResumeInfo.jobPerson.email }} <br>
+          毕业院校：{{ currentResumeInfo.jobPerson.graduateSchool }} <br>
+          学历：{{ currentResumeInfo.jobPerson.highestEdu }} <br>
+          意向行业：{{ currentResumeInfo.industryCode }} <br>
+          岗位类别：{{ currentResumeInfo.positionCode }} <br>
+          期望薪资：{{ currentResumeInfo.salaryRange }} <br>
+          求职地点：{{ currentResumeInfo.locationCode }} <br>
+          可到岗天数：{{ currentResumeInfo.availableInDays }} <br>
+          个人自述：{{ currentResumeInfo.selfComment}} <br>
+          其他说明：{{ currentResumeInfo.remark}} <br>
+        </div>
+
+        <!--工作经验-->
+        <div v-if="currentResumeInfo.jobPersonJobHistList">
+          <ul>
+            <li v-for="item in currentResumeInfo.jobPersonJobHistList">
+              <span>{{item.COMPANY_NAME}}</span>
+              <span>{{item.ACHIEVEMENT}}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--学历教育-->
+        <div v-if="currentResumeInfo.jobPersonEduList">
+          <ul>
+            <li v-for="item in currentResumeInfo.jobPersonEduList">
+              <span>{{item.SCHOOL_NAME}}</span>
+              <span>{{item.MAJOR_CODE}}</span>
+              <span>{{item.EDUCATION_CODE}}</span>
+              <span>{{item.EDU_MODE}}</span>
+              <span>{{item.DEGREE_CODE}}</span>
+            </li>
+          </ul>
+        </div>
+
+      <!--项目经验-->
+        <div v-if="currentResumeInfo.projectList">
+          <ul>
+            <li v-for="item in currentResumeInfo.projectList">
+              <span>{{item.startDate ? item.startDate.substr(0, 10) : '-未填-'}}至{{item.endDate ? item.endDate.substr(0, 10) : '至今'}}</span>
+              <span>{{item.projectDetail}}</span>
+              <span>{{item.responsibility}}</span>
+              <span>{{item.keyTechnology}}</span>
+            </li>
+          </ul>
+        </div>
+
+      <!--技能-->
+        <div v-if="currentResumeInfo.skillList">
+          <ul>
+            <li v-for="item in currentResumeInfo.skillList">
+              <span>{{item.SKILL}}</span>
+              <span>{{item.USE_TIME}}</span>
+              <span>{{item.PROFICIENCY}}</span>
+            </li>
+          </ul>
+        </div>
+
+      <!--职业教育培训-->
+        <div v-if="currentResumeInfo.trainingList">
+          <ul>
+            <li v-for="item in currentResumeInfo.trainingList">
+              <span>{{item.startDate ? item.startDate.substr(0, 10) : '至今'}}至{{item.endDate ? item.endDate.substr(0, 10) : '至今'}}</span>
+              <span>{{item.trainingOrg}}</span>
+              <span>{{item.trainingName}}</span>
+              <span>{{item.trainingDetail}}</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!--/简历详情Dialog-->
   <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
