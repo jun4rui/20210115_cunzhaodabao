@@ -82,57 +82,108 @@
     <!-- 招聘大厅 -->
     <div class="tab_item" v-if="currentTab===0">
       <h1>招聘大厅</h1>
-      <div class="company-list_panel" v-if="companyList">
-        <!--展位单元-->
-        <div class="company-item" v-for="item in companyList" :class="{'offline': Math.random()>0.5}">
-          <!--TODO 这里离线的条件需要修改，暂时是测试用-->
-          <!--公司名称-->
-          <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
-            <span>{{ item.companyName }}</span>
-          </div>
-          <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
-          <!--职位列表-->
-          <div @click="showRecruitList(item.companyId)" class="recruit-list">
-            <div class="recruit-list_panel">
-              <div class="recruit-item">
-                <div class="see-more">查看更多</div>
+      <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
+      </svg>
+      <div class="out_panel_top1"></div>
+      <div class="out_panel_top2"></div>
+      <div class="out_border_1">
+        <div class="out_border_2">
+          <div class="company-list_panel" v-if="companyList">
+            <!--展位单元-->
+            <div class="company-item" v-for="item in companyList" :class="{'offline': Math.random()>0.5}">
+              <!--TODO 这里离线的条件需要修改，暂时是测试用-->
+              <!--公司名称-->
+              <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
+                <span>{{ item.companyName }}</span>
               </div>
-              <div class="recruit-item" v-if="item.recruitModelList" v-for="(recruitItem, recruitIndex) in item.recruitModelList">
-                <div class="job-title">{{ (parseInt(recruitIndex) + 1) + '. ' + recruitItem.jobTitle }}</div>
-                <div class="salary" v-if="recruitItem.salary==='1000元以下'">1K内</div>
-                <div class="salary" v-if="recruitItem.salary==='1500-2000元'">1.5-2K</div>
-                <div class="salary" v-if="recruitItem.salary==='2000-2500元'">2-2.5K</div>
-                <div class="salary" v-if="recruitItem.salary==='2500-3000元'">2.5-3K</div>
-                <div class="salary" v-if="recruitItem.salary==='3000-3500元'">3-3.5K</div>
-                <div class="salary" v-if="recruitItem.salary==='3500-4000元'">3.5-4K</div>
-                <div class="salary" v-if="recruitItem.salary==='4000-5000元'">4-5K</div>
-                <div class="salary" v-if="recruitItem.salary==='5000-6000元'">5-6K</div>
-                <div class="salary" v-if="recruitItem.salary==='6000-8000元'">6-8K</div>
-                <div class="salary" v-if="recruitItem.salary==='8000-10000元'">8-10K</div>
-                <div class="salary" v-if="recruitItem.salary==='10000-15000元'">10-15K</div>
-                <div class="salary" v-if="recruitItem.salary==='15000元以上'">15K以上</div>
-                <div class="salary" v-if="recruitItem.salary==='面议'">面议</div>
+              <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
+              <!--职位列表-->
+              <div @click="showRecruitList(item.companyId)" class="recruit-list">
+                <div class="recruit-list_panel">
+                  <div class="recruit-item">
+                    <div class="see-more">查看更多</div>
+                  </div>
+                  <div class="recruit-item" v-if="item.recruitModelList" v-for="(recruitItem, recruitIndex) in item.recruitModelList">
+                    <div class="job-title">{{ (parseInt(recruitIndex) + 1) + '. ' + recruitItem.jobTitle }}</div>
+                    <div class="salary" v-if="recruitItem.salary==='1000元以下'">1K内</div>
+                    <div class="salary" v-if="recruitItem.salary==='1500-2000元'">1.5-2K</div>
+                    <div class="salary" v-if="recruitItem.salary==='2000-2500元'">2-2.5K</div>
+                    <div class="salary" v-if="recruitItem.salary==='2500-3000元'">2.5-3K</div>
+                    <div class="salary" v-if="recruitItem.salary==='3000-3500元'">3-3.5K</div>
+                    <div class="salary" v-if="recruitItem.salary==='3500-4000元'">3.5-4K</div>
+                    <div class="salary" v-if="recruitItem.salary==='4000-5000元'">4-5K</div>
+                    <div class="salary" v-if="recruitItem.salary==='5000-6000元'">5-6K</div>
+                    <div class="salary" v-if="recruitItem.salary==='6000-8000元'">6-8K</div>
+                    <div class="salary" v-if="recruitItem.salary==='8000-10000元'">8-10K</div>
+                    <div class="salary" v-if="recruitItem.salary==='10000-15000元'">10-15K</div>
+                    <div class="salary" v-if="recruitItem.salary==='15000元以上'">15K以上</div>
+                    <div class="salary" v-if="recruitItem.salary==='面议'">面议</div>
+                  </div>
+                </div>
               </div>
+              <!--HR-->
+              <div class="hr" :style="{backgroundImage:'url(images/pic_hr_'+((parseInt(Math.random()*16))+1)+'.png)'}"></div>
+              <!--Table-->
+              <div class="table"></div>
+              <!--JobSeeker-->
+              <div class="job-seeker" :style="{backgroundImage:'url(images/pic_jobseeker_'+((parseInt(Math.random()*8))+1)+'.png)'}"></div>
+              <!--Chair-->
+              <div class="chair"></div>
+              <!--立即沟通-->
+              <div class="to-chat">立即沟通</div><!--TODO 离线以后这里文字要改成离线状态-->
             </div>
+            <!--/展位单元-->
           </div>
-          <!--HR-->
-          <div class="hr" :style="{backgroundImage:'url(images/pic_hr_'+((parseInt(Math.random()*16))+1)+'.png)'}"></div>
-          <!--Table-->
-          <div class="table"></div>
-          <!--JobSeeker-->
-          <div class="job-seeker" :style="{backgroundImage:'url(images/pic_jobseeker_'+((parseInt(Math.random()*8))+1)+'.png)'}"></div>
-          <!--Chair-->
-          <div class="chair"></div>
-          <!--立即沟通-->
-          <div class="to-chat">立即沟通</div><!--TODO 离线以后这里文字要改成离线状态-->
         </div>
-        <!--/展位单元-->
       </div>
+      <div class="out_panel_bottom2"></div>
+      <div class="out_panel_bottom1"></div>
     </div>
     <!-- /招聘大厅 -->
     <!-- 求职大厅 -->
     <div class="tab_item" v-if="currentTab===1">
-      求职大厅
+      <h1>求职大厅</h1>
+      <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
+      </svg>
+      <div class="out_panel_top1"></div>
+      <div class="out_panel_top2"></div>
+      <div class="out_border_1">
+        <div class="out_border_2">
+          <!-- 在线求职者列表 -->
+          <div id="job-seeker_list">
+            <!--TODO 这里判断在线的要写算法，这里是随机数-->
+            <div class="job-seeker_item" :class="{'offline':(Math.random()*2)<1}" v-if="jobSeekerList" v-for="item in jobSeekerList">
+              <div class="online_status">在线</div><!--TODO 这里在线离线要手动识别-->
+              <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='女'?'woman':'man')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
+              <div class="name">{{ item.personName }}</div>
+              <div class="position">{{ item.positionCode?item.positionCode:'-暂无-' }}</div>
+              <div class="info">
+                某某某某大学<br>
+                本科/技校<br>
+                地质工程
+              </div>
+              <div class="chat-now">立即沟通</div>
+              <div class="view-resume">查看简历</div>
+              <!--
+              cvId: "1510314"
+              investCv: null
+              lastUpdateDate: "2021-01-22 00:00:00"
+              personId: "3410605"
+              personName: "彭昭峰"
+              positionCode: "审计专员/助理"
+              -->
+              <!--最后刷新时间：{{ item.lastUpdateDate }}<br>-->
+              <!--简历ID：{{ item.cvId }}<br>-->
+              <!--投递过简历吗？：{{ item.investCv ? item.investCv : '-没投递-' }}<br>-->
+            </div>
+          </div>
+          <!-- /在线求职者列表 -->
+        </div>
+      </div>
+      <div class="out_panel_bottom2"></div>
+      <div class="out_panel_bottom1"></div>
     </div>
     <!-- /求职大厅 -->
   </div>
@@ -141,7 +192,9 @@
   <!-- 企业详情Dialog -->
   <el-dialog title="公司详情" :visible.sync="companyInfoDialog" width="600px">
     <div v-if="currentCompanyInfo">
-      LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt=""> <br>
+      <!--TODO 样式没做-->
+      LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt="">
+      <br>
       公司名称：{{ currentCompanyInfo.companyName }}<br>
       联系人：{{ currentCompanyInfo.contactPerson }}<br>
       公司地址：{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-未填写-' }}<br>
@@ -159,12 +212,11 @@
   </el-dialog>
   <!-- /企业详情Dialog -->
   <!-- 职位详情Dialog -->
-
   <!-- /职位详情Dialog -->
   <!-- 职位列表和投递 -->
   <el-dialog id="recruit-list_dialog" title="选择面试职位" :visible.sync="recruitListDialog" width="520px">
     <div v-if="currentRecruitList" v-for="item in currentRecruitList">
-      <el-radio v-model="currentRecruitChecked" :label="item.recruitId" border>{{item.recruitName}}</el-radio>
+      <el-radio v-model="currentRecruitChecked" :label="item.recruitId" border>{{ item.recruitName }}</el-radio>
     </div>
     <div slot="footer" class="dialog-footer">
       <span id="recruit-list_submit" @click="recruitListSubmit()">投递简历</span>

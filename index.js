@@ -1,7 +1,7 @@
 var mainModel = new Vue({
   el:      '#main',
   data:    {
-    currentTab:         0,       //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
+    currentTab:         1,       //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
     currentStatus:      0,       //表示当前status选择第几个，{0:全部企业,1:在线企业}
     companyId:          null,    //企业ID，企业登陆以后会有值
     activityId:         null,    //展会ID
@@ -82,9 +82,11 @@ var mainModel = new Vue({
 
     //加载求职者列表
     getJobSeekerList: function() {
-      $.post(_SERVER + '/activity/getSceneAppointmentList', {
-        activityId: this.activityId,
-        companyId:  this.companyId || ''
+      $.post(_SERVER + '/activity/getOnsiteAndInvestList', {
+        //activityId: this.activityId, //TODO 记得改回来
+        activityId: 581
+        //holdingTime: this.activityInfo.holdingTime.substr(0, 10),//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
+        //companyId:  this.companyId || '1458',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
       }, function(response) {
         if (response.errCode === '00') {
           this.jobSeekerList = response.data;
