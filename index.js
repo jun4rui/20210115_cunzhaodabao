@@ -243,6 +243,11 @@ var mainModel = new Vue({
           this.$message.error(response.errMsg);
         }
       }.bind(this));
+    },
+
+    //聊天
+    toChat:function(inPersonId){
+      console.log(`toChat: ${inPersonId}`);
     }
 
   },

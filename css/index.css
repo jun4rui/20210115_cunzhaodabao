@@ -962,7 +962,14 @@ ul, li {
   display: block;
 }
 #job-seeker_list .job-seeker_item.offline .chat-now {
+  cursor: default;
   background: linear-gradient(275.28deg, #ACACAC 0%, #D0D0D0 100%);
+}
+#job-seeker_list .job-seeker_item.offline .chat-now.online {
+  display: none;
+}
+#job-seeker_list .job-seeker_item.offline .chat-now.offline {
+  display: block;
 }
 #job-seeker_list .job-seeker_item .avatar {
   width: 80px;
@@ -1012,6 +1019,12 @@ ul, li {
   background: linear-gradient(95.28deg, #FFA41B 0%, #FF5C00 100%);
   border-radius: 5px;
   cursor: pointer;
+}
+#job-seeker_list .job-seeker_item .chat-now.online {
+  display: block;
+}
+#job-seeker_list .job-seeker_item .chat-now.offline {
+  display: none;
 }
 #job-seeker_list .job-seeker_item .view-resume {
   position: absolute;

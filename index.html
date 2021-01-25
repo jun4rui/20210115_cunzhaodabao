@@ -158,14 +158,15 @@
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
               <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
-              <div class="name">{{ item.personName }}{{item.genderCode}}</div>
+              <div class="name">{{ item.personName }}</div>
               <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
               <div class="info">
                 {{ item.graduateSchool ? item.graduateSchool : '-未登记学校信息-' }}<br>
                 {{ item.major ? item.major : '-专业未填-' }}/{{ item.highestEdu ? item.highestEdu + '学历' : '-学历未填-' }}<br>
                 {{ item.workYears }}年工作经验
               </div>
-              <div class="chat-now">立即沟通</div>
+              <div class="chat-now online" @click="toChat(item.personId)">立即沟通</div>
+              <div class="chat-now offline">立即沟通</div>
               <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
             </div>
           </div>
