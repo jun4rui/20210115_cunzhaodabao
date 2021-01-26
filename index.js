@@ -286,7 +286,7 @@ var mainModel = new Vue({
 
     //DEBUG
     setTimeout(function(){
-      $('.company_name').eq(0).click();
+      // $('.company_name').eq(0).click();
     },3000);
   }
 });
