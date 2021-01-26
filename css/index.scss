@@ -725,3 +725,46 @@
 	}
   }
 }
+
+#login_panel {
+  li {
+	display: inline-block;
+	margin: 0 22px;
+	text-align: center;
+
+	> img {
+	  width: 70px;
+	  height: 70px;
+	  margin: 0 auto;
+	}
+
+	> .login_button {
+	  display: inline-block;
+	  width: 80px;
+	  height: 27px;
+	  margin-top: 7px;
+	  box-sizing: border-box;
+	  line-height: 24px;
+	  border: 2px solid #FFF;
+	  background-color: #333;
+	  border-radius: 5px;
+	  color: #FFF;
+	  font-weight: bold;
+	  cursor: pointer;
+	}
+  }
+
+  #person_login {
+	.login_button {
+	  background: #E45491;
+	  border-color: rgba(255, 255, 255, 0.5);
+	}
+  }
+
+  #company_login {
+	.login_button {
+	  background: #4E31FF;
+	  border-color: rgba(255, 255, 255, 0.5);
+	}
+  }
+}

@@ -19,6 +19,10 @@ var mainModel = new Vue({
     danmuNum:           50,     //每次加载弹幕数量
     reloading:          false,  //是否在装弹？
 
+    loginMode:       null,    //用户登陆带入mode参数的值
+    personUserInfo:  null,    //个人用户登陆信息
+    companyUserInfo: null,    //企业用户登陆信息
+
     currentCompanyInfo:    null,//当前企业（信息）
     currentRecruitList:    null,//当前（企业）职位列表
     currentRecruitChecked: '',  //当前职位选择了谁
@@ -245,13 +249,62 @@ var mainModel = new Vue({
       }.bind(this));
     },
 
+    //登陆 TODO 可能还需要完善，而且不好测试
+    login: function(inMode) {
+      if (inMode === 'person') {
+        window.localStorage.setItem('backurl', window.location.href.indexOf('?')>-1?window.location.href.substr(0,window.location.href.indexOf('?')):window.location.href + '?mode=person');
+        window.location.href = 'http://www.hnrcsc.com/web/seekjob/login.action';
+        return false;
+      }
+      if (inMode === 'company') {
+        window.localStorage.setItem('backurl', window.location.href.indexOf('?')>-1?window.location.href.substr(0,window.location.href.indexOf('?')):window.location.href + '?mode=company');
+        window.location.href = 'http://www.hnrcsc.com/web/recruit/login.action';
+        return false;
+      }
+    },
+    //获取个人用户登陆信息
+    getPersonUserInfo: function() {
+      //首先清空个人用户和企业用户（感觉其实也没必要）
+      this.personUserInfo = this.companyUserInfo = null;
+      $.post('http://www.hnrcsc.com/web/seekjob/video!personLogin.action', function(response) {
+        if (response.map.status === '00') {
+          this.personUserInfo = response.map.user;
+          console.log('个人用户已登录！');
+        } else {
+          this.$message.error('个人账号登陆失败！');
+        }
+      }.bind(this));
+    },
+    //获取企业用户登陆信息
+    getCompanyUserInfo: function() {
+      //首先清空个人用户和企业用户（感觉其实也没必要）
+      //感觉代码和获取个人账号的一样，也可以考虑合并起来
+      this.personUserInfo = this.companyUserInfo = null;
+      $.post('http://www.hnrcsc.com/web/recruit/login!checkLogin.action', function(response) {
+        if (response.map.status === '00') {
+          this.companyUserInfo = response.map.user;
+          console.log('企业用户已登录！');
+        } else {
+          this.$message.error('企业账号登陆失败！');
+        }
+      }.bind(this));
+    },
+    //退出登陆
+    logout: function(){
+      window.location.href = window.location.href.substr(0,window.location.href.indexOf('?'));
+    },
     //聊天
-    toChat:function(inPersonId){
+    toChat: function(inPersonId) {
       console.log(`toChat: ${inPersonId}`);
     }
 
   },
   created: function() {
+    //如果有参数mode，则根据mode的值来获取用户信息
+    this.loginMode = getParameterValue(window.location.href, 'mode');
+    if (this.loginMode === 'person') this.getPersonUserInfo();
+    if (this.loginMode === 'company') this.getCompanyUserInfo();
+
     this.getActivityId();//获取场次ID
     this.addCounter();//调用计数器
     this.getActivityInfo();//获取展会信息
@@ -285,8 +338,8 @@ var mainModel = new Vue({
     }.bind(this), 3000);
 
     //DEBUG
-    setTimeout(function(){
+    setTimeout(function() {
       // $('.company_name').eq(0).click();
-    },3000);
+    }, 3000);
   }
 });

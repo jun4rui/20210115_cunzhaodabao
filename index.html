@@ -26,7 +26,7 @@
     <div class="header_panel">
       <a href="#" class="to_home">返回首页</a>
       <ul id="count_panel">
-        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews?activityRecord.pageviews:0 }}</span>，</li>
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews ? activityRecord.pageviews : 0 }}</span>，</li>
         <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
         <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
       </ul>
@@ -61,10 +61,25 @@
       </div>
       <div class="banner_panel_right cj-pull-right">
         <!--登录区-->
-        <ul id="login_panel">
-          <li>个人登陆</li>
-          <li>企业登陆</li>
+        <ul id="login_panel" v-if="!personUserInfo && !companyUserInfo">
+          <li id="person_login">
+            <img src="images/icon_login_person.png" alt="个人登陆">
+            <span class="login_button" @click="login('person')">个人登陆</span>
+          </li>
+          <li id="company_login">
+            <img src="images/icon_login_company.png" alt="企业登陆">
+            <span class="login_button" @click="login('company')">企业登陆</span>
+          </li>
         </ul>
+        <ul id="person-info_panel" v-if="personUserInfo">
+          个人用户信息 {{personUserInfo.personName}}
+          <div @click="logout">退出登录</div>
+        </ul>
+        <ul id="company-info_panel" v-if="companyUserInfo">
+          企业用户信息 {{companyUserInfo.userName`}}
+          <div @click="logout">退出登录</div>
+        </ul>
+
         <!--/登录区-->
         <!--倒计时区-->
         <div class="cj-block">
@@ -186,51 +201,54 @@
       <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
       <ul class="company-info_other split">
         <li>{{ currentCompanyInfo.entProp }}</li>
-        <li>{{ currentCompanyInfo.persons?currentCompanyInfo.persons:'-人数未填写-' }}</li>
+        <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : '-人数未填写-' }}</li>
         <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}</li>
       </ul>
-      <div class="company-info_address">{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-' }}</div>
+      <div class="company-info_address">{{
+          currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-'
+        }}
+      </div>
       <div class="company-info_subtitle">企业简介</div>
-      <div class="company-info_content">{{currentCompanyInfo.companyInfo}}</div>
+      <div class="company-info_content">{{ currentCompanyInfo.companyInfo }}</div>
       <div class="company-info_subtitle">招聘职位</div>
       <div class="company-info_content">
-      <!--职位列表-->
-      <div class="company-info-recruit-list">
-        <div class="company-info-recruit_item" v-for="recruitItem in currentRecruitList">
-          <div class="job-title">{{ recruitItem.recruitName }}</div>
-          <ul class="recruit-other-info split">
-            <li>
-              <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
-              <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
-              <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
-              <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
-              <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
-              <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
-              <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
-              <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
-              <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
-              <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
-              <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
-              <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
-              <span v-if="recruitItem.salary==='面议'">面议</span>
-            </li>
-            <li>
-              学历要求{{recruitItem.lowerEdu}}
-            </li>
-            <li>
-              经验{{recruitItem.workYears}}
-            </li>
-            <li>
-              招{{recruitItem.persons}}人
-            </li>
-          </ul>
-          <div class="welfare">
-            绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
+        <!--职位列表-->
+        <div class="company-info-recruit-list">
+          <div class="company-info-recruit_item" v-for="recruitItem in currentRecruitList">
+            <div class="job-title">{{ recruitItem.recruitName }}</div>
+            <ul class="recruit-other-info split">
+              <li>
+                <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
+                <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
+                <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
+                <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
+                <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
+                <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
+                <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
+                <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
+                <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
+                <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
+                <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
+                <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
+                <span v-if="recruitItem.salary==='面议'">面议</span>
+              </li>
+              <li>
+                学历要求{{ recruitItem.lowerEdu }}
+              </li>
+              <li>
+                经验{{ recruitItem.workYears }}
+              </li>
+              <li>
+                招{{ recruitItem.persons }}人
+              </li>
+            </ul>
+            <div class="welfare">
+              绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
+            </div>
+            <div class="post-resume">投递简历</div>
           </div>
-          <div class="post-resume">投递简历</div>
         </div>
-      </div>
-      <!--/职位列表-->
+        <!--/职位列表-->
       </div>
       <!--TODO 样式没做-->
       <!--LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt="">-->
@@ -299,68 +317,70 @@
           期望薪资：{{ currentResumeInfo.salaryRange }} <br>
           求职地点：{{ currentResumeInfo.locationCode }} <br>
           可到岗天数：{{ currentResumeInfo.availableInDays }} <br>
-          个人自述：{{ currentResumeInfo.selfComment}} <br>
-          其他说明：{{ currentResumeInfo.remark}} <br>
+          个人自述：{{ currentResumeInfo.selfComment }} <br>
+          其他说明：{{ currentResumeInfo.remark }} <br>
         </div>
-
         <!--工作经验-->
         <div v-if="currentResumeInfo.jobPersonJobHistList">
           <ul>
             <li v-for="item in currentResumeInfo.jobPersonJobHistList">
-              <span>{{item.COMPANY_NAME}}</span>
-              <span>{{item.ACHIEVEMENT}}</span>
+              <span>{{ item.COMPANY_NAME }}</span>
+              <span>{{ item.ACHIEVEMENT }}</span>
             </li>
           </ul>
         </div>
-
         <!--学历教育-->
         <div v-if="currentResumeInfo.jobPersonEduList">
           <ul>
             <li v-for="item in currentResumeInfo.jobPersonEduList">
-              <span>{{item.SCHOOL_NAME}}</span>
-              <span>{{item.MAJOR_CODE}}</span>
-              <span>{{item.EDUCATION_CODE}}</span>
-              <span>{{item.EDU_MODE}}</span>
-              <span>{{item.DEGREE_CODE}}</span>
+              <span>{{ item.SCHOOL_NAME }}</span>
+              <span>{{ item.MAJOR_CODE }}</span>
+              <span>{{ item.EDUCATION_CODE }}</span>
+              <span>{{ item.EDU_MODE }}</span>
+              <span>{{ item.DEGREE_CODE }}</span>
             </li>
           </ul>
         </div>
-
-      <!--项目经验-->
+        <!--项目经验-->
         <div v-if="currentResumeInfo.projectList">
           <ul>
             <li v-for="item in currentResumeInfo.projectList">
-              <span>{{item.startDate ? item.startDate.substr(0, 10) : '-未填-'}}至{{item.endDate ? item.endDate.substr(0, 10) : '至今'}}</span>
-              <span>{{item.projectDetail}}</span>
-              <span>{{item.responsibility}}</span>
-              <span>{{item.keyTechnology}}</span>
+              <span>{{ item.startDate ? item.startDate.substr(0, 10) : '-未填-' }}至{{
+                  item.endDate
+                      ? item.endDate.substr(0, 10)
+                      : '至今'
+                }}</span>
+              <span>{{ item.projectDetail }}</span>
+              <span>{{ item.responsibility }}</span>
+              <span>{{ item.keyTechnology }}</span>
             </li>
           </ul>
         </div>
-
-      <!--技能-->
+        <!--技能-->
         <div v-if="currentResumeInfo.skillList">
           <ul>
             <li v-for="item in currentResumeInfo.skillList">
-              <span>{{item.SKILL}}</span>
-              <span>{{item.USE_TIME}}</span>
-              <span>{{item.PROFICIENCY}}</span>
+              <span>{{ item.SKILL }}</span>
+              <span>{{ item.USE_TIME }}</span>
+              <span>{{ item.PROFICIENCY }}</span>
             </li>
           </ul>
         </div>
-
-      <!--职业教育培训-->
+        <!--职业教育培训-->
         <div v-if="currentResumeInfo.trainingList">
           <ul>
             <li v-for="item in currentResumeInfo.trainingList">
-              <span>{{item.startDate ? item.startDate.substr(0, 10) : '至今'}}至{{item.endDate ? item.endDate.substr(0, 10) : '至今'}}</span>
-              <span>{{item.trainingOrg}}</span>
-              <span>{{item.trainingName}}</span>
-              <span>{{item.trainingDetail}}</span>
+              <span>{{ item.startDate ? item.startDate.substr(0, 10) : '至今' }}至{{
+                  item.endDate
+                      ? item.endDate.substr(0, 10)
+                      : '至今'
+                }}</span>
+              <span>{{ item.trainingOrg }}</span>
+              <span>{{ item.trainingName }}</span>
+              <span>{{ item.trainingDetail }}</span>
             </li>
           </ul>
         </div>
-
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
