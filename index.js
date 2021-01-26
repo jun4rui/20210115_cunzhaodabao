@@ -1,7 +1,7 @@
 var mainModel = new Vue({
   el:      '#main',
   data:    {
-    currentTab:         1,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
+    currentTab:         0,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
     currentStatus:      0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
     companyId:          null,   //企业ID，企业登陆以后会有值
     activityId:         null,   //展会ID
@@ -283,5 +283,10 @@ var mainModel = new Vue({
       });
 
     }.bind(this), 3000);
+
+    //DEBUG
+    setTimeout(function(){
+      $('.company_name').eq(0).click();
+    },3000);
   }
 });

@@ -181,22 +181,71 @@
   <!-- /Tab容器 -->
   <!-- 区域内放置Dialog -->
   <!-- 企业详情Dialog -->
-  <el-dialog title="公司详情" :visible.sync="companyInfoDialog" width="600px">
+  <el-dialog id="company-info" title="公司详情" :visible.sync="companyInfoDialog" width="600px">
     <div v-if="currentCompanyInfo">
+      <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
+      <ul class="company-info_other split">
+        <li>{{ currentCompanyInfo.entProp }}</li>
+        <li>{{ currentCompanyInfo.persons?currentCompanyInfo.persons:'-人数未填写-' }}</li>
+        <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}</li>
+      </ul>
+      <div class="company-info_address">{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-' }}</div>
+      <div class="company-info_subtitle">企业简介</div>
+      <div class="company-info_content">{{currentCompanyInfo.companyInfo}}</div>
+      <div class="company-info_subtitle">招聘职位</div>
+      <div class="company-info_content">
+      <!--职位列表-->
+      <div class="company-info-recruit-list">
+        <div class="company-info-recruit_item" v-for="recruitItem in currentRecruitList">
+          <div class="job-title">{{ recruitItem.recruitName }}</div>
+          <ul class="recruit-other-info split">
+            <li>
+              <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
+              <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
+              <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
+              <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
+              <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
+              <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
+              <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
+              <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
+              <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
+              <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
+              <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
+              <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
+              <span v-if="recruitItem.salary==='面议'">面议</span>
+            </li>
+            <li>
+              学历要求{{recruitItem.lowerEdu}}
+            </li>
+            <li>
+              经验{{recruitItem.workYears}}
+            </li>
+            <li>
+              招{{recruitItem.persons}}人
+            </li>
+          </ul>
+          <div class="welfare">
+            绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
+          </div>
+          <div class="post-resume">投递简历</div>
+        </div>
+      </div>
+      <!--/职位列表-->
+      </div>
       <!--TODO 样式没做-->
-      LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt="">
-      <br>
-      公司名称：{{ currentCompanyInfo.companyName }}<br>
-      联系人：{{ currentCompanyInfo.contactPerson }}<br>
-      公司地址：{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-未填写-' }}<br>
-      公司地址(location)：{{ currentCompanyInfo.location ? currentCompanyInfo.location : '-未填写-' }}<br>
-      公司类型：{{ currentCompanyInfo.entProp }}<br>
-      传真：{{ currentCompanyInfo.fax ? currentCompanyInfo.fax : '-未填写-' }}<br>
-      公司类型：{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}<br>
-      公司名称：{{ currentCompanyInfo.componentName }}<br>
-      公司人数：{{ currentCompanyInfo.persons }}<br>
-      联系电话：{{ currentCompanyInfo.phone }}<br>
-      网站：{{ currentCompanyInfo.website }}
+      <!--LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt="">-->
+      <!--<br>-->
+      <!--公司名称：{{ currentCompanyInfo.companyName }}<br>-->
+      <!--联系人：{{ currentCompanyInfo.contactPerson }}<br>-->
+      <!--公司地址：{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-未填写-' }}<br>-->
+      <!--公司地址(location)：{{ currentCompanyInfo.location ? currentCompanyInfo.location : '-未填写-' }}<br>-->
+      <!--公司类型：{{ currentCompanyInfo.entProp }}<br>-->
+      <!--传真：{{ currentCompanyInfo.fax ? currentCompanyInfo.fax : '-未填写-' }}<br>-->
+      <!--公司类型：{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}<br>-->
+      <!--公司名称：{{ currentCompanyInfo.componentName }}<br>-->
+      <!--公司人数：{{ currentCompanyInfo.persons }}<br>-->
+      <!--联系电话：{{ currentCompanyInfo.phone }}<br>-->
+      <!--网站：{{ currentCompanyInfo.website }}-->
     </div>
     <span slot="footer" class="dialog-footer">
     </span>
