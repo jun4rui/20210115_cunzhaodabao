@@ -625,7 +625,7 @@
 }
 
 //公司详情
-#company-info {
+#company-info,.company-info {
 
   .split {
 	li {
@@ -642,85 +642,86 @@
 	font-size: 14px;
 	line-height: 2;
 	color: #666;
-
-	.company-info_subtitle {
-	  background: url(../images/icon_2dot@2x.png) no-repeat left center;
-	  background-size: 14px 10px;
-	  text-indent: 22px;
-	  font-size: 16px;
-	  color: #333;
-	  font-weight: bold;
-	  margin-top: 20px;
-	}
-
-	.company-info_content {
-	  font-size: 14px;
-	  line-height: 25px;
-	  color: #666;
-	  padding-left: 22px;
-	}
-
-	.company-info_name {
-	  font-size: 16px;
-	  font-weight: bold;
-	  color: #333;
-	}
+  }
 
 
-	.company-info_address {
-	  background: url(../images/icon_address@2x.png) no-repeat left center;
-	  background-size: 18px 18px;
-	  text-indent: 22px;
-	}
+  .company-info_subtitle {
+	background: url(../images/icon_2dot@2x.png) no-repeat left center;
+	background-size: 14px 10px;
+	text-indent: 22px;
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+	margin-top: 20px;
+  }
 
-	.company-info-recruit-list {
-	  .company-info-recruit_item {
-		position: relative;
-		margin-top: 15px;
-		width: 502px;
-		background: #FFF;
+  .company-info_content {
+	font-size: 14px;
+	line-height: 25px;
+	color: #666;
+	padding-left: 22px;
+  }
+
+  .company-info_name {
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+  }
+
+
+  .company-info_address {
+	background: url(../images/icon_address@2x.png) no-repeat left center;
+	background-size: 18px 18px;
+	text-indent: 22px;
+  }
+
+  .company-info-recruit-list {
+	.company-info-recruit_item {
+	  position: relative;
+	  margin-top: 15px;
+	  width: 502px;
+	  background: #FFF;
+	  box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
+	  border-radius: 7px;
+	  padding: 20px;
+	  box-sizing: border-box;
+	  line-height: 2;
+
+	  &:hover {
+		box-shadow: 0 0 6px 1px #1A8CFA;
+	  }
+
+	  .job-title {
+		font-size: 14px;
+		font-weight: bold;
+		color: #2C75F1;
+	  }
+
+	  .recruit-other-info {
+		color: #666;
+	  }
+
+	  .welfare {
+
+	  }
+
+	  .post-resume {
+		position: absolute;
+		width: 76px;
+		height: 28px;
+		right: 20px;
+		top: 20px;
+
+		background: linear-gradient(93.34deg, #2D95F9 0%, #1062E9 100%);
 		box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
 		border-radius: 7px;
-		padding: 20px;
-		box-sizing: border-box;
-		line-height: 2;
 
-		&:hover {
-		  box-shadow: 0 0 6px 1px #1A8CFA;
-		}
-
-		.job-title {
-		  font-size: 14px;
-		  font-weight: bold;
-		  color: #2C75F1;
-		}
-
-		.recruit-other-info {
-		  color: #666;
-		}
-
-		.welfare {
-
-		}
-
-		.post-resume {
-		  position: absolute;
-		  width: 76px;
-		  height: 28px;
-		  right: 20px;
-		  top: 20px;
-
-		  background: linear-gradient(93.34deg, #2D95F9 0%, #1062E9 100%);
-		  box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
-		  border-radius: 7px;
-
-		  text-align: center;
-		  font-weight: bold;
-		  font-size: 12px;
-		  line-height: 28px;
-		  color: #FFF;
-		  cursor: pointer;
-		}
+		text-align: center;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 28px;
+		color: #FFF;
+		cursor: pointer;
 	  }
 	}
   }
@@ -765,6 +766,227 @@
 	.login_button {
 	  background: #4E31FF;
 	  border-color: rgba(255, 255, 255, 0.5);
+	}
+  }
+}
+
+//聊天对话框
+#chat-dialog {
+  margin: 0;
+  padding: 0;
+
+  .el-dialog {
+	min-width: 90vw;
+	height: 75vh;
+	margin: 10vh 100px !important;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	border: 5px solid #0606067D;
+	background: none;
+
+	.el-dialog__header {
+	  background: none;
+	  padding: 0;
+	  height: 0;
+
+	  .el-dialog__headerbtn {
+		top: 10px;
+	  }
+	}
+
+	.el-dialog__body {
+	  flex-grow: 1;
+	  padding: 0;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: stretch;
+	  overflow: hidden;
+	  background-color: #FFF;
+
+	  #chat-dialog_panel {
+		display: flex;
+		justify-content: space-around;
+		align-items: stretch;
+		overflow: hidden;
+
+		#conversations_panel {
+		  width: 390px;
+		  overflow: auto;
+
+		  li {
+			height: 48px;
+			line-height: 48px;
+			font-size: 16px;
+			color: #666;
+			box-sizing: border-box;
+			padding: 0 1em;
+			background-size: 28px;
+			border-bottom: 1px solid #EFEFEF;
+
+			display:flex;
+			justify-content: space-around;
+			align-items: center;
+
+			&.active {
+			  background-color: #F7F7F7;
+			}
+
+			.avatar {
+			  width:24px;
+			  height:24px;
+			  margin-right: 10px;
+			}
+			.nike-name {
+			  @extend .cj-ellipsis;
+			  flex-grow:1;
+			}
+			.new {
+			  display:inline-block;
+			  width:24px;
+			  height:24px;
+			  line-height:  24px;
+			  text-align: center;
+			  background-color: #F00;
+			  color: #FFF;
+			  border-radius:50%;
+			}
+		  }
+		}
+
+		#chat-area_panel {
+		  flex-grow: 1;
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: flex-start;
+		  box-sizing: border-box;
+		  background: #F5F5F5;
+		  box-shadow: inset 1px 1px 5px #DEDEDE;
+		  //聊天信息
+		  #chat-message {
+			flex-grow: 1;
+			display: block;
+			overflow: auto;
+			box-sizing: border-box;
+			padding: 10px;
+
+			> li {
+			  margin-top: 1em;
+			  @extend .cj-flex;
+			  @extend .cj-flex-nowrap;
+			  @extend .cj-justify-content-start;
+			  align-items: flex-start;
+
+			  > .avatar {
+				@extend .cj-block;
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background-color: #FFF;
+				line-height: 50px;
+				text-align: center;
+				font-size: 22px;
+				//text-shadow: 1px 1px 3px;
+				margin-right: 5px;
+				flex-shrink: 0;
+				margin-top: 22px;
+			  }
+
+			  > .chat-info {
+				@extend .cj-flex;
+				@extend .cj-flex-wrap;
+				@extend .cj-justify-content-start;
+
+				> .name {
+				  @extend .cj-w100;
+				  @extend .cj-ellipsis;
+				  padding-left: .5em;
+				  padding-bottom: 2px;
+				  color: #CCC;
+				}
+
+				> .time {
+				  color: #CCC;
+				  padding-left: 0.5em;
+				  @extend .cj-w100;
+				}
+
+				> .message {
+				  @extend .cj-inline-block;
+				  width: 218px;
+				  background-color: #FFF;
+				  border-radius: 11px;
+				  padding: 15px;
+				}
+			  }
+
+			  &.self {
+				flex-direction: row-reverse;
+
+				> .avatar {
+				  margin-right: 0;
+				  margin-left: 5px;
+				  background-color: #3080FF;
+				  color: #FFF;
+				}
+
+				> .chat-info {
+				  @extend .cj-flex;
+				  @extend .cj-flex-wrap;
+				  justify-content: flex-end;
+
+				  > .name {
+					padding-right: .5em;
+					text-align: right;
+				  }
+
+				  > .message {
+					background-color: #3080FF;
+					color: #FFF;
+				  }
+
+				  > .time {
+					text-align: right;
+					padding-right: 5px;
+				  }
+				}
+			  }
+			}
+		  }
+
+		  .chat-message_footer {
+			background:#FFF;
+			padding: 5px;
+			box-sizing: border-box;
+			border: 1px solid #DFDFDF;
+			border-top: 0;
+			border-bottom: 0;
+		  }
+		}
+
+		#chat-area_other {
+		  width: 600px;
+		  display: flex;
+		  align-items: stretch;
+
+		  .model {
+			display:none;
+
+			&.active {
+			  display:block;
+			}
+		  }
+
+		  iframe {
+			width:100%;
+		  }
+
+		  .company-info {
+			padding:30px;
+			overflow:auto;
+		  }
+		}
+	  }
 	}
   }
 }

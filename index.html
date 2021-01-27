@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="js/barragerjs/dist/css/barrager.css">
   <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
+  <script src="node_modules/lodash/lodash.min.js"></script>
+  <script src="js/jmessage-sdk-web-2.6.0/jmessage-sdk-web.2.6.0.min.js"></script>
   <!--搜狐pv库，加入returnCitySN对象-->
   <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 </head>
@@ -64,22 +66,21 @@
         <ul id="login_panel" v-if="!personUserInfo && !companyUserInfo">
           <li id="person_login">
             <img src="images/icon_login_person.png" alt="个人登陆">
-            <span class="login_button" @click="login('person')">个人登陆</span>
+            <span class="login_button" @click="userLogin('person')">个人登陆</span>
           </li>
           <li id="company_login">
             <img src="images/icon_login_company.png" alt="企业登陆">
-            <span class="login_button" @click="login('company')">企业登陆</span>
+            <span class="login_button" @click="userLogin('company')">企业登陆</span>
           </li>
         </ul>
         <ul id="person-info_panel" v-if="personUserInfo">
-          个人用户信息 {{personUserInfo.personName}}
+          个人用户信息 {{ personUserInfo.personName }}
           <div @click="logout">退出登录</div>
         </ul>
         <ul id="company-info_panel" v-if="companyUserInfo">
-          企业用户信息 {{companyUserInfo.userName}}
+          企业用户信息 {{ companyUserInfo.userName }}
           <div @click="logout">退出登录</div>
         </ul>
-
         <!--/登录区-->
         <!--倒计时区-->
         <div class="cj-block">
@@ -92,6 +93,125 @@
     </div>
   </div>
   <!-- /Banner -->
+  <!--消息对话框Dialog-->
+  <el-dialog :title="targetUser.name" :visible.sync="chatDiaglogVisible" center id="chat-dialog" @close="clearChatTargetUser">
+    <!--聊天区域面板-->
+    <div id="chat-dialog_panel">
+      <!--对话列表-->
+      <div id="conversations_panel">
+        <ul>
+          <li @click="readMsg(item.nickName, item.name)" :class="{active:item.nickName==targetUser.name}" class="cj-block" v-for="item in conversations">
+            <img class="avatar" src="images/avatar_man_3.png" alt="avatar">
+            <span class="nike-name">{{ item.nickName }}</span>
+            <span class="new" v-if="item.unread_msg_count>0">{{ item.unread_msg_count }}</span>
+          </li>
+        </ul>
+      </div>
+      <!--/对话列表-->
+      <!--对话框-->
+      <div id="chat-area_panel">
+        <ul id="chat-message">
+          <li v-for="item in currentMsg" :class="{self: item.from_id!==mainModel.targetUser.id}">
+            <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
+            <div class="chat-info">
+              <span class="name">{{ item.from_username }}</span>
+              <span class="message">{{ item.message }}</span>
+              <span class="time">{{ moment(new Date(item.timestamp)).format('YYYY-MM-DD hh:mm:ss') }}</span>
+            </div>
+          </li>
+        </ul>
+        <span class="chat-message_footer">
+              <!--聊天功能菜单-->
+              <div id="caht-function_menu">
+                <div class="cj-inline-block" @click="chatViewCompanyInfo" v-if="personUserInfo">[公司详情]</div>
+                <div class="cj-inline-block" @click="chatViewPersonResume" v-if="companyUserInfo">[看个人简历]</div>
+                <div class="cj-inline-block" @click="chatViewVideo">[视频聊天]</div>
+              </div>
+          <!--/聊天功能菜单-->
+          <!--消息发送-->
+              <div id="chat-input">
+                  <el-input :rows="2" id="input-message" placeholder="请输入内容" type="textarea" v-model="chatMessage"></el-input>
+                  <div style="justify-content: flex-end;padding-top: 10px" class="cj-flex cj-flex-nowrap cj-align-items-center">
+                      <!--<el-button @click="clearChatTargetUser" type="warning" slot="prepend" icon="el-icon-close">离开</el-button>-->
+                      <el-button @click="sendChatMessage" type="primary" slot="append" icon="el-icon-upload2">发送</el-button>
+                  </div>
+              </div>
+          <!--/消息发送-->
+          </span>
+      </div>
+      <!--/对话框-->
+      <!--其他信息区域-->
+      <div id="chat-area_other">
+        <!--企业信息模块-->
+        <div class="company-info model active">
+          <div v-if="currentCompanyInfo">
+            <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
+            <ul class="company-info_other split">
+              <li>{{ currentCompanyInfo.entProp }}</li>
+              <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : '-人数未填写-' }}</li>
+              <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}</li>
+            </ul>
+            <div class="company-info_address">{{
+                currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-'
+              }}
+            </div>
+            <div class="company-info_subtitle">企业简介</div>
+            <div class="company-info_content">{{ currentCompanyInfo.companyInfo }}</div>
+            <div class="company-info_subtitle">招聘职位</div>
+            <div class="company-info_content">
+              <!--职位列表-->
+              <div class="company-info-recruit-list">
+                <div class="company-info-recruit_item" v-for="recruitItem in currentRecruitList">
+                  <div class="job-title">{{ recruitItem.recruitName }}</div>
+                  <ul class="recruit-other-info split">
+                    <li>
+                      <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
+                      <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
+                      <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
+                      <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
+                      <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
+                      <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
+                      <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
+                      <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
+                      <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
+                      <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
+                      <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
+                      <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
+                      <span v-if="recruitItem.salary==='面议'">面议</span>
+                    </li>
+                    <li>
+                      学历要求{{ recruitItem.lowerEdu }}
+                    </li>
+                    <li>
+                      经验{{ recruitItem.workYears }}
+                    </li>
+                    <li>
+                      招{{ recruitItem.persons }}人
+                    </li>
+                  </ul>
+                  <div class="welfare">
+                    绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
+                  </div>
+                  <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
+                </div>
+              </div>
+              <!--/职位列表-->
+            </div>
+          </div>
+        </div>
+        <!--/企业信息模块-->
+        <!--在线聊天模块-->
+        <iframe class="video-chat model" frameborder="0"></iframe>
+        <!--/在线聊天模块-->
+        <!--个人简历模块-->
+        <div class="person-resume mobel"></div>
+        <!--/个人简历模块-->
+      </div>
+      <!--/其他信息区域-->
+    </div>
+    <!--/聊天区域面板-->
+  </el-dialog>
+  <!--/消息对话框Dialog-->
   <!-- Tab容器 -->
   <div id="tab_content">
     <!-- 招聘大厅 -->
@@ -146,7 +266,8 @@
               <!--Chair-->
               <div class="chair"></div>
               <!--立即沟通-->
-              <div class="to-chat">立即沟通</div><!--TODO 离线以后这里文字要改成离线状态-->
+              <div class="to-chat" @click="chatToCompany(item.companyName, item.companyId)">立即沟通</div>
+              <!--TODO 离线以后这里文字要改成离线状态-->
             </div>
             <!--/展位单元-->
           </div>
@@ -180,7 +301,7 @@
                 {{ item.major ? item.major : '-专业未填-' }}/{{ item.highestEdu ? item.highestEdu + '学历' : '-学历未填-' }}<br>
                 {{ item.workYears }}年工作经验
               </div>
-              <div class="chat-now online" @click="toChat(item.personId)">立即沟通</div>
+              <div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通</div>
               <div class="chat-now offline">立即沟通</div>
               <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
             </div>
@@ -196,7 +317,7 @@
   <!-- /Tab容器 -->
   <!-- 区域内放置Dialog -->
   <!-- 企业详情Dialog -->
-  <el-dialog id="company-info" title="公司详情" :visible.sync="companyInfoDialog" width="600px">
+  <el-dialog id="company-info" class="company-info" title="公司详情" :visible.sync="companyInfoDialog" width="600px">
     <div v-if="currentCompanyInfo">
       <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
       <ul class="company-info_other split">
@@ -245,28 +366,13 @@
             <div class="welfare">
               绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
             </div>
-            <div class="post-resume">投递简历</div>
+            <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
           </div>
         </div>
         <!--/职位列表-->
       </div>
-      <!--TODO 样式没做-->
-      <!--LOGO: <img :src="currentCompanyInfo.logoLink?currentCompanyInfo.logoLink:'images/icon_danmu_avatar.png'" alt="">-->
-      <!--<br>-->
-      <!--公司名称：{{ currentCompanyInfo.companyName }}<br>-->
-      <!--联系人：{{ currentCompanyInfo.contactPerson }}<br>-->
-      <!--公司地址：{{ currentCompanyInfo.address ? currentCompanyInfo.address : '-未填写-' }}<br>-->
-      <!--公司地址(location)：{{ currentCompanyInfo.location ? currentCompanyInfo.location : '-未填写-' }}<br>-->
-      <!--公司类型：{{ currentCompanyInfo.entProp }}<br>-->
-      <!--传真：{{ currentCompanyInfo.fax ? currentCompanyInfo.fax : '-未填写-' }}<br>-->
-      <!--公司类型：{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}<br>-->
-      <!--公司名称：{{ currentCompanyInfo.componentName }}<br>-->
-      <!--公司人数：{{ currentCompanyInfo.persons }}<br>-->
-      <!--联系电话：{{ currentCompanyInfo.phone }}<br>-->
-      <!--网站：{{ currentCompanyInfo.website }}-->
     </div>
-    <span slot="footer" class="dialog-footer">
-    </span>
+    <span slot="footer" class="dialog-footer"></span>
   </el-dialog>
   <!-- /企业详情Dialog -->
   <!-- 职位详情Dialog -->
