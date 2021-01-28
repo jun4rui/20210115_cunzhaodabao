@@ -920,11 +920,12 @@ var mainModel = new Vue({
         return false;
       }
       //发射从弹幕池动态获取最上面的弹幕
-      $('#danmu').barrager({
-        img:   'images/icon_danmu_avatar.png',
-        info:  this.danmuList.splice(0, 1),
-        speed: parseInt(Math.random() * 5) + 15
-      });
+      //TODO 弹幕先关了，看着烦
+      // $('#danmu').barrager({
+      //   img:   'images/icon_danmu_avatar.png',
+      //   info:  this.danmuList.splice(0, 1),
+      //   speed: parseInt(Math.random() * 5) + 15
+      // });
 
     }.bind(this), 3000);
 

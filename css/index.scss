@@ -55,6 +55,36 @@
   height: 532px;
   background: url(../images/banner.png) no-repeat center center;
 
+  #title_panel {
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	z-index:99;
+
+	.title {
+	  padding-top: 98px;
+	  width: 720px;
+	  height:130px;
+	  font-weight: bold;
+	  font-size: 60px;
+	  line-height: 65px;
+	  text-align: center;
+	  color: #FFF;
+	  text-shadow: 0 4px 4px rgba(31, 69, 125, 0.56);
+	}
+
+	.desc {
+	  padding-top: 28px;
+	  font-weight: bold;
+	  font-size: 14px;
+	  line-height: 25px;
+	  color: #FFF;
+	  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+	}
+  }
+
   .banner_panel {
 	position: absolute;
 	bottom: 0;
@@ -63,7 +93,6 @@
 	min-width: 900px;
 	width: 100%;
 
-	background-color: #F003;
 	padding: 0 118px;
 	box-sizing: border-box;
   }
@@ -303,7 +332,6 @@
 #danmu {
   width: 100%;
   height: 300px;
-  background: #F003;
   overflow: hidden;
 }
 
@@ -625,7 +653,7 @@
 }
 
 //公司详情
-#company-info,.company-info {
+#company-info, .company-info {
 
   .split {
 	li {
@@ -824,7 +852,7 @@
 			background-size: 28px;
 			border-bottom: 1px solid #EFEFEF;
 
-			display:flex;
+			display: flex;
 			justify-content: space-around;
 			align-items: center;
 
@@ -833,23 +861,25 @@
 			}
 
 			.avatar {
-			  width:24px;
-			  height:24px;
+			  width: 24px;
+			  height: 24px;
 			  margin-right: 10px;
 			}
+
 			.nike-name {
 			  @extend .cj-ellipsis;
-			  flex-grow:1;
+			  flex-grow: 1;
 			}
+
 			.new {
-			  display:inline-block;
-			  width:24px;
-			  height:24px;
-			  line-height:  24px;
+			  display: inline-block;
+			  width: 24px;
+			  height: 24px;
+			  line-height: 24px;
 			  text-align: center;
 			  background-color: #F00;
 			  color: #FFF;
-			  border-radius:50%;
+			  border-radius: 50%;
 			}
 		  }
 		}
@@ -955,7 +985,7 @@
 		  }
 
 		  .chat-message_footer {
-			background:#FFF;
+			background: #FFF;
 			padding: 5px;
 			box-sizing: border-box;
 			border: 1px solid #DFDFDF;
@@ -970,20 +1000,20 @@
 		  align-items: stretch;
 
 		  .model {
-			display:none;
+			display: none;
 
 			&.active {
-			  display:block;
+			  display: block;
 			}
 		  }
 
 		  iframe {
-			width:100%;
+			width: 100%;
 		  }
 
 		  .company-info {
-			padding:30px;
-			overflow:auto;
+			padding: 30px;
+			overflow: auto;
 		  }
 		}
 	  }

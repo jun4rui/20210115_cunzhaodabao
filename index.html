@@ -37,6 +37,18 @@
   <!-- /Header -->
   <!-- Banner -->
   <div id="banner">
+    <!--标题区-->
+    <div id="title_panel" v-if="activityInfo">
+      <div class="title">{{activityInfo.productName}}</div>
+      <!--TODO 测试数据没有值暂时先用下面写死的部分 <div class="desc">{{(activityInfo.remark||'').replace(/(\r\n)|(\n)/g,'<br>')}}</div>-->
+      <div class="desc">
+        主办：211校招网<br>
+        承办：211校招网211校招网211校招网<br>
+        协办：211校招网211校招网211校招网<br>
+        时间：01-06 09:00 至 01-15 18:00
+      </div>
+    </div>
+    <!--/标题区-->
     <div class="banner_panel">
       <!--弹幕区-->
       <div id="danmu"></div>

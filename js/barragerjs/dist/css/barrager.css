@@ -1,4 +1,4 @@
-.barrage {position: absolute;bottom: 70px;right: -500px;display: inline-block;width: 500px;z-index: 99999}
+.barrage {position: absolute;bottom: 70px;right: -500px;display: inline-block;width: 500px;z-index: 1;}
 
 .barrage_box {background-color: rgba(0, 0, 0, .5);padding-right: 8px; height: 40px;display: inline-block;border-radius: 25px;transition: all .3s;}
 
