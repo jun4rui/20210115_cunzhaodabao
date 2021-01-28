@@ -39,7 +39,7 @@
   <div id="banner">
     <!--标题区-->
     <div id="title_panel" v-if="activityInfo">
-      <div class="title">{{activityInfo.productName}}</div>
+      <div class="title">{{ activityInfo.productName }}</div>
       <!--TODO 测试数据没有值暂时先用下面写死的部分 <div class="desc">{{(activityInfo.remark||'').replace(/(\r\n)|(\n)/g,'<br>')}}</div>-->
       <div class="desc">
         主办：211校招网<br>
@@ -95,11 +95,23 @@
         </ul>
         <!--/登录区-->
         <!--倒计时区-->
-        <div class="cj-block">
-          3天12时17分
+        <div id="countdown_panel">
+          <div class="title">会议结束倒计时</div>
+          <div id="countdown_time" class="cj-block">
+            <span class="time">{{activityEndTime.day}}</span>
+            <span class="char">天</span>
+            <span class="time">{{activityEndTime.hour}}</span>
+            <span class="char">时</span>
+            <span class="time">{{activityEndTime.min}}</span>
+            <span class="char">分</span>
+          </div>
+          <div id="goto_panel">
+            <div id="view-invitation-card" @click="activityDescDialog=true;" v-if="!personUserInfo && !companyUserInfo"></div>
+            <div id="view-invitation-card_long" @click="activityDescDialog=true;" v-if="personUserInfo"></div>
+            <a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo"><!--TODO 这里还没有链接--></a>
+            <a id="order-exhibition_long" href="#" v-if="companyUserInfo"><!--TODO 这里还没有链接--></a>
+          </div>
         </div>
-        <div @click="activityDescDialog=true;">查看邀请函</div>
-        <a href="#">企业订展</a>
         <!--/倒计时区-->
       </div>
     </div>
