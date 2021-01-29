@@ -67,7 +67,7 @@
           <div id="recruitment_section" class="cj-flex cj-justify-content-start cj-align-items-center" v-if="currentTab===0">
             <!--企业搜索条-->
             <div id="company-search_panel" class="keyword_search">
-              <input type="text" placeholder="请输入您要搜索的企业名称">
+              <input type="text" placeholder="请输入您要搜索的企业名称" v-model="searchCompanyKeyword">
               <button type="button">搜索</button>
             </div>
             <!--/企业搜索条-->
@@ -83,7 +83,7 @@
           <div id="jobseeker_section" class="cj-flex cj-justify-content-start cj-align-items-center" v-if="currentTab===1">
             <!--个人搜索条-->
             <div id="person-search_panel" class="keyword_search">
-              <input type="text" placeholder="请输入您要搜索的求职者名称">
+              <input type="text" placeholder="请输入您要搜索的求职者名称" v-model="searchPersonKeyword">
               <button type="button">搜索</button>
             </div>
             <!--/个人搜索条-->
@@ -274,7 +274,7 @@
         <div class="out_border_2">
           <div class="company-list_panel" v-if="companyList" :class="{'online': currentCompanyShowStatus===1}">
             <!--展位单元-->
-            <div class="company-item" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
+            <div class="company-item" v-if="searchCompanyKeyword.trim()==='' || item.companyName.indexOf(searchCompanyKeyword)>-1" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
               <!--<div style=" z-index: 9999999999; position: absolute; color:#FFF;">{{item.companyId %6}}-{{item.companyId}}-{{(item.companyId%16+1)}}</div>-->
               <!--公司名称-->
               <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
@@ -339,8 +339,8 @@
       <div class="out_border_1">
         <div class="out_border_2">
           <!-- 在线求职者列表 -->
-          <div id="job-seeker_list" :class="{'online': currentPersonShowStatus===1}">
-            <div class="job-seeker_item" :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-if="jobSeekerList" v-for="item in jobSeekerList">
+          <div id="job-seeker_list" :class="{'online': currentPersonShowStatus===1}" v-if="jobSeekerList">
+            <div class="job-seeker_item" v-if="searchPersonKeyword.trim()==='' || item.personName.indexOf(searchPersonKeyword)>-1"  :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-for="item in jobSeekerList">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
               <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->

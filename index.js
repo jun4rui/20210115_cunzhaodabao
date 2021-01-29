@@ -4,6 +4,8 @@ var mainModel = new Vue({
     currentTab:               0,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
     currentCompanyShowStatus: 0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
     currentPersonShowStatus:  0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
+    searchCompanyKeyword:     '',     //搜索企业关键字
+    searchPersonKeyword:      '',     //搜索个人关键字
     companyId:                null,   //企业ID，企业登陆以后会有值
     activityId:               null,   //展会ID
     activityInfo:             null,   //展会信息
@@ -241,6 +243,12 @@ var mainModel = new Vue({
         //companyId:  this.companyId || '1458',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
       }, function(response) {
         if (response.errCode === '00') {
+          //测试数据里面personName有null导致程序异常，这里修复一下
+          response.data = response.data.map(function(item){
+            if (!item.personName) item.personName='-无-';
+            return item;
+          });
+
           this.jobSeekerList = response.data;
         } else {
           this.$message.error(response.errMsg);
