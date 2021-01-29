@@ -308,6 +308,11 @@
 	text-align: center;
 	color: #FFF;
 	background: linear-gradient(180deg, #79E444, #3BB300 9%, #3BB300 52%, #3BB300 90%, #2C8600);
+
+	&.offline {
+	  display: none;
+	  background: linear-gradient(180deg, #D8D8D8 0%, #B5B5B5 8.85%, #B5B5B5 52.08%, #B5B5B5 89.58%, #979797 100%);
+	}
   }
 
   //离线企业的显示效果
@@ -340,7 +345,11 @@
 	}
 
 	.to-chat {
-	  background: linear-gradient(180deg, #D8D8D8 0%, #B5B5B5 8.85%, #B5B5B5 52.08%, #B5B5B5 89.58%, #979797 100%);
+	  display: none;
+
+	  &.offline {
+		display: block;
+	  }
 	}
   }
 }
