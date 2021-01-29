@@ -274,8 +274,8 @@
         <div class="out_border_2">
           <div class="company-list_panel" v-if="companyList">
             <!--展位单元-->
-            <div class="company-item" v-for="item in companyList" :class="{'offline': Math.random()>0.5}">
-              <!--TODO 这里离线的条件需要修改，暂时是测试用-->
+            <div class="company-item" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
+              <!--<div style=" z-index: 9999999999; position: absolute; color:#FFF;">{{item.companyId %6}}-{{item.companyId}}-{{(item.companyId%16+1)}}</div>-->
               <!--公司名称-->
               <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
                 <span>{{ item.companyName }}</span>
@@ -306,11 +306,11 @@
                 </div>
               </div>
               <!--HR-->
-              <div class="hr" :style="{backgroundImage:'url(images/pic_hr_'+((parseInt(Math.random()*16))+1)+'.png)'}"></div>
+              <div class="hr" :style="{backgroundImage:'url(images/pic_hr_'+(item.companyId%16+1)+'.png)'}"></div>
               <!--Table-->
               <div class="table"></div>
               <!--JobSeeker-->
-              <div class="job-seeker" :style="{backgroundImage:'url(images/pic_jobseeker_'+((parseInt(Math.random()*8))+1)+'.png)'}"></div>
+              <div class="job-seeker" :style="{backgroundImage:'url(images/pic_jobseeker_'+(item.companyId%8+1)+'.png)'}"></div>
               <!--Chair-->
               <div class="chair"></div>
               <!--立即沟通-->
@@ -340,12 +340,11 @@
         <div class="out_border_2">
           <!-- 在线求职者列表 -->
           <div id="job-seeker_list">
-            <!--TODO 这里判断在线的要写算法，这里是随机数-->
-            <div class="job-seeker_item" :class="{'offline':(Math.random()*2)<1}" v-if="jobSeekerList" v-for="item in jobSeekerList">
+            <div class="job-seeker_item" :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-if="jobSeekerList" v-for="item in jobSeekerList">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
-              <span>{{item.lastUpdateDate}}</span>
-              <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
+              <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
+              <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(item.personId%4+1)+'.png)'"></div>
               <div class="name">{{ item.personName }}</div>
               <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
               <div class="info">

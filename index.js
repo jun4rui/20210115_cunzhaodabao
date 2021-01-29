@@ -9,6 +9,7 @@ var mainModel = new Vue({
     activityPattern:    null,   //展会模式
     activityTime:       null,   //展会时间
     activityEndTime:    null,   //展会结束时间
+    offlineTimeout:     30,     //离线超时时长（分钟）
     activityRecord:     null,   //展会统计数据
     activityDesc:       null,   //展会邀请函内容
     activityDescDialog: false,  //邀请函显示开关
@@ -964,7 +965,6 @@ var mainModel = new Vue({
         return false;
       }
       //发射从弹幕池动态获取最上面的弹幕
-      // TODO 弹幕先关了，看着烦
       $('#danmu').barrager({
         img:   'images/icon_danmu_avatar.png',
         info:  this.danmuList.splice(0, 1),
