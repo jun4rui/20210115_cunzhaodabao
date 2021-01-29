@@ -53,67 +53,92 @@
       <!--弹幕区-->
       <div id="danmu"></div>
       <!--/弹幕区-->
-      <div class="banner_panel_left cj-pull-left">
-        <!--Tab-->
-        <ul id="tab">
-          <li @click="currentTab=0" :class="{'active':currentTab===0}">招聘大厅</li>
-          <li @click="currentTab=1" :class="{'active':currentTab===1}">求职大厅</li>
-        </ul>
-        <!--/Tab-->
-        <!--Search Panel-->
-        <div id="search_panel">
-          <input type="text">
-          <button type="button">搜索</button>
-        </div>
-        <!--/Search Panel-->
-        <!--Status Switch-->
-        <ul id="status">
-          <li @click="currentStatus=0" :class="{'active':currentStatus===0}">全部企业</li>
-          <li @click="currentStatus=1" :class="{'active':currentStatus===1}">在线企业</li>
-        </ul>
-        <!--/Status Switch-->
-      </div>
-      <div class="banner_panel_right cj-pull-right">
-        <!--登录区-->
-        <ul id="login_panel" v-if="!personUserInfo && !companyUserInfo">
-          <li id="person_login">
-            <img src="images/icon_login_person.png" alt="个人登陆">
-            <span class="login_button" @click="userLogin('person')">个人登陆</span>
-          </li>
-          <li id="company_login">
-            <img src="images/icon_login_company.png" alt="企业登陆">
-            <span class="login_button" @click="userLogin('company')">企业登陆</span>
-          </li>
-        </ul>
-        <ul id="person-info_panel" v-if="personUserInfo">
-          个人用户信息 {{ personUserInfo.personName }}
-          <div @click="logout">退出登录</div>
-        </ul>
-        <ul id="company-info_panel" v-if="companyUserInfo">
-          企业用户信息 {{ companyUserInfo.userName }}
-          <div @click="logout">退出登录</div>
-        </ul>
-        <!--/登录区-->
-        <!--倒计时区-->
-        <div id="countdown_panel">
-          <div class="title">会议结束倒计时</div>
-          <div id="countdown_time" class="cj-block">
-            <span class="time">{{activityEndTime.day}}</span>
-            <span class="char">天</span>
-            <span class="time">{{activityEndTime.hour}}</span>
-            <span class="char">时</span>
-            <span class="time">{{activityEndTime.min}}</span>
-            <span class="char">分</span>
+
+      <!--功能区-->
+      <div id="func_panel">
+        <div class="func_panel_left">
+          <!--Tab-->
+          <ul id="tab">
+            <li @click="currentTab=0" :class="{'active':currentTab===0}">招聘大厅</li>
+            <li @click="currentTab=1" :class="{'active':currentTab===1}">求职大厅</li>
+          </ul>
+          <!--/Tab-->
+          <!--招聘大厅用-->
+          <div id="recruitment_section" class="cj-flex cj-justify-content-start cj-align-items-center" v-if="currentTab===0">
+            <!--企业搜索条-->
+            <div id="company-search_panel" class="keyword_search">
+              <input type="text" placeholder="请输入您要搜索的企业名称">
+              <button type="button">搜索</button>
+            </div>
+            <!--/企业搜索条-->
+            <!--企业离线在线切换-->
+            <ul id="company-status_switch" class="status_switch">
+              <li @click="currentStatus=0" :class="{'active':currentStatus===0}">全部企业</li>
+              <li @click="currentStatus=1" :class="{'active':currentStatus===1}">在线企业</li>
+            </ul>
+            <!--/企业离线在线切换-->
           </div>
-          <div id="goto_panel">
-            <div id="view-invitation-card" @click="activityDescDialog=true;" v-if="!personUserInfo && !companyUserInfo"></div>
-            <div id="view-invitation-card_long" @click="activityDescDialog=true;" v-if="personUserInfo"></div>
-            <a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo"><!--TODO 这里还没有链接--></a>
-            <a id="order-exhibition_long" href="#" v-if="companyUserInfo"><!--TODO 这里还没有链接--></a>
+          <!--/招聘大厅用-->
+          <!--求职大厅用-->
+          <div id="jobseeker_section" class="cj-flex cj-justify-content-start cj-align-items-center" v-if="currentTab===1">
+            <!--个人搜索条-->
+            <div id="person-search_panel" class="keyword_search">
+              <input type="text" placeholder="请输入您要搜索的求职者名称">
+              <button type="button">搜索</button>
+            </div>
+            <!--/个人搜索条-->
+            <!--个人离线在线切换-->
+            <ul id="person-status_switch" class="status_switch">
+              <li @click="currentStatus=0" :class="{'active':currentStatus===0}">全部求职者</li>
+              <li @click="currentStatus=1" :class="{'active':currentStatus===1}">在线求职者</li>
+            </ul>
+            <!--/个人离线在线切换-->
           </div>
+          <!--/求职大厅用-->
         </div>
-        <!--/倒计时区-->
+        <div class="func_panel_right">
+          <!--登录区-->
+          <ul id="login_panel" v-if="!personUserInfo && !companyUserInfo">
+            <li id="person_login">
+              <img src="images/icon_login_person.png" alt="个人登陆">
+              <span class="login_button" @click="userLogin('person')">个人登陆</span>
+            </li>
+            <li id="company_login">
+              <img src="images/icon_login_company.png" alt="企业登陆">
+              <span class="login_button" @click="userLogin('company')">企业登陆</span>
+            </li>
+          </ul>
+          <ul id="person-info_panel" v-if="personUserInfo">
+            个人用户信息 {{ personUserInfo.personName }}
+            <div @click="logout">退出登录</div>
+          </ul>
+          <ul id="company-info_panel" v-if="companyUserInfo">
+            企业用户信息 {{ companyUserInfo.userName }}
+            <div @click="logout">退出登录</div>
+          </ul>
+          <!--/登录区-->
+          <!--倒计时区-->
+          <div id="countdown_panel">
+            <div class="title">会议结束倒计时</div>
+            <div id="countdown_time" class="cj-block">
+              <span class="time">3</span>
+              <span class="char">天</span>
+              <span class="time">12</span>
+              <span class="char">时</span>
+              <span class="time">17</span>
+              <span class="char">分</span>
+            </div>
+            <div id="goto_panel">
+              <div id="view-invitation-card" @click="activityDescDialog=true;" v-if="!personUserInfo && !companyUserInfo"></div>
+              <div id="view-invitation-card_long" @click="activityDescDialog=true;" v-if="personUserInfo"></div>
+              <a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo"><!--TODO 这里还没有链接--></a>
+              <a id="order-exhibition_long" href="#" v-if="companyUserInfo"><!--TODO 这里还没有链接--></a>
+            </div>
+          </div>
+          <!--/倒计时区-->
+        </div>
       </div>
+      <!--/功能区-->
     </div>
   </div>
   <!-- /Banner -->
@@ -239,8 +264,7 @@
   <!-- Tab容器 -->
   <div id="tab_content">
     <!-- 招聘大厅 -->
-    <div class="tab_item" v-if="currentTab===0">
-      <h1>招聘大厅</h1>
+    <div id="recruitment-hall" class="tab_item" v-if="currentTab===0">
       <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
       </svg>
@@ -302,12 +326,15 @@
     </div>
     <!-- /招聘大厅 -->
     <!-- 求职大厅 -->
-    <div class="tab_item" v-if="currentTab===1">
-      <h1>求职大厅</h1>
+    <div id="job-hall" class="tab_item" v-if="currentTab===1">
       <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
       </svg>
-      <div class="out_panel_top1"></div>
+      <div class="out_panel_top1">
+        <div class="title_panel">
+          <div class="title"></div>
+        </div>
+      </div>
       <div class="out_panel_top2"></div>
       <div class="out_border_1">
         <div class="out_border_2">

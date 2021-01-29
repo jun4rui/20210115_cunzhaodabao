@@ -8,7 +8,6 @@ var mainModel = new Vue({
     activityInfo:       null,   //展会信息
     activityPattern:    null,   //展会模式
     activityTime:       null,   //展会时间
-    activityEndTime:    null,   //展会结束时间
     activityRecord:     null,   //展会统计数据
     activityDesc:       null,   //展会邀请函内容
     activityDescDialog: false,  //邀请函显示开关
@@ -57,8 +56,8 @@ var mainModel = new Vue({
   },
   computed: {
     //获取target的id
-    targetId: function() {
-      return this.targetUser.id.replace(/^[c|p]/g, '').replace(/test$/g, '');
+    targetId:function(){
+      return this.targetUser.id.replace(/^[c|p]/g,'').replace(/test$/g,'');
     },
     /*聊天相关*/
     currentMsg:         function() {
@@ -143,29 +142,6 @@ var mainModel = new Vue({
     /*~聊天相关*/
   },
   methods:  {
-    //获得距离展会结束时间还有多久
-    getEndTime: function() {
-      var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes());
-      console.log(_tempTime);
-      var _day  = '';
-      var _hour = '';
-      var _min  = '';
-      if (this.activityTime === null) {
-        this.activityEndTime = null;
-      } else {
-        _day      = parseInt(_tempTime / (24 * 60));
-        _tempTime = _tempTime % (24 * 60);
-        _hour     = parseInt(_tempTime / 60);
-        _min      = _tempTime % 60;
-        this.activityEndTime = {
-          day:  _day,
-          hour: _hour,
-          min:  _min
-        };
-
-        console.log('activityEndTime:',this.activityEndTime);
-      }
-    },
     //获取场次ID
     getActivityId: function() {
       this.activityId = getParameterValue(window.location.href, 'activityid') || '';
@@ -189,19 +165,6 @@ var mainModel = new Vue({
             this.activityInfo    = response.data;
             this.activityPattern = response.data.activityPattern;
             this.activityTime    = response.data.holdingTime;
-
-            //根据约定因为活动都是线上，活动结束时间统一设置为当天23点59分59秒，所以做如下操作
-            this.activityTime = moment(mainModel.activityTime).
-                set('hour', 23).
-                set('minute', 59).
-                set('second', 59).
-                format('YYYY-MM-DD HH:mm:ss');
-
-            //然后立刻算出当前时间离结束时间还有多久
-            this.getEndTime();
-            setInterval(function(){
-              this.getEndTime();
-            }.bind(this),60000);
 
             if (response.data.wordpressId) {
               //获取展会邀请函
@@ -234,7 +197,7 @@ var mainModel = new Vue({
     //加载求职者列表
     getJobSeekerList: function() {
       $.post(_SERVER + '/activity/getOnsiteAndInvestList', {
-        activityId: this.activityId //TODO 记得改回来
+        activityId: this.activityId, //TODO 记得改回来
         // activityId: 581
         //holdingTime: this.activityInfo.holdingTime.substr(0, 10),//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
         //companyId:  this.companyId || '1458',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
@@ -358,7 +321,7 @@ var mainModel = new Vue({
     //在弹出职位列表Dialog窗口投递简历
     recruitListSubmit: function() {
       //检查用户是否登陆，登陆以后才能投递职位
-      if (!this.personUserInfo) {
+      if(!this.personUserInfo){
         this.$message.error('请您先登陆，然后才能投递简历。');
         return false;
       }
@@ -484,7 +447,7 @@ var mainModel = new Vue({
     chatToPerson: function(inPersonName, inPersonId) {
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
 
-      if (this.companyUserInfo === null) {
+      if(this.companyUserInfo===null){
         this.$message.error('请登陆企业账号，并确认已参加该场招聘会。');
         return false;
       }
@@ -499,7 +462,7 @@ var mainModel = new Vue({
     chatToCompany: function(inCompanyName, inCompanyId) {
       console.log(`开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`);
 
-      if (this.personUserInfo === null) {
+      if(this.personUserInfo===null){
         this.$message.error('请先登陆个人账号，才能和企业进行沟通。');
         return false;
       }
@@ -659,11 +622,11 @@ var mainModel = new Vue({
         this.conversations = _.reverse(_.sortBy(data.conversations, ['unread_msg_count']));
         //20200921 更新，过滤掉该场展会之前的消息
         /*TODO 测试期间因为没有数据，所以暂时就不做过滤了
-         this.conversations = mainModel.conversations.filter(item => {
-         let _msgTime      = new Date(item.mtime).getTime();
-         let _activityTime = new Date(mainModel.activityInfo.holdingTime).getTime();
-         return _msgTime > _activityTime;
-         });*/
+        this.conversations = mainModel.conversations.filter(item => {
+          let _msgTime      = new Date(item.mtime).getTime();
+          let _activityTime = new Date(mainModel.activityInfo.holdingTime).getTime();
+          return _msgTime > _activityTime;
+        });*/
         //data.code 返回码
         //data.message 描述
         //data.conversations[] 会话列表，属性如下示例
@@ -725,7 +688,7 @@ var mainModel = new Vue({
       // 清空未读会话数
       this.resetUnreadCount(inUserId);
       //如果是c开头的企业，则调用接口获取企业信息
-      if (this.targetUser.id.indexOf('c') === 0) {
+      if(this.targetUser.id.indexOf('c')===0){
         this.getCurrentCompanyInfo(this.targetId);
         this.getRecruitList(this.targetId);
       }
@@ -830,16 +793,16 @@ var mainModel = new Vue({
         personId:   this.personUserInfo.personId,
         activityId: this.activityId
       }, function(response) {
-        if (response.errCode === '00') {
-          console.log('个人签到成功！', response);
-        } else {
-          this.$message.error('签到失败！' + response.errMsg);
+        if(response.errCode==='00') {
+          console.log('个人签到成功！',response);
+        }else{
+          this.$message.error('签到失败！'+response.errMsg);
           //个人失败是否要清空个人登陆信息？
         }
       });
     },
     //企业签到
-    companySign: function() {
+    companySign:function(){
       //检查信息是否齐全
       if (this.companyUserInfo === null || this.activityId === null) {
         console.log('企业签到失败，参数不全');
@@ -847,50 +810,42 @@ var mainModel = new Vue({
       }
 
       //调用报名签到接口
-      $.post(_SERVER + '/enterprise/invitationAndSign', {
-        activityId: this.activityId,
-        companyId:  this.companyUserInfo.companyId,
-        sceneType:  1/*1是签到模式*/
-      }, function(response) {
+      $.post(_SERVER + '/enterprise/invitationAndSign', {activityId: this.activityId, companyId:  this.companyUserInfo.companyId, sceneType: 1/*1是签到模式*/}, function(response) {
         if (response.errCode === '00') {
           //签到成功操作暂不处理
-          console.log('企业签到成功！', response);
+          console.log('企业签到成功！',response);
         } else {
-          this.$message.error('企业签到失败！' + response.errMsg);
+          this.$message.error('企业签到失败！'+response.errMsg);
           this.companyUserInfo = null;//签到失败，就清空企业信息
         }
       }.bind(this));
     },
 
     //聊天用查看公司详情
-    chatViewCompanyInfo: function() {
+    chatViewCompanyInfo:function(){
       //设定当前企业为target企业
       this.getCurrentCompanyInfo(this.targetId);
       this.getRecruitList(this.targetId);
 
-      $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
+      $('#chat-area_other .video-chat').attr('src','');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
       $('#chat-area_other .model').removeClass('active');
       $('#chat-area_other .company-info.model').addClass('active')
       ;
     },
     //聊天用查看个人简历
-    chatViewPersonResume: function() {
-      $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
+    chatViewPersonResume:function(){
+      $('#chat-area_other .video-chat').attr('src','');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
     },
     //聊天用打开视频聊天
-    chatViewVideo: function() {
+    chatViewVideo:function(){
       //区分当前账号是个人还是公司
       //个人方式
-      if (this.personUserInfo !== null) {
-        $('#chat-area_other .video-chat').
-            attr('src', 'https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId +
-                '&companyid=' + (this.targetId));
+      if (this.personUserInfo!==null){
+        $('#chat-area_other .video-chat').attr('src','https://www.hnrcsc.com/videochat/client.html?personid='+this.personUserInfo.personId+'&companyid='+(this.targetId));
       }
       //企业方式
-      if (this.companyUserInfo !== null) {
-        $('#chat-area_other .video-chat').
-            attr('src', 'https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId +
-                '&orderid=' + this.companyUserInfo.orderId);
+      if(this.companyUserInfo!==null){
+        $('#chat-area_other .video-chat').attr('src','https://www.hnrcsc.com/videochat/hr.html?companyid='+this.companyUserInfo.companyId+'&orderid='+this.companyUserInfo.orderId);
       }
 
       $('#chat-area_other .model').removeClass('active');
@@ -898,12 +853,12 @@ var mainModel = new Vue({
     },
 
     //投递简历
-    postResume: function(inRecruitId) {
-      if (!this.personUserInfo) {
+    postResume:function(inRecruitId){
+      if(!this.personUserInfo){
         this.$message.error('您登陆以后才可以投递简历');
         return false;
       }
-      console.log('投递简历：', inRecruitId);
+      console.log('投递简历：',inRecruitId);
 
       let _params    = {
         recruitId: inRecruitId,
@@ -965,12 +920,12 @@ var mainModel = new Vue({
         return false;
       }
       //发射从弹幕池动态获取最上面的弹幕
-      //TODO 弹幕先关了，看着烦
-      // $('#danmu').barrager({
-      //   img:   'images/icon_danmu_avatar.png',
-      //   info:  this.danmuList.splice(0, 1),
-      //   speed: parseInt(Math.random() * 5) + 15
-      // });
+      // TODO 弹幕先关了，看着烦
+      $('#danmu').barrager({
+        img:   'images/icon_danmu_avatar.png',
+        info:  this.danmuList.splice(0, 1),
+        speed: parseInt(Math.random() * 5) + 15
+      });
 
     }.bind(this), 3000);
 
