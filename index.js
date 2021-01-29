@@ -153,17 +153,17 @@ var mainModel = new Vue({
       if (this.activityTime === null) {
         this.activityEndTime = null;
       } else {
-        _day      = parseInt(_tempTime / (24 * 60));
-        _tempTime = _tempTime % (24 * 60);
-        _hour     = parseInt(_tempTime / 60);
-        _min      = _tempTime % 60;
+        _day                 = parseInt(_tempTime / (24 * 60));
+        _tempTime            = _tempTime % (24 * 60);
+        _hour                = parseInt(_tempTime / 60);
+        _min                 = _tempTime % 60;
         this.activityEndTime = {
           day:  _day,
           hour: _hour,
           min:  _min
         };
 
-        console.log('activityEndTime:',this.activityEndTime);
+        console.log('activityEndTime:', this.activityEndTime);
       }
     },
     //获取场次ID
@@ -199,10 +199,9 @@ var mainModel = new Vue({
 
             //然后立刻算出当前时间离结束时间还有多久
             this.getEndTime();
-            setInterval(function(){
+            setInterval(function() {
               this.getEndTime();
-            }.bind(this),60000);
-
+            }.bind(this), 60000);
 
             if (response.data.wordpressId) {
               //获取展会邀请函
@@ -974,9 +973,11 @@ var mainModel = new Vue({
 
     }.bind(this), 3000);
 
-    //DEBUG
+    //定时操作
     setTimeout(function() {
-      // $('.company_name').eq(0).click();
+      if (this.companyUserInfo) this.companySign();//刷新企业在线状态
+      if (this.personUserInfo) this.personSign();//刷新个人在线状态
+
     }, 3000);
   }
 });
