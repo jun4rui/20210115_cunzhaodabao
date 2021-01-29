@@ -59,7 +59,7 @@
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	z-index: 99999;
+	z-index: 999;
 	position: absolute;
 
 	.title {
@@ -100,7 +100,7 @@
   margin: 0 auto;
   height: 0;
   position: relative;
-  z-index: 99999;
+  z-index: 999;
 
   .func_panel_left {
 	position: absolute;

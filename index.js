@@ -145,7 +145,7 @@ var mainModel = new Vue({
     //获取场次ID
     getActivityId: function() {
       this.activityId = getParameterValue(window.location.href, 'activityid') || '';
-      this.activityId = '601';//TODO 测试写死，用完后记得移除
+      this.activityId = '581';//TODO 测试写死，用完后记得移除
       //没有找到场次ID要报错
       if (!this.activityId) {
         this.$message.error('警告，您的入口不正确，请返回重新进入。');
