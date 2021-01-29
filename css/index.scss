@@ -168,6 +168,12 @@
 	  align-items: flex-start;
 	  padding: 26px 16px 26px 26px;
 	  box-sizing: border-box;
+
+	  &.online {
+		.company-item.offline {
+		  display:none !important;
+		}
+	  }
 	}
   }
 }
@@ -623,6 +629,13 @@
   padding: 40px 25px 20px 35px;
   box-sizing: border-box;
   background-color: #C4E9FD;
+
+  &.online {
+	.job-seeker_item.offline {
+	  display:none !important;
+	}
+  }
+
   //求职大厅 求职者item
   .job-seeker_item {
 	width: 320px;

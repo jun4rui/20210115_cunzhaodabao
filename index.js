@@ -1,25 +1,26 @@
 var mainModel = new Vue({
   el:       '#main',
   data:     {
-    currentTab:         0,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
-    currentStatus:      0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
-    companyId:          null,   //企业ID，企业登陆以后会有值
-    activityId:         null,   //展会ID
-    activityInfo:       null,   //展会信息
-    activityPattern:    null,   //展会模式
-    activityTime:       null,   //展会时间
-    activityEndTime:    null,   //展会结束时间
-    offlineTimeout:     30,     //离线超时时长（分钟）
-    activityRecord:     null,   //展会统计数据
-    activityDesc:       null,   //展会邀请函内容
-    activityDescDialog: false,  //邀请函显示开关
-    companyInfoDialog:  false,  //企业详情显示开关（可关注企业）
-    recruitListDialog:  false,  //职位列表显示开关（投递简历用）
-    resumeInfoDialog:   false,  //简历信息显示开关
-    companyList:        null,   //企业列表（包括职位）
-    danmuList:          [],     //弹幕列表
-    danmuNum:           50,     //每次加载弹幕数量
-    reloading:          false,  //是否在装弹？
+    currentTab:               0,      //表示当前tab选择第几个，{0:招聘大厅,1:求职大厅}
+    currentCompanyShowStatus: 0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
+    currentPersonShowStatus:  0,      //表示当前status选择第几个，{0:全部企业,1:在线企业}
+    companyId:                null,   //企业ID，企业登陆以后会有值
+    activityId:               null,   //展会ID
+    activityInfo:             null,   //展会信息
+    activityPattern:          null,   //展会模式
+    activityTime:             null,   //展会时间
+    activityEndTime:          null,   //展会结束时间
+    offlineTimeout:           30,     //离线超时时长（分钟）
+    activityRecord:           null,   //展会统计数据
+    activityDesc:             null,   //展会邀请函内容
+    activityDescDialog:       false,  //邀请函显示开关
+    companyInfoDialog:        false,  //企业详情显示开关（可关注企业）
+    recruitListDialog:        false,  //职位列表显示开关（投递简历用）
+    resumeInfoDialog:         false,  //简历信息显示开关
+    companyList:              null,   //企业列表（包括职位）
+    danmuList:                [],     //弹幕列表
+    danmuNum:                 50,     //每次加载弹幕数量
+    reloading:                false,  //是否在装弹？
 
     loginMode:       null,    //用户登陆带入mode参数的值
     personUserInfo:  null,    //个人用户登陆信息
