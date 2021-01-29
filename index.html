@@ -121,11 +121,11 @@
           <div id="countdown_panel">
             <div class="title">会议结束倒计时</div>
             <div id="countdown_time" class="cj-block">
-              <span class="time">3</span>
+              <span class="time">{{activityEndTime.day}}</span>
               <span class="char">天</span>
-              <span class="time">12</span>
+              <span class="time">{{activityEndTime.hour}}</span>
               <span class="char">时</span>
-              <span class="time">17</span>
+              <span class="time">{{activityEndTime.min}}</span>
               <span class="char">分</span>
             </div>
             <div id="goto_panel">
@@ -344,6 +344,7 @@
             <div class="job-seeker_item" :class="{'offline':(Math.random()*2)<1}" v-if="jobSeekerList" v-for="item in jobSeekerList">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
+              <span>{{item.lastUpdateDate}}</span>
               <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(parseInt(Math.random()*4)+1)+'.png)'"></div>
               <div class="name">{{ item.personName }}</div>
               <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
