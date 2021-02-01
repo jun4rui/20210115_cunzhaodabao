@@ -443,17 +443,18 @@ var mainModel = new Vue({
       //从接口获取简历信息到当前简历变量
       //调用接口获取展会详情
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
-      $.post(_SERVER + '/recruit/view/cvJsonList.action?cvId=', {cvId: inCvId}, function(response) {
+      $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId='+inCvId, function(response) {
         // console.table(response.data);
-        if (response.errCode === '00') {
-          if (response.data === null) {
+        if (response.map.status === '00') {
+          this.$message.error(response.map.errorMessage);
+          this.resumeInfoDialog = false;
+        } else {
+          if (response.map === null) {
             this.$message.error('未找到任何信息');
             this.resumeInfoDialog = false;
           } else {
-            this.currentResumeInfo = response.data;
+            this.currentResumeInfo = response.map;
           }
-        } else {
-          this.$message.error(response.errMsg);
         }
       }.bind(this));
     },
