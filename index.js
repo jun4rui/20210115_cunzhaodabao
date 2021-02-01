@@ -18,6 +18,7 @@ var mainModel = new Vue({
     activityDescDialog:       false,  //邀请函显示开关
     companyInfoDialog:        false,  //企业详情显示开关（可关注企业）
     recruitListDialog:        false,  //职位列表显示开关（投递简历用）
+    recruitInfoDialog:        false,  //职位详情显示开关
     resumeInfoDialog:         false,  //简历信息显示开关
     companyList:              null,   //企业列表（包括职位）
     danmuList:                [],     //弹幕列表
@@ -31,6 +32,7 @@ var mainModel = new Vue({
     currentCompanyInfo:    null,//当前企业（信息）
     currentRecruitList:    null,//当前（企业）职位列表
     currentRecruitChecked: '',  //当前职位选择了谁
+    currentRecruitInfo:    null,//当前职位详情
     currentPositionInfo:   null,//当前职位（信息）
     currentResumeInfo:     null,//当前简历
 
@@ -60,6 +62,14 @@ var mainModel = new Vue({
 
   },
   computed: {
+    //获得未读消息总数
+    unreadMsgCount:function(){
+      var _unreadMsgCount = 0;
+      this.offlineConversations.map(function(item){
+        _unreadMsgCount += item.unread_msg_count;
+      });
+      return _unreadMsgCount;
+    },
     //获取target的id
     targetId: function() {
       return this.targetUser.id.replace(/^[c|p]/g, '').replace(/test$/g, '');
@@ -172,8 +182,17 @@ var mainModel = new Vue({
     },
     //获取场次ID
     getActivityId: function() {
-      this.activityId = getParameterValue(window.location.href, 'activityid') || '';
-      this.activityId = '601';//TODO 测试写死，用完后记得移除
+      //算法：根据优先级别，首先从sessionStorage中获取activityid，然后再从url获取activityid，然后再判断是否获取到activityId
+      var _tempActivityId = getParameterValue(window.location.href, 'activityid')
+          ? getParameterValue(window.location.href, 'activityid')
+          : window.localStorage.getItem('activityid');
+
+      //如果从url传过来了activityid，就保存到sesstionStorage中去
+      if (_tempActivityId) {
+        window.localStorage.setItem('activityid', _tempActivityId);
+      }
+
+      this.activityId = _tempActivityId;
       //没有找到场次ID要报错
       if (!this.activityId) {
         this.$message.error('警告，您的入口不正确，请返回重新进入。');
@@ -244,8 +263,8 @@ var mainModel = new Vue({
       }, function(response) {
         if (response.errCode === '00') {
           //测试数据里面personName有null导致程序异常，这里修复一下
-          response.data = response.data.map(function(item){
-            if (!item.personName) item.personName='-无-';
+          response.data = response.data.map(function(item) {
+            if (!item.personName) item.personName = '-无-';
             return item;
           });
 
@@ -287,11 +306,19 @@ var mainModel = new Vue({
     },
     //调用计数器
     addCounter: function() {
+      // 如果有activityId才需要调用计数器接口，如果是访客则不需要
+      if (!this.activityId) {
+        return false;
+      }
+
       // 设定参数
       var _parameter = {
         'city':      encodeURIComponent(returnCitySN.cname),
         'type':      '4-1-1',
-        'url':       window.location.href,
+        'url':       window.location.href.indexOf('?') > -1
+                         ? window.location.href.substr(0, window.location.href.indexOf('?')) + '?activityid=' +
+            this.activityId
+                         : window.location.href + '?activityid=' + this.activityId,
         'ip':        returnCitySN.cip,
         'useragent': encodeURIComponent(navigator.userAgent)
       };
@@ -364,6 +391,30 @@ var mainModel = new Vue({
       this.recruitListDialog = true;
     },
 
+    //展示职位详情（传入职位ID）
+    showRecruitInfo: function(inRecruitId) {
+      this.getCurrentRecuitInfo(inRecruitId);
+      this.recruitInfoDialog = true;
+      console.log('showRecruitInfo: ', inRecruitId);
+    },
+
+    //获取当前职位详情
+    getCurrentRecuitInfo: function(inRecruitId) {
+      if (!inRecruitId) {
+        return false;
+      }
+
+      this.currentRecruitInfo = null;
+
+      $.post(_SERVER + '/wxCompany/wxRecruitMessage', {recruitId: inRecruitId}, function(response) {
+        if (response.errCode === '00') {
+          this.currentRecruitInfo = response.data;
+        } else {
+          this.$message.error(response.errMsg);
+        }
+      }.bind(this));
+    },
+
     //在弹出职位列表Dialog窗口投递简历
     recruitListSubmit: function() {
       //检查用户是否登陆，登陆以后才能投递职位
@@ -394,7 +445,8 @@ var mainModel = new Vue({
       this.resumeInfoDialog  = true;
       //从接口获取简历信息到当前简历变量
       //调用接口获取展会详情
-      $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
+      //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
+      $.post(_SERVER + '/recruit/view/cvJsonList.action?cvId=', {cvId: inCvId}, function(response) {
         // console.table(response.data);
         if (response.errCode === '00') {
           if (response.data === null) {
@@ -409,18 +461,18 @@ var mainModel = new Vue({
       }.bind(this));
     },
 
-    //登陆 TODO 可能还需要完善，而且不好测试
+    //登陆
     userLogin: function(inMode) {
       if (inMode === 'person') {
         window.localStorage.setItem('backurl', window.location.href.indexOf('?') > -1
-            ? window.location.href.substr(0, window.location.href.indexOf('?'))
+            ? window.location.href.substr(0, window.location.href.indexOf('?')) + '?mode=person'
             : window.location.href + '?mode=person');
         window.location.href = 'http://www.hnrcsc.com/web/seekjob/login.action';
         return false;
       }
       if (inMode === 'company') {
         window.localStorage.setItem('backurl', window.location.href.indexOf('?') > -1
-            ? window.location.href.substr(0, window.location.href.indexOf('?'))
+            ? window.location.href.substr(0, window.location.href.indexOf('?')) + '?mode=company'
             : window.location.href + '?mode=company');
         window.location.href = 'http://www.hnrcsc.com/web/recruit/login.action';
         return false;
@@ -465,6 +517,21 @@ var mainModel = new Vue({
     logout: function() {
       window.location.href = window.location.href.substr(0, window.location.href.indexOf('?'));
     },
+    //个人查看消息（打开聊天窗口）
+    viewMessage: function() {
+      //如果没有对话列表，则提示并返回
+      if (!this.conversations || this.conversations.length === 0) {
+        this.$message.warning('抱歉，您没有任何对话消息。');
+      }
+      var _tempTo = this.conversations[0];
+      if (this.personUserInfo) {
+        this.chatToCompany(_tempTo.nickName, _tempTo.name.replace(/(^c|p)|(test$)/g, ''));
+      }
+      if (this.companyUserInfo) {
+        this.chatToPerson(_tempTo.nickName, _tempTo.name.replace(/(^c|p)|(test$)/g, ''));
+      }
+    },
+
     //聊天(用来拦截以前函数的调用)
     toChat: function(inId, inName) {
       console.log(`toChat: ${inId} ${inName}`);
@@ -959,9 +1026,6 @@ var mainModel = new Vue({
     /*装载弹幕*/
     this.reloading = true;
     this.getDanmuList();//加载弹幕列表
-    /*TODO 一些数据要定时进行刷新*/
-    // 入场求职者的状态
-    // 企业和职位状态
   },
   mounted:  function() {
     //全自动弹幕发射机器
@@ -987,6 +1051,10 @@ var mainModel = new Vue({
       if (this.companyUserInfo) this.companySign();//刷新企业在线状态
       if (this.personUserInfo) this.personSign();//刷新个人在线状态
 
-    }, 3000);
+      this.getActivityInfo();//获取展会信息
+      this.getJobSeekerList();//获取求职者列表
+      this.getListActivityCompany();//加载企业和职位信息
+
+    }.bind(this), 3000);
   }
 });

@@ -4,13 +4,14 @@
 TODO
   获取简历的接口要修改
   查看职位详情还没做
-  url没有带activityId导致统计不到，而且是写死的
-  登录后返回不一定可以获取到登录信息
-  视频面试某些浏览器（Edge、Chrome）下无法看到视频，需要回家带个摄像头或者用笔记本进行测试看看哪里有问题
+  [*]url没有带activityId导致统计不到，而且是写死的
+  [*]登录后返回不一定可以获取到登录信息
+  登录以后的样式还没有完成
+  [*](https下iframe毫无问题！)视频面试某些浏览器（Edge、Chrome）下无法看到视频，需要回家带个摄像头或者用笔记本进行测试看看哪里有问题
 -->
 <head>
   <meta charset="UTF-8">
-  <!--<meta content="width=420, user-scalable=no" name="viewport">-->
+  <!--<meta content="width=1920, user-scalable=yes" name="viewport">-->
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
   <title></title>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -26,7 +27,7 @@ TODO
   <script src="node_modules/lodash/lodash.min.js"></script>
   <script src="js/jmessage-sdk-web-2.6.0/jmessage-sdk-web.2.6.0.min.js"></script>
   <!--搜狐pv库，加入returnCitySN对象-->
-  <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+  <script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
 </head>
 <body>
 <!--主内容-->
@@ -61,7 +62,6 @@ TODO
       <!--弹幕区-->
       <div id="danmu"></div>
       <!--/弹幕区-->
-
       <!--功能区-->
       <div id="func_panel">
         <div class="func_panel_left">
@@ -116,24 +116,31 @@ TODO
               <span class="login_button" @click="userLogin('company')">企业登陆</span>
             </li>
           </ul>
-          <ul id="person-info_panel" v-if="personUserInfo">
-            个人用户信息 {{ personUserInfo.personName }}
-            <div @click="logout">退出登录</div>
-          </ul>
-          <ul id="company-info_panel" v-if="companyUserInfo">
-            企业用户信息 {{ companyUserInfo.userName }}
-            <div @click="logout">退出登录</div>
-          </ul>
+          <div id="person-info_panel" v-if="personUserInfo">
+            <!--TODO 个人用户信息没有性别的吗？-->
+            <!--<div class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>-->
+            <div class="avatar" :style="'background-image:url(images/icon_login_person@2x.png)'"></div>
+            <a class="name">{{ personUserInfo.personName }}</a>
+            <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
+            <div class="logout" @click="logout">退出登录</div>
+          </div>
+
+          <div id="company-info_panel" v-if="companyUserInfo">
+            <div class="avatar" :style="'background-image:url(images/icon_login_company@2x.png)'"></div>
+            <a class="name">{{ companyUserInfo.userName }}</a>
+            <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
+            <div class="logout" @click="logout">退出登录</div>
+          </div>
           <!--/登录区-->
           <!--倒计时区-->
           <div id="countdown_panel">
             <div class="title">会议结束倒计时</div>
-            <div id="countdown_time" class="cj-block">
-              <span class="time">{{activityEndTime.day}}</span>
+            <div v-if="activityEndTime" id="countdown_time" class="cj-block">
+              <span class="time">{{ activityEndTime.day }}</span>
               <span class="char">天</span>
-              <span class="time">{{activityEndTime.hour}}</span>
+              <span class="time">{{ activityEndTime.hour }}</span>
               <span class="char">时</span>
-              <span class="time">{{activityEndTime.min}}</span>
+              <span class="time">{{ activityEndTime.min }}</span>
               <span class="char">分</span>
             </div>
             <div id="goto_panel">
@@ -348,7 +355,7 @@ TODO
         <div class="out_border_2">
           <!-- 在线求职者列表 -->
           <div id="job-seeker_list" :class="{'online': currentPersonShowStatus===1}" v-if="jobSeekerList">
-            <div class="job-seeker_item" v-if="searchPersonKeyword.trim()==='' || item.personName.indexOf(searchPersonKeyword)>-1"  :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-for="item in jobSeekerList">
+            <div class="job-seeker_item" v-if="searchPersonKeyword.trim()==='' || item.personName.indexOf(searchPersonKeyword)>-1" :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-for="item in jobSeekerList">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
               <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
@@ -377,6 +384,64 @@ TODO
   <!-- 区域内放置Dialog -->
   <!-- 企业详情Dialog -->
   <el-dialog id="company-info" class="company-info" title="公司详情" :visible.sync="companyInfoDialog" width="600px">
+    <!--职位详情子Dialog-->
+    <el-dialog id="recruit-info" width="600px" title="职位详情" :visible.sync="recruitInfoDialog" append-to-body>
+      <div v-if="currentRecruitInfo">
+        <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
+        <ul class="cri-recruit-info split">
+          <li>{{ currentRecruitInfo.salary }}</li>
+          <li>{{ currentRecruitInfo.location }}</li>
+          <li>{{ currentRecruitInfo.lowerEdu }}</li>
+          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+        </ul>
+        <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
+        <div class="cri_subtitle">职位福利</div>
+        <div class="cri_content">
+          <ul class="cri-welfare" v-if="currentRecruitInfo.welfare">
+            <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
+          </ul>
+        </div>
+
+        <div class="cri_subtitle">职位要求</div>
+        <div class="cri_content">
+          <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
+          </div>
+        </div>
+
+        <!--投递职位按钮-->
+        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <!--/投递职位按钮-->
+        <!--
+        address: "长沙市望城区雷锋大道1389号"
+        companyId: "2144184"
+        companyIdStr: "D889B54CAA4B8485"
+        companyName: "春风行动企业测试账号6"
+        contactPerson: "人力资源部"
+        deptName: ""
+        detail: "任职要求：
+        ↵222222222
+        ↵
+        ↵岗位描述：333333333
+        ↵
+        ↵
+        ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        entProp: "有限责任公司"
+        fax: null
+        industry: "机械行业"
+        location: "湖南省长沙市"
+        lowerEdu: "其它"
+        persons: "3001-5000人"
+        phone: "0731-"
+        recruitName: "厂长"
+        recruitPersons: "500"
+        refreshDate: "2021-01-29 10:12:34"
+        salary: "1000元以下"
+        welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
+        workYears: "不限"
+        -->
+      </div>
+    </el-dialog>
+    <!--/职位详情子Dialog-->
     <div v-if="currentCompanyInfo">
       <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
       <ul class="company-info_other split">
@@ -395,7 +460,7 @@ TODO
         <!--职位列表-->
         <div class="company-info-recruit-list">
           <div class="company-info-recruit_item" v-for="recruitItem in currentRecruitList">
-            <div class="job-title">{{ recruitItem.recruitName }}</div>
+            <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">{{ recruitItem.recruitName }}</div>
             <ul class="recruit-other-info split">
               <li>
                 <span v-if="recruitItem.salary==='1000元以下'">1K内</span>

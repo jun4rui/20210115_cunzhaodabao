@@ -1,4 +1,4 @@
-var _SERVER = 'http://www.hnrcsc.com/api';
+var _SERVER = '//www.hnrcsc.com/api';
 
 //查询url参数函数
 //有则返回参数列表list

@@ -2,7 +2,7 @@
 
 #main {
   background: #48C0FF url(../images/banner.png) no-repeat top center;
-  overflow: hidden;
+  overflow: auto;
 }
 
 #header {
@@ -171,7 +171,7 @@
 
 	  &.online {
 		.company-item.offline {
-		  display:none !important;
+		  display: none !important;
 		}
 	  }
 	}
@@ -632,7 +632,7 @@
 
   &.online {
 	.job-seeker_item.offline {
-	  display:none !important;
+	  display: none !important;
 	}
   }
 
@@ -785,7 +785,98 @@
   }
 }
 
+//职位详情
+#recruit-info {
+  .el-dialog {
+	background: #FFF url(../images/bg_info_bottom.png) no-repeat bottom center;
+	background-size: contain;
+	padding-bottom: 20px;
+
+	.el-dialog__body {
+	  padding: 20px 30px;
+	  font-size: 14px;
+	  line-height: 2;
+	  color: #666;
+
+	  .cri-company-name {
+		background: url(../images/icon_company@2x.png) no-repeat left center;
+		background-size: 18px 18px;
+		text-indent: 22px;
+	  }
+
+	  .cri-recruit-name {
+		font-size: 16px;
+		font-weight: bold;
+		color: #333;
+	  }
+
+	  .cri_subtitle {
+		background: url(../images/icon_2dot@2x.png) no-repeat left center;
+		background-size: 14px 10px;
+		text-indent: 22px;
+		font-size: 16px;
+		color: #333;
+		font-weight: bold;
+		margin-top: 20px;
+	  }
+
+	  .cri_content {
+		font-size: 14px;
+		line-height: 25px;
+		color: #666;
+		padding-left: 22px;
+	  }
+
+	  .cri-welfare {
+		li {
+		  @extend .cj-ellipsis;
+		  width: 80px;
+		  height: 28px;
+		  line-height: 28px;
+		  display: inline-block;
+		  text-align: center;
+
+		  font-size: 14px;
+		  color: #166CEC;
+		  margin: 0 6px 6px 0;
+
+		  background: #DDF3FF;
+		  border-radius: 5px;
+		}
+	  }
+
+	  .post-resume {
+		position: absolute;
+		width: 76px;
+		height: 28px;
+		top: 82px;
+		right: 32px;
+
+		background: linear-gradient(93.34deg, #2D95F9 0%, #1062E9 100%);
+		box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
+		border-radius: 7px;
+
+		text-align: center;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 28px;
+		color: #FFF;
+		cursor: pointer;
+	  }
+	}
+  }
+}
+
 //公司详情
+#company-info {
+  .el-dialog {
+	background: #FFF url(../images/bg_info_bottom.png) no-repeat bottom center;
+	background-size: contain;
+	padding-bottom: 20px;
+	position: relative;
+  }
+}
+
 #company-info, .company-info {
 
   .split {
@@ -856,6 +947,7 @@
 		font-size: 14px;
 		font-weight: bold;
 		color: #2C75F1;
+		cursor: pointer;
 	  }
 
 	  .recruit-other-info {
@@ -932,6 +1024,83 @@
 	  background: #4E31FF;
 	  border-color: rgba(255, 255, 255, 0.5);
 	}
+  }
+}
+
+#person-info_panel,
+#company-info_panel {
+  padding-bottom: 20px;
+  width: 274px;
+  height: 70px;
+
+  .avatar {
+	width: 70px;
+	height: 70px;
+	display: block;
+	background-size: cover;
+	position: absolute;
+	left: 0;
+	top: 0;
+  }
+
+  .name {
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 25px;
+	color: #FFF;
+	position: absolute;
+	top: 0;
+	left: 85px;
+  }
+
+  .view-message {
+	position: absolute;
+	left: 80px;
+	top: 36px;
+	width: 100px;
+	height: 30px;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 30px;
+	color: #FFF;
+	text-align: center;
+	border-radius: 20px;
+	background: #FFA800 url(../images/icon_viewmessage.png) no-repeat left 14px center;
+	background-size: 18px 16px;
+	text-indent: 32px;
+	cursor: pointer;
+
+	span {
+	  background: #F00;
+	  display: block;
+	  width: 20px;
+	  height: 20px;
+	  text-indent: 0;
+	  line-height: 20px;
+	  text-align: center;
+	  border-radius: 50%;
+	  position: absolute;
+	  font-size: 12px;
+	  right: -10px;
+	  top: -2px;
+	}
+  }
+
+  .logout {
+	position: absolute;
+	left: 200px;
+	top: 36px;
+	width: 70px;
+	height: 30px;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 30px;
+	color: #FFF;
+	text-align: center;
+	border-radius: 20px;
+	background: #ff0000;
+	background-size: 18px 16px;
+	cursor: pointer;
   }
 }
 
