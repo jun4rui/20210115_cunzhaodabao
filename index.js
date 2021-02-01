@@ -315,10 +315,7 @@ var mainModel = new Vue({
       var _parameter = {
         'city':      encodeURIComponent(returnCitySN.cname),
         'type':      '4-1-1',
-        'url':       window.location.href.indexOf('?') > -1
-                         ? window.location.href.substr(0, window.location.href.indexOf('?')) + '?activityid=' +
-            this.activityId
-                         : window.location.href + '?activityid=' + this.activityId,
+        'url':       'http://www.hnrcsc.com/mianshibao/pageview/activityId/'+this.activityId,
         'ip':        returnCitySN.cip,
         'useragent': encodeURIComponent(navigator.userAgent)
       };
