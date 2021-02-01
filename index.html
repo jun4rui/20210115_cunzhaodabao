@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh_CN">
 <!--
-TODO 登陆以后头像的变化
 TODO 视频聊天暂时采用弹出新窗口实现
 TODO 查看简历的样式设计
-TODO 低分辨率显示器适配
 -->
 <head>
   <meta charset="UTF-8">
@@ -114,16 +112,20 @@ TODO 低分辨率显示器适配
             </li>
           </ul>
           <div id="person-info_panel" v-if="personUserInfo">
-            <!--TODO 个人用户信息没有性别的吗？-->
             <!--<div class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>-->
-            <div class="avatar" :style="'background-image:url(images/icon_login_person@2x.png)'"></div>
+            <!--无头像-->
+            <div v-if="!personUserInfo.photoLink" class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>
+            <!--有头像-->
+            <div v-if="personUserInfo.photoLink" class="avatar" :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'"></div>
+
             <a class="name">{{ personUserInfo.personName }}</a>
             <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
             <div class="logout" @click="logout">退出登录</div>
           </div>
 
           <div id="company-info_panel" v-if="companyUserInfo">
-            <div class="avatar" :style="'background-image:url(images/icon_login_company@2x.png)'"></div>
+            <div v-if="!companyUserInfo.logoUrl" class="avatar" :style="'background-image:url(images/icon_login_company@2x.png)'"></div>
+            <div v-if="companyUserInfo.logoUrl" class="avatar" :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'"></div>
             <a class="name">{{ companyUserInfo.userName }}</a>
             <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
             <div class="logout" @click="logout">退出登录</div>
