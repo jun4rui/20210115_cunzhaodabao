@@ -97,7 +97,8 @@
 }
 
 #func_panel {
-  width: 1690px;
+  max-width: 1690px;
+  width: 100%;
   margin: 0 auto;
   height: 0;
   position: relative;
