@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh_CN">
 <!--
-TODO 视频聊天暂时采用弹出新窗口实现
 TODO 查看简历的样式设计
 -->
 <head>
@@ -185,10 +184,16 @@ TODO 查看简历的样式设计
         </ul>
         <span class="chat-message_footer">
               <!--聊天功能菜单-->
-              <div id="caht-function_menu">
-                <div class="cj-inline-block" @click="chatViewCompanyInfo" v-if="personUserInfo">[公司详情]</div>
-                <div class="cj-inline-block" @click="chatViewPersonResume" v-if="companyUserInfo">[看个人简历]</div>
-                <div class="cj-inline-block" @click="chatViewVideo">[视频聊天]</div>
+              <div id="chat-function_menu">
+                <div class="cj-inline-block" @click="chatViewCompanyInfo" v-if="personUserInfo">
+                  <el-button size="mini" type="primary" icon="el-icon-office-building" plain>公司详情</el-button>
+                </div>
+                <div class="cj-inline-block" @click="chatViewPersonResume" v-if="companyUserInfo">
+                  <el-button size="mini" type="primary" icon="el-icon-user-solid" plain>查看简历</el-button>
+                </div>
+                <div class="cj-inline-block" @click="chatViewVideo">
+                  <el-button size="mini" type="primary" icon="el-icon-video-camera-solid" plain>视频沟通</el-button>
+                </div>
               </div>
           <!--/聊天功能菜单-->
           <!--消息发送-->

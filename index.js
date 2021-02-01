@@ -956,15 +956,13 @@ var mainModel = new Vue({
       //区分当前账号是个人还是公司
       //个人方式
       if (this.personUserInfo !== null) {
-        $('#chat-area_other .video-chat').
-            attr('src', 'https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId +
-                '&companyid=' + (this.targetId));
+        //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId + '&companyid=' + (this.targetId));
+        window.open('https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId + '&companyid=' + (this.targetId));
       }
       //企业方式
       if (this.companyUserInfo !== null) {
-        $('#chat-area_other .video-chat').
-            attr('src', 'https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId +
-                '&orderid=' + this.companyUserInfo.orderId);
+        //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId + '&orderid=' + this.companyUserInfo.orderId);
+        window.open('https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId + '&orderid=' + this.companyUserInfo.orderId);
       }
 
       $('#chat-area_other .model').removeClass('active');
