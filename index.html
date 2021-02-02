@@ -30,8 +30,8 @@ TODO 查看简历的样式设计
   <div id="header">
     <div class="header_panel">
       <a href="/" class="to_home">返回首页</a>
-      <ul id="count_panel">
-        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews ? activityRecord.pageviews : 0 }}</span>，</li>
+      <ul v-if="activityRecord" id="count_panel">
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews}}</span>，</li>
         <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
         <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
       </ul>

@@ -431,11 +431,18 @@ var mainModel = new Vue({
     //查看用户简历
     viewResume: function(inCvId) {
       console.log('viewResume', inCvId);
-      inCvId = 14134081;//TODO cvid先写死
+      //先检查cvid是不是传了
       if (!inCvId) {
         this.$message.error('未找到该简历');
         return false;
       }
+      //在检查企业账号是否登陆
+      if(!this.companyUserInfo){
+        this.$message.error('请先登陆企业账号。');
+        return false;
+      }
+
+
       //清空当前简历变量
       this.currentResumeInfo = null;
       //打开当前简历展现dialog
@@ -445,11 +452,11 @@ var mainModel = new Vue({
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
       $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
         console.log('resume data',response);
-        if (response.status === '00') {
+        if (response.map.status === '00') {
+          this.currentResumeInfo = response.map;
+        }else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
-        } else {
-          this.currentResumeInfo = response.map;
         }
       }.bind(this));
     },
