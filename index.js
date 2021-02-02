@@ -1040,7 +1040,7 @@ var mainModel = new Vue({
     }.bind(this), 3000);
 
     //定时操作
-    setTimeout(function() {
+    setInterval(function() {
       if (this.companyUserInfo) this.companySign();//刷新企业在线状态
       if (this.personUserInfo) this.personSign();//刷新个人在线状态
 
@@ -1048,6 +1048,6 @@ var mainModel = new Vue({
       this.getJobSeekerList();//获取求职者列表
       this.getListActivityCompany();//加载企业和职位信息
 
-    }.bind(this), 3000);
+    }.bind(this), 5000);
   }
 });
