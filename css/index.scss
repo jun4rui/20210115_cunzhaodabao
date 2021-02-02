@@ -233,6 +233,7 @@
 	.recruit-list_panel {
 	  width: 220px;
 	  height: 253px;
+	  overflow:hidden;
 	  margin: 0 auto;
 	  padding: 10px 0;
 	  box-sizing: border-box;
@@ -240,6 +241,7 @@
 	  border-radius: 4px;
 
 	  .recruit-item {
+		@extend .cj-ellipsis;
 		font-size: 14px;
 		width: 180px;
 		height: 36px;
@@ -1247,6 +1249,7 @@
 		justify-content: space-around;
 		align-items: stretch;
 		overflow: hidden;
+		height:100%;
 
 		#conversations_panel {
 		  width: 390px;

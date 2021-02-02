@@ -63,9 +63,9 @@ var mainModel = new Vue({
   },
   computed: {
     //获得未读消息总数
-    unreadMsgCount:function(){
+    unreadMsgCount: function() {
       var _unreadMsgCount = 0;
-      this.offlineConversations.map(function(item){
+      this.offlineConversations.map(function(item) {
         _unreadMsgCount += item.unread_msg_count;
       });
       return _unreadMsgCount;
@@ -315,7 +315,7 @@ var mainModel = new Vue({
       var _parameter = {
         'city':      encodeURIComponent(returnCitySN.cname),
         'type':      '4-1-1',
-        'url':       'http://www.hnrcsc.com/mianshibao/pageview/activityId/'+this.activityId,
+        'url':       'http://www.hnrcsc.com/mianshibao/pageview/activityId/' + this.activityId,
         'ip':        returnCitySN.cip,
         'useragent': encodeURIComponent(navigator.userAgent)
       };
@@ -430,8 +430,8 @@ var mainModel = new Vue({
 
     //查看用户简历
     viewResume: function(inCvId) {
-      console.log(`viewResume: ${inCvId}`);
-      inCvId = 1413408;//TODO cvid先写死
+      console.log('viewResume', inCvId);
+      inCvId = 14134081;//TODO cvid先写死
       if (!inCvId) {
         this.$message.error('未找到该简历');
         return false;
@@ -443,18 +443,13 @@ var mainModel = new Vue({
       //从接口获取简历信息到当前简历变量
       //调用接口获取展会详情
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
-      $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId='+inCvId, function(response) {
-        // console.table(response.data);
-        if (response.map.status === '00') {
+      $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
+        console.log('resume data',response);
+        if (response.status === '00') {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
         } else {
-          if (response.map === null) {
-            this.$message.error('未找到任何信息');
-            this.resumeInfoDialog = false;
-          } else {
-            this.currentResumeInfo = response.map;
-          }
+          this.currentResumeInfo = response.map;
         }
       }.bind(this));
     },
@@ -957,12 +952,14 @@ var mainModel = new Vue({
       //个人方式
       if (this.personUserInfo !== null) {
         //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId + '&companyid=' + (this.targetId));
-        window.open('https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId + '&companyid=' + (this.targetId));
+        window.open('https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId +
+            '&companyid=' + (this.targetId));
       }
       //企业方式
       if (this.companyUserInfo !== null) {
         //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId + '&orderid=' + this.companyUserInfo.orderId);
-        window.open('https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId + '&orderid=' + this.companyUserInfo.orderId);
+        window.open('https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId +
+            '&orderid=' + this.companyUserInfo.orderId);
       }
 
       $('#chat-area_other .model').removeClass('active');

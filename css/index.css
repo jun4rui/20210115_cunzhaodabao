@@ -229,7 +229,7 @@ ul, li {
   border: 1px solid #DDD;
 }
 
-.cj-ellipsis, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .name, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel li .nike-name, #recruit-info .el-dialog .el-dialog__body .cri-welfare li, #job-seeker_list .job-seeker_item .position {
+.cj-ellipsis, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .name, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel li .nike-name, #recruit-info .el-dialog .el-dialog__body .cri-welfare li, #job-seeker_list .job-seeker_item .position, .company-item .recruit-list .recruit-list_panel .recruit-item {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -735,6 +735,7 @@ ul, li {
 .company-item .recruit-list .recruit-list_panel {
   width: 220px;
   height: 253px;
+  overflow: hidden;
   margin: 0 auto;
   padding: 10px 0;
   box-sizing: border-box;
@@ -1587,6 +1588,7 @@ ul, li {
   justify-content: space-around;
   align-items: stretch;
   overflow: hidden;
+  height: 100%;
 }
 #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel {
   width: 390px;
