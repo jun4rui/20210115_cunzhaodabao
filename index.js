@@ -1029,14 +1029,14 @@ var mainModel = new Vue({
         this.reloading = true;
         this.getDanmuList();//加载弹幕列表
         return false;
+      }else{
+        //发射从弹幕池动态获取最上面的弹幕
+        $('#danmu').barrager({
+          img:   'images/icon_danmu_avatar.png',
+          info:  this.danmuList.splice(0, 1),
+          speed: parseInt(Math.random() * 5) + 15
+        });
       }
-      //发射从弹幕池动态获取最上面的弹幕
-      $('#danmu').barrager({
-        img:   'images/icon_danmu_avatar.png',
-        info:  this.danmuList.splice(0, 1),
-        speed: parseInt(Math.random() * 5) + 15
-      });
-
     }.bind(this), 3000);
 
     //定时操作
