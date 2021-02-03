@@ -927,6 +927,11 @@
 	font-size: 16px;
 	font-weight: bold;
 	color: #333;
+	line-height: 2;
+  }
+
+  .company-info_other {
+	line-height: 2;
   }
 
 
@@ -934,6 +939,7 @@
 	background: url(../images/icon_address@2x.png) no-repeat left center;
 	background-size: 18px 18px;
 	text-indent: 22px;
+	line-height: 2;
   }
 
   .company-info-recruit-list {
@@ -1440,8 +1446,10 @@
 		  .person-resume {
 			padding: 30px;
 			overflow: auto;
-			display: flex;
 			width: 100%;
+			&.action {
+			  display: flex;
+			}
 			.resume-detail {
 			  flex-grow: 1;
 			}

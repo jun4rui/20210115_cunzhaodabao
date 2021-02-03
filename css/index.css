@@ -1303,11 +1303,16 @@ ul, li {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+  line-height: 2;
+}
+#company-info .company-info_other, .company-info .company-info_other {
+  line-height: 2;
 }
 #company-info .company-info_address, .company-info .company-info_address {
   background: url(../images/icon_address@2x.png) no-repeat left center;
   background-size: 18px 18px;
   text-indent: 22px;
+  line-height: 2;
 }
 #company-info .company-info-recruit-list .company-info-recruit_item, .company-info .company-info-recruit-list .company-info-recruit_item {
   position: relative;
@@ -1733,8 +1738,10 @@ ul, li {
 #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other .person-resume {
   padding: 30px;
   overflow: auto;
-  display: flex;
   width: 100%;
+}
+#chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other .person-resume.action {
+  display: flex;
 }
 #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other .person-resume .resume-detail {
   flex-grow: 1;
