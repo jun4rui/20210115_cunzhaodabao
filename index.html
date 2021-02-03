@@ -66,7 +66,7 @@
             <!--/企业搜索条-->
             <!--企业离线在线切换-->
             <ul id="company-status_switch" class="status_switch">
-              <li @click="currentCompanyShowStatus=1" v-if="currentCompanyShowStatus===0" class="active">全部企业</li>
+              <li @click="currentCompanyShowStatus=1" v-if="currentCompanyShowStatus===0">全部企业</li>
               <li @click="currentCompanyShowStatus=0" v-if="currentCompanyShowStatus===1" class="active">在线企业</li>
             </ul>
             <!--/企业离线在线切换-->
@@ -82,7 +82,7 @@
             <!--/个人搜索条-->
             <!--个人离线在线切换-->
             <ul id="person-status_switch" class="status_switch">
-              <li @click="currentPersonShowStatus=1" v-if="currentPersonShowStatus===0" class="active">全部求职者</li>
+              <li @click="currentPersonShowStatus=1" v-if="currentPersonShowStatus===0">全部求职者</li>
               <li @click="currentPersonShowStatus=0" v-if="currentPersonShowStatus===1" class="active">在线求职者</li>
             </ul>
             <!--/个人离线在线切换-->
