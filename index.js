@@ -1087,11 +1087,12 @@ var mainModel = new Vue({
     //全自动弹幕发射机器
     setInterval(function() {
       //如果没子弹了，就重新装载子弹
-      if (this.danmuList.length === 0 && !this.reloading) {
-        console.log('重新装弹中');
-        this.reloading = true;
-        this.getDanmuList();//加载弹幕列表
-        return false;
+      if (this.danmuList.length === 0) {
+        if(!this.reloading){
+          console.log('重新装弹中');
+          this.reloading = true;
+          this.getDanmuList();//加载弹幕列表
+        }
       }else{
         //发射从弹幕池动态获取最上面的弹幕
         $('#danmu').barrager({

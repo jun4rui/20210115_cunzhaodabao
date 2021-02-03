@@ -39,7 +39,7 @@ TODO 查看简历的样式设计
   </div>
   <!-- /Header -->
   <!-- Banner -->
-  <div id="banner" :style="{backgroundImage:'url('+(activityInfo.otherUrl?'//www.hnrcsc.com'+activityInfo.otherUrl:'../images/banner.png')+')'}">
+  <div id="banner" v-if="activityInfo" :style="{backgroundImage:'url('+(activityInfo.otherUrl?'//www.hnrcsc.com'+activityInfo.otherUrl:'../images/banner.png')+')'}">
     <!--标题区-->
     <div id="title_panel" v-if="activityInfo">
       <div class="title" v-if="!activityInfo.otherUrl">{{ activityInfo.productName }}</div>
@@ -823,6 +823,6 @@ TODO 查看简历的样式设计
   <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
-<script src="index.js?v=20210203a"></script>
+<script src="index.js?v=20210203b"></script>
 </body>
 </html>
