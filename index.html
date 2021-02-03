@@ -31,7 +31,7 @@ TODO 查看简历的样式设计
     <div class="header_panel">
       <a href="/" class="to_home">返回首页</a>
       <ul v-if="activityRecord" id="count_panel">
-        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews}}</span>，</li>
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews }}</span>，</li>
         <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
         <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
       </ul>
@@ -43,7 +43,7 @@ TODO 查看简历的样式设计
     <!--标题区-->
     <div id="title_panel" v-if="activityInfo">
       <div class="title">{{ activityInfo.productName }}</div>
-      <div class="desc">{{nl2br(activityInfo.remark||'')}}</div>
+      <div class="desc">{{ nl2br(activityInfo.remark || '') }}</div>
     </div>
     <!--/标题区-->
     <div class="banner_panel">
@@ -110,17 +110,15 @@ TODO 查看简历的样式设计
             <div v-if="!personUserInfo.photoLink" class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>
             <!--有头像-->
             <div v-if="personUserInfo.photoLink" class="avatar" :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'"></div>
-
             <a class="name">{{ personUserInfo.personName }}</a>
-            <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
+            <div class="view-message" @click="viewMessage">查看消息<span>{{ unreadMsgCount }}</span></div>
             <div class="logout" @click="logout">退出登录</div>
           </div>
-
           <div id="company-info_panel" v-if="companyUserInfo">
             <div v-if="!companyUserInfo.logoUrl" class="avatar" :style="'background-image:url(images/icon_login_company@2x.png)'"></div>
             <div v-if="companyUserInfo.logoUrl" class="avatar" :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'"></div>
             <a class="name">{{ companyUserInfo.userName }}</a>
-            <div class="view-message" @click="viewMessage">查看消息<span>{{unreadMsgCount}}</span></div>
+            <div class="view-message" @click="viewMessage">查看消息<span>{{ unreadMsgCount }}</span></div>
             <div class="logout" @click="logout">退出登录</div>
           </div>
           <!--/登录区-->
@@ -267,7 +265,155 @@ TODO 查看简历的样式设计
         <iframe class="video-chat model" frameborder="0"></iframe>
         <!--/在线聊天模块-->
         <!--个人简历模块-->
-        <div class="person-resume mobel"></div>
+        <div class="person-resume mobel">
+          <div v-if="currentResumeInfo" class="resume-detail">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
+              <!--头像-->
+              <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+              <div class="resume-detail_info cj-flex">
+                <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
+                  <!--姓名-->
+                  <div class="personName cj-inline-block">{{ currentResumeInfo.jobPerson.personName }}</div>
+                  <!--社会在职-->
+                  <div class="personTypeDsp cj-inline-block">{{ currentResumeInfo.jobPerson.personTypeDsp }}</div>
+                </div>
+                <ul class="resume-other_info split">
+                  <li>
+                    <!--性别-->
+                    {{ currentResumeInfo.jobPerson.genderDsp }}
+                  </li>
+                  <li>
+                    <!--年龄-->
+                    {{ currentResumeInfo.jobPerson.age }}
+                  </li>
+                  <li>
+                    <!--工作年限-->
+                    {{ currentResumeInfo.jobPerson.workYears }}年工作经验
+                  </li>
+                  <li>
+                    <!--学历-->
+                    {{ currentResumeInfo.jobPerson.highestEduDsp }}
+                  </li>
+                </ul>
+                <div class="resume-detail_concat">
+                  <!--手机号码-->
+                  <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
+                  <!--电子邮箱-->
+                  <div class="email cj-inline-block">{{ currentResumeInfo.jobPerson.email?currentResumeInfo.jobPerson.email:'-未填-' }}</div>
+                  <!--现居地-->
+                  <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!--教育经历-->
+            <div class="jobPersonEduList" v-if="currentResumeInfo.personEduList">
+              <div class="resume-detail_subtitle">教育经历</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personEduList">
+                  {{item.personEduDsp}}
+                </div>
+              </div>
+              <ul>
+
+              </ul>
+            </div>
+            <!--期待岗位-->
+            <div class="position">
+              <div class="resume-detail_subtitle">意向岗位</div>
+              <div class="resume-detail_content">
+                <!--意向岗位-->
+                <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
+                <!--工作性质-->
+                <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
+                <!--工作地点-->
+                <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
+                <!--从事行业-->
+                <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
+                <!--期待月薪-->
+                <div class="salaryRangeDsp">期待月薪：{{ currentResumeInfo.jobPersonCv.salaryRangeDsp }}</div>
+                <!--到岗时间-->
+                <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
+              </div>
+            </div>
+
+            <div v-if="currentResumeInfo.jobPersonCv">
+              <div class="resume-detail_subtitle">个人自述</div>
+              <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
+              <div class="resume-detail_subtitle">其他说明</div>
+              <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
+            </div>
+
+            <!--工作经验-->
+            <div v-if="currentResumeInfo.personJobHistList">
+              <div class="resume-detail_subtitle">工作经验</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personJobHistList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.positionName }}</div>
+                  </div>
+                  <div>{{ item.companyName }}</div>
+                  <div v-html="item.achievement4Disp"></div>
+                  <br>
+                </div>
+              </div>
+            </div>
+            <!--项目经验-->
+            <div v-if="currentResumeInfo.personProjectList">
+              <div class="resume-detail_subtitle">项目经验</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personProjectList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.projectName }}</div>
+                  </div>
+                  <div v-html="item.projectDetail4Disp"></div>
+                  <div v-html="item.responsibility4Disp"></div>
+                  <div v-html="item.keyTechnology4Disp"></div>
+                  <br>
+                </div>
+              </div>
+            </div>
+
+
+            <!--技能-->
+            <div v-if="currentResumeInfo.personItSkillList">
+              <div class="resume-detail_subtitle">技能</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personItSkillList">
+                  {{ item.personItSkillDsp }}
+                </div>
+              </div>
+            </div>
+            <!--资格证书-->
+            <div v-if="currentResumeInfo.personProCertList">
+              <div class="resume-detail_subtitle">资格证书</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personProCertList">
+                  {{ item.personProCertDsp }}
+                </div>
+              </div>
+            </div>
+            <!--职业教育培训-->
+            <div v-if="currentResumeInfo.trainingList">
+              <div class="resume-detail_subtitle">职业教育培训</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.trainingList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.projectName }}</div>
+                  </div>
+                  <div v-html="item.trainingOrgDsp"></div>
+                  <div v-html="item.trainingNameDsp"></div>
+                  <div v-html="item.trainingDetailDsp"></div>
+                  <br>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <!--/个人简历模块-->
       </div>
       <!--/其他信息区域-->
@@ -400,13 +546,11 @@ TODO 查看简历的样式设计
             <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
           </ul>
         </div>
-
         <div class="cri_subtitle">职位要求</div>
         <div class="cri_content">
           <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
           </div>
         </div>
-
         <!--投递职位按钮-->
         <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
         <!--/投递职位按钮-->
@@ -525,90 +669,150 @@ TODO 查看简历的样式设计
   <!-- /邀请函Dialog -->
   <!--简历详情Dialog-->
   <el-dialog title="简历详情" :visible.sync="resumeInfoDialog" width="600px">
-    <div v-if="currentResumeInfo">
-      <div class="cj-text-center">
-        <div v-if="currentResumeInfo.jobPerson">
-          姓名：{{ currentResumeInfo.jobPerson.personName }} <br>
-          性别：{{ currentResumeInfo.jobPerson.genderCode === '01' ? '男性' : '女性' }} <br>
-          年龄：{{ currentResumeInfo.jobPerson.age }}岁 <br>
-          经验：{{ currentResumeInfo.jobPerson.workYears }}年工作经验 <br>
-          学历：{{ currentResumeInfo.jobPerson.highestEdu }} <br>
-          生日：{{ (currentResumeInfo.jobPerson.dob ? currentResumeInfo.jobPerson.dob.substr(0, 10) : '') }} <br>
-          现居地：{{ currentResumeInfo.jobPerson.currLocCode }} <br>
-          身高：{{ currentResumeInfo.jobPerson.height }} <br>
-          手机：{{ currentResumeInfo.jobPerson.mobilePhone }} <br>
-          固话：{{ currentResumeInfo.jobPerson.phone }} <br>
-          E-mail：{{ currentResumeInfo.jobPerson.email }} <br>
-          毕业院校：{{ currentResumeInfo.jobPerson.graduateSchool }} <br>
-          学历：{{ currentResumeInfo.jobPerson.highestEdu }} <br>
-          意向行业：{{ currentResumeInfo.industryCode }} <br>
-          岗位类别：{{ currentResumeInfo.positionCode }} <br>
-          期望薪资：{{ currentResumeInfo.salaryRange }} <br>
-          求职地点：{{ currentResumeInfo.locationCode }} <br>
-          可到岗天数：{{ currentResumeInfo.availableInDays }} <br>
-          个人自述：{{ currentResumeInfo.selfComment }} <br>
-          其他说明：{{ currentResumeInfo.remark }} <br>
-        </div>
-        <!--工作经验-->
-        <div v-if="currentResumeInfo.jobPersonJobHistList">
-          <ul>
-            <li v-for="item in currentResumeInfo.jobPersonJobHistList">
-              <span>{{ item.COMPANY_NAME }}</span>
-              <span>{{ item.ACHIEVEMENT }}</span>
+    <div v-if="currentResumeInfo" class="resume-detail">
+      <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
+        <!--头像-->
+        <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+        <div class="resume-detail_info cj-flex">
+          <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
+            <!--姓名-->
+            <div class="personName cj-inline-block">{{ currentResumeInfo.jobPerson.personName }}</div>
+            <!--社会在职-->
+            <div class="personTypeDsp cj-inline-block">{{ currentResumeInfo.jobPerson.personTypeDsp }}</div>
+          </div>
+          <ul class="resume-other_info split">
+            <li>
+              <!--性别-->
+              {{ currentResumeInfo.jobPerson.genderDsp }}
+            </li>
+            <li>
+              <!--年龄-->
+              {{ currentResumeInfo.jobPerson.age }}
+            </li>
+            <li>
+              <!--工作年限-->
+              {{ currentResumeInfo.jobPerson.workYears }}年工作经验
+            </li>
+            <li>
+              <!--学历-->
+              {{ currentResumeInfo.jobPerson.highestEduDsp }}
             </li>
           </ul>
+          <div class="resume-detail_concat">
+            <!--手机号码-->
+            <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
+            <!--电子邮箱-->
+            <div class="email cj-inline-block">{{ currentResumeInfo.jobPerson.email?currentResumeInfo.jobPerson.email:'-未填-' }}</div>
+            <!--现居地-->
+            <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
+          </div>
         </div>
-        <!--学历教育-->
-        <div v-if="currentResumeInfo.jobPersonEduList">
-          <ul>
-            <li v-for="item in currentResumeInfo.jobPersonEduList">
-              <span>{{ item.SCHOOL_NAME }}</span>
-              <span>{{ item.MAJOR_CODE }}</span>
-              <span>{{ item.EDUCATION_CODE }}</span>
-              <span>{{ item.EDU_MODE }}</span>
-              <span>{{ item.DEGREE_CODE }}</span>
-            </li>
-          </ul>
+
+      </div>
+
+      <!--教育经历-->
+      <div class="jobPersonEduList" v-if="currentResumeInfo.personEduList">
+        <div class="resume-detail_subtitle">教育经历</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personEduList">
+            {{item.personEduDsp}}
+          </div>
         </div>
-        <!--项目经验-->
-        <div v-if="currentResumeInfo.projectList">
-          <ul>
-            <li v-for="item in currentResumeInfo.projectList">
-              <span>{{ item.startDate ? item.startDate.substr(0, 10) : '-未填-' }}至{{
-                  item.endDate
-                      ? item.endDate.substr(0, 10)
-                      : '至今'
-                }}</span>
-              <span>{{ item.projectDetail }}</span>
-              <span>{{ item.responsibility }}</span>
-              <span>{{ item.keyTechnology }}</span>
-            </li>
-          </ul>
+        <ul>
+
+        </ul>
+      </div>
+      <!--期待岗位-->
+      <div class="position">
+        <div class="resume-detail_subtitle">意向岗位</div>
+        <div class="resume-detail_content">
+          <!--意向岗位-->
+          <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
+          <!--工作性质-->
+          <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
+          <!--工作地点-->
+          <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
+          <!--从事行业-->
+          <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
+          <!--期待月薪-->
+          <div class="salaryRangeDsp">期待月薪：{{ currentResumeInfo.jobPersonCv.salaryRangeDsp }}</div>
+          <!--到岗时间-->
+          <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
         </div>
-        <!--技能-->
-        <div v-if="currentResumeInfo.skillList">
-          <ul>
-            <li v-for="item in currentResumeInfo.skillList">
-              <span>{{ item.SKILL }}</span>
-              <span>{{ item.USE_TIME }}</span>
-              <span>{{ item.PROFICIENCY }}</span>
-            </li>
-          </ul>
+      </div>
+
+      <div v-if="currentResumeInfo.jobPersonCv">
+        <div class="resume-detail_subtitle">个人自述</div>
+        <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
+        <div class="resume-detail_subtitle">其他说明</div>
+        <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
+      </div>
+
+      <!--工作经验-->
+      <div v-if="currentResumeInfo.personJobHistList">
+        <div class="resume-detail_subtitle">工作经验</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personJobHistList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.positionName }}</div>
+            </div>
+            <div>{{ item.companyName }}</div>
+            <div v-html="item.achievement4Disp"></div>
+            <br>
+          </div>
         </div>
-        <!--职业教育培训-->
-        <div v-if="currentResumeInfo.trainingList">
-          <ul>
-            <li v-for="item in currentResumeInfo.trainingList">
-              <span>{{ item.startDate ? item.startDate.substr(0, 10) : '至今' }}至{{
-                  item.endDate
-                      ? item.endDate.substr(0, 10)
-                      : '至今'
-                }}</span>
-              <span>{{ item.trainingOrg }}</span>
-              <span>{{ item.trainingName }}</span>
-              <span>{{ item.trainingDetail }}</span>
-            </li>
-          </ul>
+      </div>
+      <!--项目经验-->
+      <div v-if="currentResumeInfo.personProjectList">
+        <div class="resume-detail_subtitle">项目经验</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personProjectList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.projectName }}</div>
+            </div>
+            <div v-html="item.projectDetail4Disp"></div>
+            <div v-html="item.responsibility4Disp"></div>
+            <div v-html="item.keyTechnology4Disp"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+
+
+      <!--技能-->
+      <div v-if="currentResumeInfo.personItSkillList">
+        <div class="resume-detail_subtitle">技能</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personItSkillList">
+            {{ item.personItSkillDsp }}
+          </div>
+        </div>
+      </div>
+      <!--资格证书-->
+      <div v-if="currentResumeInfo.personProCertList">
+        <div class="resume-detail_subtitle">资格证书</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personProCertList">
+            {{ item.personProCertDsp }}
+          </div>
+        </div>
+      </div>
+      <!--职业教育培训-->
+      <div v-if="currentResumeInfo.trainingList">
+        <div class="resume-detail_subtitle">职业教育培训</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.trainingList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.projectName }}</div>
+            </div>
+            <div v-html="item.trainingOrgDsp"></div>
+            <div v-html="item.trainingNameDsp"></div>
+            <div v-html="item.trainingDetailDsp"></div>
+            <br>
+          </div>
         </div>
       </div>
     </div>

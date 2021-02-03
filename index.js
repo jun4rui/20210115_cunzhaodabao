@@ -461,6 +461,35 @@ var mainModel = new Vue({
       }.bind(this));
     },
 
+    //获取用户简历
+    getResume: function(inCvId) {
+      //先检查cvid是不是传了
+      if (!inCvId) {
+        this.$message.error('未找到该简历');
+        return false;
+      }
+      //在检查企业账号是否登陆
+      if(!this.companyUserInfo){
+        this.$message.error('请先登陆企业账号。');
+        return false;
+      }
+
+      //清空当前简历变量
+      this.currentResumeInfo = null;
+      //从接口获取简历信息到当前简历变量
+      //调用接口获取展会详情
+      //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
+      $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
+        console.log('resume data',response);
+        if (response.map.status === '00') {
+          this.currentResumeInfo = response.map;
+        }else {
+          this.$message.error(response.map.errorMessage);
+          this.resumeInfoDialog = false;
+        }
+      }.bind(this));
+    },
+
     //登陆
     userLogin: function(inMode) {
       if (inMode === 'person') {
@@ -524,6 +553,8 @@ var mainModel = new Vue({
         this.$message.warning('抱歉，您没有任何对话消息。');
       }
       var _tempTo = this.conversations[0];
+      // 清空当前查看简历（其实也可以企业 查看的时候再清空）
+      this.currentResumeInfo = null;
       if (this.personUserInfo) {
         this.chatToCompany(_tempTo.nickName, _tempTo.name.replace(/(^c|p)|(test$)/g, ''));
       }
@@ -951,7 +982,32 @@ var mainModel = new Vue({
     },
     //聊天用查看个人简历
     chatViewPersonResume: function() {
+      //获取用户简历列表
+      $.post(_SERVER+'/personCenter/listPersonCv', {personId: this.targetId}, function(response){
+        if(response.errCode==='00'){
+
+          //获取用户默认简历ID
+          var _tempCvId = 0;
+          for (var i=0;i<response.data.length; i++){
+            if (response.data[i].DEFAULTFLAG==='Y'){
+              _tempCvId = response.data[i].CVID;
+            }
+          }
+          if (_tempCvId===0){
+            this.$message.warning('该用户没有简历，或没有设置默认简历');
+          }else{
+            //获取用户简历到当前简历变量
+            this.getResume(_tempCvId);
+          }
+        }else{
+          this.$message.error(response.errMsg);
+          return false;
+        }
+      }.bind(this));
+
       $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
+      $('#chat-area_other .model').removeClass('active');
+      $('#chat-area_other .person-resume.model').addClass('active')
     },
     //聊天用打开视频聊天
     chatViewVideo: function() {
