@@ -423,7 +423,7 @@ ul, li {
   font-family: SourceHanSerifBold, "Microsoft YaHei", Arial, Helvetica, sans-serif; }
 
 #main {
-  background: #48C0FF url(../images/banner.png) no-repeat top center;
+  background: #48C0FF no-repeat top center;
   overflow: auto; }
 
 #header {

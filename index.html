@@ -39,11 +39,11 @@ TODO 查看简历的样式设计
   </div>
   <!-- /Header -->
   <!-- Banner -->
-  <div id="banner">
+  <div id="banner" :style="{backgroundImage:'url('+(activityInfo.otherUrl?'//www.hnrcsc.com'+activityInfo.otherUrl:'../images/banner.png')+')'}">
     <!--标题区-->
     <div id="title_panel" v-if="activityInfo">
-      <div class="title">{{ activityInfo.productName }}</div>
-      <div class="desc">{{ nl2br(activityInfo.remark || '') }}</div>
+      <div class="title" v-if="!activityInfo.otherUrl">{{ activityInfo.productName }}</div>
+      <div class="desc" v-if="!activityInfo.otherUrl">{{ nl2br(activityInfo.remark || '') }}</div>
     </div>
     <!--/标题区-->
     <div class="banner_panel">
@@ -217,7 +217,7 @@ TODO 查看简历的样式设计
               }}
             </div>
             <div class="company-info_subtitle">企业简介</div>
-            <div class="company-info_content">{{ currentCompanyInfo.companyInfo }}</div>
+            <div class="company-info_content company-info_desc">{{ currentCompanyInfo.companyInfo }}</div>
             <div class="company-info_subtitle">招聘职位</div>
             <div class="company-info_content">
               <!--职位列表-->
@@ -597,7 +597,7 @@ TODO 查看简历的样式设计
         }}
       </div>
       <div class="company-info_subtitle">企业简介</div>
-      <div class="company-info_content">{{ currentCompanyInfo.companyInfo }}</div>
+      <div class="company-info_content company-info_desc">{{ currentCompanyInfo.companyInfo }}</div>
       <div class="company-info_subtitle">招聘职位</div>
       <div class="company-info_content">
         <!--职位列表-->

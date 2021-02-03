@@ -1,7 +1,7 @@
 @import 'base';
 
 #main {
-  background: #48C0FF url(../images/banner.png) no-repeat top center;
+  background: #48C0FF no-repeat top center;
   overflow: auto;
 }
 
@@ -900,6 +900,9 @@
 	color: #666;
   }
 
+  .company-info_desc {
+
+  }
 
   .company-info_subtitle {
 	background: url(../images/icon_2dot@2x.png) no-repeat left center;
