@@ -211,10 +211,10 @@ var mainModel = new Vue({
           } else {
             this.activityInfo    = response.data;
             this.activityPattern = response.data.activityPattern;
-            this.activityTime    = response.data.holdingTime;
+            this.activityTime    = response.data.endDate;
 
             //根据约定因为活动都是线上，活动结束时间统一设置为当天23点59分59秒，所以做如下操作
-            this.activityTime = moment(mainModel.activityTime).
+            this.activityTime = moment(response.data.endDate).
                 set('hour', 23).
                 set('minute', 59).
                 set('second', 59).
