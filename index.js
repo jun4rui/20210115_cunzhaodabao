@@ -278,8 +278,8 @@ var mainModel = new Vue({
     //加载弹幕
     getDanmuList: function() {
       $.post(_SERVER + '/activity/queryBarrage', {
-        // activityId: this.activityId,
-        activityId: 581,
+        activityId: this.activityId,
+        // activityId: 581,
         num:        this.danmuNum
       }, function(response) {
         if (response.errCode === '00') {
@@ -1089,7 +1089,7 @@ var mainModel = new Vue({
       //如果没子弹了，就重新装载子弹
       if (this.danmuList.length === 0) {
         if(!this.reloading){
-          console.log('重新装弹中');
+          console.log('reloading.');
           this.reloading = true;
           this.getDanmuList();//加载弹幕列表
         }
