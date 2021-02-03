@@ -1305,6 +1305,29 @@ ul, li {
   color: #333;
   line-height: 2;
 }
+#company-info .company-info_desc, .company-info .company-info_desc {
+  position: relative;
+}
+#company-info .company-info_desc .unfold, .company-info .company-info_desc .unfold {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  color: #2C75F1;
+  background: rgba(255, 255, 255, 0.85);
+}
+#company-info .company-info_desc .fold, .company-info .company-info_desc .fold {
+  display: inline-block;
+  cursor: pointer;
+  color: #2C75F1;
+}
+#company-info .company-info_desc.cj-ellipsis-multiline .unfold, .company-info .company-info_desc.cj-ellipsis-multiline .unfold {
+  display: inline-block;
+}
+#company-info .company-info_desc.cj-ellipsis-multiline .fold, .company-info .company-info_desc.cj-ellipsis-multiline .fold {
+  display: none;
+}
 #company-info .company-info_other, .company-info .company-info_other {
   line-height: 2;
 }
@@ -1771,14 +1794,14 @@ ul, li {
   background-position: center center;
   background-repeat: no-repeat;
   margin-right: 17px;
-  border: 4px solid #3333331f;
+  border: 4px solid #3333331F;
   overflow: hidden;
 }
 .resume-detail .personName {
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
-  color: #000000;
+  color: #000;
   margin-right: 14px;
 }
 .resume-detail .personTypeDsp {
@@ -1795,7 +1818,7 @@ ul, li {
 }
 .resume-detail .resume-other_info {
   font-size: 14px;
-  color: #666666;
+  color: #666;
 }
 .resume-detail .resume-other_info li:after {
   color: #C2C2C3;

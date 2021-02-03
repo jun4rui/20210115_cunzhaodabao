@@ -280,7 +280,7 @@ var mainModel = new Vue({
       $.post(_SERVER + '/activity/queryBarrage', {
         activityId: this.activityId,
         // activityId: 581,
-        num:        this.danmuNum
+        num: this.danmuNum
       }, function(response) {
         if (response.errCode === '00') {
           this.danmuList = response.data;
@@ -437,11 +437,10 @@ var mainModel = new Vue({
         return false;
       }
       //在检查企业账号是否登陆
-      if(!this.companyUserInfo){
+      if (!this.companyUserInfo) {
         this.$message.error('请先登陆企业账号。');
         return false;
       }
-
 
       //清空当前简历变量
       this.currentResumeInfo = null;
@@ -451,10 +450,10 @@ var mainModel = new Vue({
       //调用接口获取展会详情
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
       $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
-        console.log('resume data',response);
+        console.log('resume data', response);
         if (response.map.status === '00') {
           this.currentResumeInfo = response.map;
-        }else {
+        } else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
         }
@@ -469,7 +468,7 @@ var mainModel = new Vue({
         return false;
       }
       //在检查企业账号是否登陆
-      if(!this.companyUserInfo){
+      if (!this.companyUserInfo) {
         this.$message.error('请先登陆企业账号。');
         return false;
       }
@@ -480,10 +479,10 @@ var mainModel = new Vue({
       //调用接口获取展会详情
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
       $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
-        console.log('resume data',response);
+        console.log('resume data', response);
         if (response.map.status === '00') {
           this.currentResumeInfo = response.map;
-        }else {
+        } else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
         }
@@ -552,7 +551,7 @@ var mainModel = new Vue({
       if (!this.conversations || this.conversations.length === 0) {
         this.$message.warning('抱歉，您没有任何对话消息。');
       }
-      var _tempTo = this.conversations[0];
+      var _tempTo            = this.conversations[0];
       // 清空当前查看简历（其实也可以企业 查看的时候再清空）
       this.currentResumeInfo = null;
       if (this.personUserInfo) {
@@ -983,23 +982,23 @@ var mainModel = new Vue({
     //聊天用查看个人简历
     chatViewPersonResume: function() {
       //获取用户简历列表
-      $.post(_SERVER+'/personCenter/listPersonCv', {personId: this.targetId}, function(response){
-        if(response.errCode==='00'){
+      $.post(_SERVER + '/personCenter/listPersonCv', {personId: this.targetId}, function(response) {
+        if (response.errCode === '00') {
 
           //获取用户默认简历ID
           var _tempCvId = 0;
-          for (var i=0;i<response.data.length; i++){
-            if (response.data[i].DEFAULTFLAG==='Y'){
+          for (var i = 0; i < response.data.length; i++) {
+            if (response.data[i].DEFAULTFLAG === 'Y') {
               _tempCvId = response.data[i].CVID;
             }
           }
-          if (_tempCvId===0){
+          if (_tempCvId === 0) {
             this.$message.warning('该用户没有简历，或没有设置默认简历');
-          }else{
+          } else {
             //获取用户简历到当前简历变量
             this.getResume(_tempCvId);
           }
-        }else{
+        } else {
           this.$message.error(response.errMsg);
           return false;
         }
@@ -1007,7 +1006,7 @@ var mainModel = new Vue({
 
       $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
       $('#chat-area_other .model').removeClass('active');
-      $('#chat-area_other .person-resume.model').addClass('active')
+      $('#chat-area_other .person-resume.model').addClass('active');
     },
     //聊天用打开视频聊天
     chatViewVideo: function() {
@@ -1065,6 +1064,22 @@ var mainModel = new Vue({
           }
         }
       }.bind(this));
+    },
+
+    //折叠 or 展开企业详情
+    doFold: function(inParentDom) {
+      console.log($(inParentDom).find('.company-info_desc').prop('class'));
+      if($(inParentDom).find('.company-info_desc').prop('class').indexOf('cj-ellipsis-multiline')>-1 ){
+        $(inParentDom).find('.company-info_desc').removeClass('cj-ellipsis-multiline');
+      }else{
+        $(inParentDom).find('.company-info_desc').addClass('cj-ellipsis-multiline');
+      }
+      //原生写法兼容性较差，暂时不用
+      // if(event.target.parentElement.classList.value.indexOf('cj-ellipsis-multiline')>-1){
+      //   event.target.parentElement.classList.remove('cj-ellipsis-multiline');
+      // }else{
+      //   event.target.parentElement.classList.add('cj-ellipsis-multiline');
+      // }
     }
   },
   created:  function() {
@@ -1088,12 +1103,12 @@ var mainModel = new Vue({
     setInterval(function() {
       //如果没子弹了，就重新装载子弹
       if (this.danmuList.length === 0) {
-        if(!this.reloading){
+        if (!this.reloading) {
           console.log('reloading.');
           this.reloading = true;
           this.getDanmuList();//加载弹幕列表
         }
-      }else{
+      } else {
         //发射从弹幕池动态获取最上面的弹幕
         $('#danmu').barrager({
           img:   'images/icon_danmu_avatar.png',

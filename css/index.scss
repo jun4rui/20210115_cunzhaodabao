@@ -235,7 +235,7 @@
 	.recruit-list_panel {
 	  width: 220px;
 	  height: 253px;
-	  overflow:hidden;
+	  overflow: hidden;
 	  margin: 0 auto;
 	  padding: 10px 0;
 	  box-sizing: border-box;
@@ -902,10 +902,6 @@
 	color: #666;
   }
 
-  .company-info_desc {
-
-  }
-
   .company-info_subtitle {
 	background: url(../images/icon_2dot@2x.png) no-repeat left center;
 	background-size: 14px 10px;
@@ -929,6 +925,34 @@
 	color: #333;
 	line-height: 2;
   }
+
+  .company-info_desc {
+	position: relative;
+
+	.unfold {
+	  display:none;
+	  position: absolute;
+	  right: 0;
+	  bottom: 0;
+	  cursor: pointer;
+	  color: #2C75F1;
+	  background: rgba(255, 255, 255, 0.85);
+	}
+	.fold {
+	  display:inline-block;
+	  cursor: pointer;
+	  color: #2C75F1;
+	}
+	&.cj-ellipsis-multiline{
+	  .unfold {
+		display:inline-block;
+	  }
+	  .fold {
+		display:none;
+	  }
+	}
+  }
+
 
   .company-info_other {
 	line-height: 2;
@@ -1260,7 +1284,7 @@
 		justify-content: space-around;
 		align-items: stretch;
 		overflow: hidden;
-		height:100%;
+		height: 100%;
 
 		#conversations_panel {
 		  width: 390px;
@@ -1415,6 +1439,7 @@
 			border: 1px solid #DFDFDF;
 			border-top: 0;
 			border-bottom: 0;
+
 			#chat-function_menu {
 			  padding: 0 0 5px 0;
 			}
@@ -1447,9 +1472,11 @@
 			padding: 30px;
 			overflow: auto;
 			width: 100%;
+
 			&.action {
 			  display: flex;
 			}
+
 			.resume-detail {
 			  flex-grow: 1;
 			}
@@ -1489,7 +1516,7 @@
 	background-position: center center;
 	background-repeat: no-repeat;
 	margin-right: 17px;
-	border: 4px solid #3333331f;
+	border: 4px solid #3333331F;
 	overflow: hidden;
   }
 
@@ -1497,7 +1524,7 @@
 	font-weight: bold;
 	font-size: 16px;
 	line-height: 20px;
-	color: #000000;
+	color: #000;
 	margin-right: 14px;
   }
 
@@ -1517,28 +1544,31 @@
 
   .resume-other_info {
 	font-size: 14px;
-	color: #666666;
+	color: #666;
+
 	li:after {
-	  color:#C2C2C3;
+	  color: #C2C2C3;
 	  padding: 0px 0.2em;
 	}
   }
 
   .resume-detail_concat {
 	.mobilePhone {
-	  background:url(../images/icon_moble.png) no-repeat left center;
+	  background: url(../images/icon_moble.png) no-repeat left center;
 	  background-size: 18px 18px;
 	  text-indent: 20px;
 	  margin-right: 20px;
 	}
+
 	.email {
-	  background:url(../images/icon_email.png) no-repeat left center;
+	  background: url(../images/icon_email.png) no-repeat left center;
 	  background-size: 18px 18px;
 	  text-indent: 20px;
 	  margin-right: 20px;
 	}
+
 	.currLocDsp {
-	  background:url(../images/icon_location.png) no-repeat left center;
+	  background: url(../images/icon_location.png) no-repeat left center;
 	  background-size: 18px 18px;
 	  text-indent: 20px;
 	  margin-right: 20px;
