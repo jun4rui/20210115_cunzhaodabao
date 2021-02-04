@@ -131,7 +131,7 @@
               <span class="char">分</span>
             </div>
             <div id="goto_panel">
-              <div id="view-invitation-card" @click="activityDescDialog=true;" v-if="!personUserInfo && !companyUserInfo"></div>
+              <div id="view-invitation-card" @click="activityDescDialog=true;" v-if="!personUserInfo && !companyUserInfo && activityInfo.wordpressId"></div>
               <div id="view-invitation-card_long" @click="activityDescDialog=true;" v-if="personUserInfo"></div>
               <!--TODO 没有做所以先去掉-->
               <!--<a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo">&lt;!&ndash;TODO 这里还没有链接&ndash;&gt;</a>-->
