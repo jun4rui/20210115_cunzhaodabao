@@ -1129,6 +1129,6 @@ var mainModel = new Vue({
       this.getJobSeekerList();//获取求职者列表
       this.getListActivityCompany();//加载企业和职位信息
 
-    }.bind(this), 5000);
+    }.bind(this), 15000);
   }
 });
