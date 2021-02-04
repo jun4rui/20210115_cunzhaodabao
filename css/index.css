@@ -772,6 +772,9 @@ ul, li {
   color: #1D7CD9;
   font-weight: bold;
 }
+.company-item .recruit-list .recruit-list_panel .recruit-item:last-of-type {
+  border-bottom: 0 !important;
+}
 .company-item .hr {
   position: absolute;
   top: 166px;
