@@ -519,6 +519,8 @@ var mainModel = new Vue({
           this.personSign();
           //登陆聊天账号
           this.readyChat();
+          //个人登录后Tab默认切换到招聘大厅的企业列表处
+          this.currentTab = 0;
         } else {
           this.$message.error('个人账号登陆失败！');
         }
@@ -537,6 +539,8 @@ var mainModel = new Vue({
           this.companySign();
           //登陆聊天账号
           this.readyChat();
+          //企业登录后Tab默认切换到求职大厅的人才列表处
+          this.currentTab = 1;
         } else {
           this.$message.error('企业账号登陆失败！');
         }
