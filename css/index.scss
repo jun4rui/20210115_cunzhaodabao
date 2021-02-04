@@ -1134,7 +1134,7 @@
 
   .view-message {
 	position: absolute;
-	left: 90px;
+	left: 80px;
 	top: 36px;
 	width: 80px;
 	height: 30px;
@@ -1144,10 +1144,10 @@
 	color: #FFF;
 	text-align: center;
 	border-radius: 20px;
-	background: #FFA800 url(../images/icon_viewmessage.png) no-repeat left 16px center;
+	background: #FFA800 url(../images/icon_viewmessage.png) no-repeat left 14px center;
 	background-size: 18px 16px;
-	text-indent: 28px;
-	cursor: pointer;
+	text-indent: 26px;
+	cursor: pointer;。
 
 	span {
 	  background: #F00;
@@ -1167,7 +1167,7 @@
 
   .logout {
 	position: absolute;
-	left: 196px;
+	left: 190px;
 	top: 36px;
 	width: 70px;
 	height: 30px;
