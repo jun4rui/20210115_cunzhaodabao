@@ -431,7 +431,6 @@ var mainModel = new Vue({
     //查看用户简历
     viewResume: function(inCvId) {
       console.log('DEBUG 暂时不调用这个接口');
-      return false; //TODO 暂时不调用这个接口
       console.log('viewResume', inCvId);
       //先检查cvid是不是传了
       if (!inCvId) {
