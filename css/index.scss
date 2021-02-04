@@ -216,6 +216,7 @@
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+	cursor: pointer;
 
 	> span {
 	  flex-grow: 1;
@@ -253,6 +254,7 @@
 	  box-sizing: border-box;
 	  background: #CFE8F5;
 	  border-radius: 4px;
+	  cursor: pointer;
 
 	  .recruit-item {
 		@extend .cj-ellipsis;

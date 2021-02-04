@@ -438,13 +438,13 @@
             <div class="company-item" v-if="searchCompanyKeyword.trim()==='' || item.companyName.indexOf(searchCompanyKeyword)>-1" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
               <!--<div style=" z-index: 9999999999; position: absolute; color:#FFF;">{{item.companyId %6}}-{{item.companyId}}-{{(item.companyId%16+1)}}</div>-->
               <!--公司名称-->
-              <div class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
+              <div title="点击查看详情" class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
                 <span>{{ item.companyName }}</span>
               </div>
               <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
               <!--职位列表-->
               <div @click="showRecruitList(item.companyId)" class="recruit-list">
-                <div class="recruit-list_panel">
+                <div class="recruit-list_panel" title="点击投递职位">
                   <div class="recruit-item">
                     <div class="see-more">查看更多</div>
                   </div>
