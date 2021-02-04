@@ -802,7 +802,11 @@ ul, li {
     box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25); }
     #recruit-list_dialog .el-dialog__body label.el-radio .el-radio__label {
       font-size: 16px;
-      color: #333; }
+      color: #333;
+      overflow: hidden;
+      display: inline-block;
+      width: 350px;
+      text-overflow: ellipsis; }
 
 #recruit-list_dialog .el-dialog__footer {
   padding: 30px 20px 40px; }
@@ -1154,7 +1158,8 @@ ul, li {
     font-size: 14px;
     font-weight: bold;
     color: #2C75F1;
-    cursor: pointer; }
+    cursor: pointer;
+    width: 380px; }
   #company-info .company-info-recruit-list .company-info-recruit_item .recruit-other-info, .company-info .company-info-recruit-list .company-info-recruit_item .recruit-other-info {
     color: #666; }
   #company-info .company-info-recruit-list .company-info-recruit_item .post-resume, .company-info .company-info-recruit-list .company-info-recruit_item .post-resume {

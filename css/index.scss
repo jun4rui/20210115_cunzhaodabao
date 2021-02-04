@@ -529,6 +529,10 @@
 	  .el-radio__label {
 		font-size: 16px;
 		color: #333;
+		overflow: hidden;
+		display: inline-block;
+		width: 350px;
+		text-overflow: ellipsis;
 	  }
 	}
   }
@@ -1018,6 +1022,7 @@
 		font-weight: bold;
 		color: #2C75F1;
 		cursor: pointer;
+		width:380px;
 	  }
 
 	  .recruit-other-info {
