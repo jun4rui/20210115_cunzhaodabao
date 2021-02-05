@@ -17,6 +17,7 @@
   <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
   <script src="node_modules/lodash/lodash.min.js"></script>
   <script src="js/jmessage-sdk-web-2.6.0/jmessage-sdk-web.2.6.0.min.js"></script>
+  <script src="node_modules/cssobj/dist/cssobj.min.js"></script>
   <!--搜狐pv库，加入returnCitySN对象-->
   <script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
 </head>
@@ -300,24 +301,26 @@
                   <!--手机号码-->
                   <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
                   <!--电子邮箱-->
-                  <div class="email cj-inline-block">{{ currentResumeInfo.jobPerson.email?currentResumeInfo.jobPerson.email:'-未填-' }}</div>
+                  <div class="email cj-inline-block">{{
+                      currentResumeInfo.jobPerson.email
+                          ? currentResumeInfo.jobPerson.email
+                          : '-未填-'
+                    }}
+                  </div>
                   <!--现居地-->
                   <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
                 </div>
               </div>
-
             </div>
-
             <!--教育经历-->
             <div class="jobPersonEduList" v-if="currentResumeInfo.personEduList">
               <div class="resume-detail_subtitle">教育经历</div>
               <div class="resume-detail_content">
                 <div v-for="item in currentResumeInfo.personEduList">
-                  {{item.personEduDsp}}
+                  {{ item.personEduDsp }}
                 </div>
               </div>
               <ul>
-
               </ul>
             </div>
             <!--期待岗位-->
@@ -338,21 +341,24 @@
                 <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
               </div>
             </div>
-
             <div v-if="currentResumeInfo.jobPersonCv">
               <div class="resume-detail_subtitle">个人自述</div>
               <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
               <div class="resume-detail_subtitle">其他说明</div>
               <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
             </div>
-
             <!--工作经验-->
             <div v-if="currentResumeInfo.personJobHistList">
               <div class="resume-detail_subtitle">工作经验</div>
               <div class="resume-detail_content">
                 <div v-for="item in currentResumeInfo.personJobHistList">
                   <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                        item.endDate
+                            ? item.endDate.substr(0, 7)
+                            : '至今'
+                      }}
+                    </div>
                     <div>{{ item.positionName }}</div>
                   </div>
                   <div>{{ item.companyName }}</div>
@@ -367,7 +373,12 @@
               <div class="resume-detail_content">
                 <div v-for="item in currentResumeInfo.personProjectList">
                   <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                        item.endDate
+                            ? item.endDate.substr(0, 7)
+                            : '至今'
+                      }}
+                    </div>
                     <div>{{ item.projectName }}</div>
                   </div>
                   <div v-html="item.projectDetail4Disp"></div>
@@ -377,8 +388,6 @@
                 </div>
               </div>
             </div>
-
-
             <!--技能-->
             <div v-if="currentResumeInfo.personItSkillList">
               <div class="resume-detail_subtitle">技能</div>
@@ -403,7 +412,12 @@
               <div class="resume-detail_content">
                 <div v-for="item in currentResumeInfo.trainingList">
                   <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                    <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                        item.endDate
+                            ? item.endDate.substr(0, 7)
+                            : '至今'
+                      }}
+                    </div>
                     <div>{{ item.projectName }}</div>
                   </div>
                   <div v-html="item.trainingOrgDsp"></div>
@@ -426,9 +440,7 @@
   <div id="tab_content">
     <!-- 招聘大厅 -->
     <div id="recruitment-hall" class="tab_item" v-if="currentTab===0">
-      <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
-      </svg>
+      <div id="top-bar"></div>
       <div class="out_panel_top1"></div>
       <div class="out_panel_top2"></div>
       <div class="out_border_1">
@@ -489,9 +501,6 @@
     <!-- /招聘大厅 -->
     <!-- 求职大厅 -->
     <div id="job-hall" class="tab_item" v-if="currentTab===1">
-      <svg style="display:block; margin:0 auto;" width="1780" height="42" viewBox="0 0 1780 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M42 0H1738L1780 42H0L42 0Z" fill="#8AE4FC"/>
-      </svg>
       <div class="out_panel_top1">
         <div class="title_panel">
           <div class="title"></div>
@@ -708,24 +717,26 @@
             <!--手机号码-->
             <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
             <!--电子邮箱-->
-            <div class="email cj-inline-block">{{ currentResumeInfo.jobPerson.email?currentResumeInfo.jobPerson.email:'-未填-' }}</div>
+            <div class="email cj-inline-block">{{
+                currentResumeInfo.jobPerson.email
+                    ? currentResumeInfo.jobPerson.email
+                    : '-未填-'
+              }}
+            </div>
             <!--现居地-->
             <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
           </div>
         </div>
-
       </div>
-
       <!--教育经历-->
       <div class="jobPersonEduList" v-if="currentResumeInfo.personEduList">
         <div class="resume-detail_subtitle">教育经历</div>
         <div class="resume-detail_content">
           <div v-for="item in currentResumeInfo.personEduList">
-            {{item.personEduDsp}}
+            {{ item.personEduDsp }}
           </div>
         </div>
         <ul>
-
         </ul>
       </div>
       <!--期待岗位-->
@@ -746,21 +757,24 @@
           <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
         </div>
       </div>
-
       <div v-if="currentResumeInfo.jobPersonCv">
         <div class="resume-detail_subtitle">个人自述</div>
         <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
         <div class="resume-detail_subtitle">其他说明</div>
         <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
       </div>
-
       <!--工作经验-->
       <div v-if="currentResumeInfo.personJobHistList">
         <div class="resume-detail_subtitle">工作经验</div>
         <div class="resume-detail_content">
           <div v-for="item in currentResumeInfo.personJobHistList">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                  item.endDate
+                      ? item.endDate.substr(0, 7)
+                      : '至今'
+                }}
+              </div>
               <div>{{ item.positionName }}</div>
             </div>
             <div>{{ item.companyName }}</div>
@@ -775,7 +789,12 @@
         <div class="resume-detail_content">
           <div v-for="item in currentResumeInfo.personProjectList">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                  item.endDate
+                      ? item.endDate.substr(0, 7)
+                      : '至今'
+                }}
+              </div>
               <div>{{ item.projectName }}</div>
             </div>
             <div v-html="item.projectDetail4Disp"></div>
@@ -785,8 +804,6 @@
           </div>
         </div>
       </div>
-
-
       <!--技能-->
       <div v-if="currentResumeInfo.personItSkillList">
         <div class="resume-detail_subtitle">技能</div>
@@ -811,7 +828,12 @@
         <div class="resume-detail_content">
           <div v-for="item in currentResumeInfo.trainingList">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-              <div>{{ item.startDate ? item.startDate.substr(0,7) : '至今' }}至{{ item.endDate ? item.endDate.substr(0,7) : '至今' }}</div>
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
+                  item.endDate
+                      ? item.endDate.substr(0, 7)
+                      : '至今'
+                }}
+              </div>
               <div>{{ item.projectName }}</div>
             </div>
             <div v-html="item.trainingOrgDsp"></div>
@@ -830,5 +852,47 @@
 </div>
 <!--/主内容-->
 <script src="index.js?v=20210204AA"></script>
+<script>
+  //根据浏览器窗口宽度计算内容框体宽度
+  (function() {
+    var obj       = {
+      '#top-bar':            {width: '1780px'},
+      '.out_panel_top1':     {width: '1780px'},
+      '.out_panel_bottom2':  {width: '1780px'},
+      '.out_panel_top2':     {width: '1780px'},
+      '.out_panel_bottom1':  {width: '1780px'},
+      '.out_border_1':       {width: '1746px'},
+      '.company-list_panel': {width: '1712px'}
+    };
+    var cssResult = cssobj(obj);
+
+    function reCalcSize() {
+      console.log('WIDTH:' + window.innerWidth + ', HEIGHT:' + window.innerHeight);
+      var _baseWidth = '1780';
+      if (window.innerWidth < 1780) {
+        _baseWidth = window.innerWidth;
+      }
+
+      obj['#top-bar'].width            = (_baseWidth) + 'px';
+      obj['.out_panel_top1'].width     = (_baseWidth) + 'px';
+      obj['.out_panel_top2'].width     = (_baseWidth) + 'px';
+      obj['.out_panel_bottom1'].width  = (_baseWidth) + 'px';
+      obj['.out_panel_bottom2'].width  = (_baseWidth) + 'px';
+      obj['.out_border_1'].width       = (_baseWidth - 34) + 'px';
+      obj['.company-list_panel'].width = (_baseWidth - 68) + 'px';
+      cssResult.update();
+    }
+
+    // 这样根据屏幕尺寸可以初始化一下元素宽度，延迟3s再计算一次
+    reCalcSize();
+    setTimeout(function(){
+      reCalcSize();
+    },3000);
+
+    $(window).resize(function() {
+      reCalcSize();
+    });
+  })();
+</script>
 </body>
 </html>

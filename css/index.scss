@@ -1611,3 +1611,33 @@
 	}
   }
 }
+
+#top-bar {
+  width: 1780px;
+  height: 42px;
+  background: #8ae4fc;
+  margin: 0 auto;
+  position: relative;
+  &:before {
+	content: '';
+	height: 0px;
+	width: 0px;
+	background: #48c0ff;
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-right: 42px solid #8ae4fc;
+	border-top: 42px solid transparent;
+  }
+  &:after {
+	content: '';
+	height: 0;
+	width: 0;
+	background: #48c0ff;
+	position: absolute;
+	right: 0;
+	top: 0;
+	border-left: 42px solid #8ae4fc;
+	border-top: 42px solid transparent;
+  }
+}
