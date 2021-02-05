@@ -447,8 +447,8 @@
         <div class="out_border_2">
           <div class="company-list_panel" v-if="companyList" :class="{'online': currentCompanyShowStatus===1}">
             <!--展位单元-->
-            <div class="company-item" v-if="searchCompanyKeyword.trim()==='' || item.companyName.indexOf(searchCompanyKeyword)>-1" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
-              <!--<div style=" z-index: 9999999999; position: absolute; color:#FFF;">{{item.companyId %6}}-{{item.companyId}}-{{(item.companyId%16+1)}}</div>-->
+            <div class="company-item" v-if="item.companyName.indexOf(searchCompanyKeyword)>-1 || JSON.stringify(item.recruitModelList).indexOf(searchCompanyKeyword.trim())>-1" v-for="item in companyList" :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}">
+              <!--<div class="DEBUG" style=" z-index: 9999999999; position: absolute; color:#FFF;">{{}}</div>-->
               <!--公司名称-->
               <div title="点击查看详情" class="company_name" @click="showCurrentCompanyInfo(item.companyId)">
                 <span>{{ item.companyName }}</span>
