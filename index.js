@@ -161,6 +161,16 @@ var mainModel = new Vue({
     getEndTime: function() {
       var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes());
       console.log(_tempTime);
+      //如果时间是负数，则三个数都返回0
+      if(_tempTime<0){
+        this.activityEndTime = {
+          day:  0,
+          hour: 0,
+          min:  0
+        };
+        return false;
+      }
+
       var _day  = '';
       var _hour = '';
       var _min  = '';
