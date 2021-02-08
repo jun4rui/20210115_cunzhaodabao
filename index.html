@@ -37,7 +37,7 @@
   </div>
   <!-- /Header -->
   <!-- Banner -->
-  <div id="banner" v-if="activityInfo" :style="{backgroundImage:'url('+(activityInfo.otherUrl?'//www.hnrcsc.com'+activityInfo.otherUrl:'../images/banner.png')+')'}">
+  <div id="banner" v-if="activityInfo" :style="{backgroundImage:'url('+(activityInfo.otherUrl?activityInfo.otherUrl:'../images/banner.png')+')'}">
     <!--标题区-->
     <div id="title_panel" v-if="activityInfo">
       <div class="title" v-if="!activityInfo.otherUrl">{{ activityInfo.productName }}</div>
