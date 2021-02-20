@@ -157,12 +157,31 @@ var mainModel = new Vue({
     /*~聊天相关*/
   },
   methods:  {
+    //检查当前时间，是不是在活动开始和结束时间范围内。结束时间（因为默认是最后一天0点）按照时间+1天计算（用来表示第二天0点）
+    checkDateTime: function() {
+      //如果当前没有获得招聘会信息，则默认返回false
+      if (!this.activityInfo) {
+        return false;
+      } else {
+        var _currentDateTime = moment().valueOf();
+        var _startDateTime   = moment(this.activityInfo.startDate).valueOf();
+        var _endDateTime     = moment(this.activityInfo.endDate).add(1, 'days').valueOf();
+
+        console.log(_startDateTime, _currentDateTime, _endDateTime);
+
+        if (_currentDateTime > _startDateTime && _currentDateTime < _endDateTime) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
     //获得距离展会结束时间还有多久
     getEndTime: function() {
       var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes());
       console.log(_tempTime);
       //如果时间是负数，则三个数都返回0
-      if(_tempTime<0){
+      if (_tempTime < 0) {
         this.activityEndTime = {
           day:  0,
           hour: 0,
@@ -1084,9 +1103,9 @@ var mainModel = new Vue({
     //折叠 or 展开企业详情
     doFold: function(inParentDom) {
       console.log($(inParentDom).find('.company-info_desc').prop('class'));
-      if($(inParentDom).find('.company-info_desc').prop('class').indexOf('cj-ellipsis-multiline')>-1 ){
+      if ($(inParentDom).find('.company-info_desc').prop('class').indexOf('cj-ellipsis-multiline') > -1) {
         $(inParentDom).find('.company-info_desc').removeClass('cj-ellipsis-multiline');
-      }else{
+      } else {
         $(inParentDom).find('.company-info_desc').addClass('cj-ellipsis-multiline');
       }
       //原生写法兼容性较差，暂时不用
