@@ -536,8 +536,33 @@ var mainModel = new Vue({
         return false;
       }
     },
+    //自动登录（用获取个人和企业登陆状态接口，看哪个能返回已登录信息来判断）
+    autoLogin: function() {
+      //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
+      //如果前端标记了退出状态，则不要自动登录
+      if (window.sessionStorage.getItem('online_exit')!=='1'){
+        //个人登录判断
+        $.post('http://www.hnrcsc.com/web/seekjob/video!personLogin.action', function(response) {
+          if (response.map.status === '00') {
+            console.log('执行个人自动登录');
+            this.$message.success('系统检测您已经使用个人方式登录过，正在加载个人账户信息……');
+            this.getPersonUserInfo();
+          }
+        }.bind(this));
+        //企业登录判断
+        $.post('http://www.hnrcsc.com/web/recruit/login!checkLogin.action', function(response) {
+          if (response.map.status === '00') {
+            console.log('执行企业自动登录');
+            this.$message.success('系统检测您已经使用企业方式登录过，正在加载企业账户信息……');
+            this.getCompanyUserInfo();
+          }
+        }.bind(this));
+      }
+    },
     //获取个人用户登陆信息
     getPersonUserInfo: function() {
+      //清除自动登录标记
+      window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
       this.personUserInfo = this.companyUserInfo = null;
       $.post('http://www.hnrcsc.com/web/seekjob/video!personLogin.action', function(response) {
@@ -557,6 +582,8 @@ var mainModel = new Vue({
     },
     //获取企业用户登陆信息
     getCompanyUserInfo: function() {
+      //清除自动登录标记
+      window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
       //感觉代码和获取个人账号的一样，也可以考虑合并起来
       this.personUserInfo = this.companyUserInfo = null;
@@ -577,6 +604,7 @@ var mainModel = new Vue({
     },
     //退出登陆
     logout: function() {
+      window.sessionStorage.setItem('online_exit', '1');
       window.location.href = window.location.href.substr(0, window.location.href.indexOf('?'));
     },
     //个人查看消息（打开聊天窗口）
@@ -1130,6 +1158,8 @@ var mainModel = new Vue({
     this.loginMode = getParameterValue(window.location.href, 'mode');
     if (this.loginMode === 'person') this.getPersonUserInfo();
     if (this.loginMode === 'company') this.getCompanyUserInfo();
+    //没有mode参数，则使用autoLogin帮助已经登录的用户自动登录
+    if (this.loginMode === '') this.autoLogin();
 
     this.getActivityId();//获取场次ID
     this.addCounter();//调用计数器
