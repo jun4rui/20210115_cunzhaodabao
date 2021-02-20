@@ -164,8 +164,8 @@ var mainModel = new Vue({
         return false;
       } else {
         var _currentDateTime = moment().valueOf();
-        var _startDateTime   = moment(this.activityInfo.startDate).valueOf();
-        var _endDateTime     = moment(this.activityInfo.endDate).add(1, 'days').valueOf();
+        var _startDateTime   = moment(this.activityInfo.holdingTime).valueOf();
+        var _endDateTime     = moment(this.activityInfo.holdingTime).add(1, 'days').valueOf();
 
         console.log(_startDateTime, _currentDateTime, _endDateTime);
 
