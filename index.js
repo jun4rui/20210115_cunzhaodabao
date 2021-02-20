@@ -623,6 +623,10 @@ var mainModel = new Vue({
     //开始和个人聊天 只有企业登陆以后才能调用
     chatToPerson: function(inPersonName, inPersonId) {
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
+      if (!this.checkDateTime()) {
+        this.$message.error('本场招聘会还未开始，无法进行联系。');
+        return false;
+      }
 
       if (this.companyUserInfo === null) {
         this.$message.error('请登陆企业账号，并确认已参加该场招聘会。');
@@ -638,6 +642,11 @@ var mainModel = new Vue({
     //开始和企业聊天 只有个人登陆以后才可以调用
     chatToCompany: function(inCompanyName, inCompanyId) {
       console.log(`开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`);
+
+      if (!this.checkDateTime()) {
+        this.$message.error('本场招聘会还未开始，无法进行联系。');
+        return false;
+      }
 
       if (this.personUserInfo === null) {
         this.$message.error('请先登陆个人账号，才能和企业进行沟通。');
