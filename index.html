@@ -489,7 +489,7 @@
               <div class="chair"></div>
               <!--立即沟通-->
               <div class="to-chat" @click="chatToCompany(item.companyName, item.companyId)">立即沟通</div>
-              <div class="to-chat offline">立即沟通（离线）</div>
+              <div class="to-chat offline" @click="chatToCompany(item.companyName, item.companyId)">给TA留言（离线）</div>
             </div>
             <!--/展位单元-->
           </div>
@@ -524,7 +524,7 @@
                 {{ item.workYears }}年工作经验
               </div>
               <div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通</div>
-              <div class="chat-now offline">立即沟通</div>
+              <div class="chat-now offline" @click="chatToPerson(item.personName, item.personId)">给TA留言</div>
               <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
             </div>
           </div>
