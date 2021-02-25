@@ -122,9 +122,11 @@
           <!--/登录区-->
           <!--倒计时区-->
           <div id="countdown_panel">
-            <div class="title">会议结束倒计时</div>
+            <div class="title" v-if="activityAlreadyStarted">会议结束倒计时</div>
+            <div class="title" v-if="!activityAlreadyStarted">会议开始倒计时</div>
             <div v-if="activityEndTime" id="countdown_time" class="cj-block">
-              <span class="time">{{ activityEndTime.day }}</span>
+              <span class="time" v-if="activityAlreadyStarted">{{ activityEndTime.day }}</span>
+              <span class="time" v-if="!activityAlreadyStarted">{{ activityEndTime.day-1 }}</span>
               <span class="char">天</span>
               <span class="time">{{ activityEndTime.hour }}</span>
               <span class="char">时</span>
@@ -851,7 +853,7 @@
   <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
-<script src="index.js?v=20210220k"></script>
+<script src="index.js?v=20210225a"></script>
 <script>
   //根据浏览器窗口宽度计算内容框体宽度
   (function() {

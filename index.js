@@ -12,6 +12,7 @@ var mainModel = new Vue({
     activityPattern:          null,   //展会模式
     activityTime:             null,   //展会时间
     activityEndTime:          null,   //展会结束时间
+    activityAlreadyStarted:   false,  //展会是否已经开始
     offlineTimeout:           30,     //离线超时时长（分钟）
     activityRecord:           null,   //展会统计数据
     activityDesc:             null,   //展会邀请函内容
@@ -179,6 +180,13 @@ var mainModel = new Vue({
     //获得距离展会结束时间还有多久
     getEndTime: function() {
       var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes());
+      //判断活动是否开始
+      if((parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes())/60-24)>0){
+        this.activityAlreadyStarted = false;
+      }else{
+        this.activityAlreadyStarted = true;
+      }
+
       console.log(_tempTime);
       //如果时间是负数，则三个数都返回0
       if (_tempTime < 0) {
@@ -205,6 +213,7 @@ var mainModel = new Vue({
           hour: _hour,
           min:  _min
         };
+
 
         console.log('activityEndTime:', this.activityEndTime);
       }
@@ -540,7 +549,7 @@ var mainModel = new Vue({
     autoLogin: function() {
       //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
       //如果前端标记了退出状态，则不要自动登录
-      if (window.sessionStorage.getItem('online_exit')!=='1'){
+      if (window.sessionStorage.getItem('online_exit') !== '1') {
         //个人登录判断
         $.post('http://www.hnrcsc.com/web/seekjob/video!personLogin.action', function(response) {
           if (response.map.status === '00') {
