@@ -276,7 +276,8 @@
               <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'" target="_blank" class="resume_download">
                 <i class="el-icon-download"></i>&nbsp;下载简历
               </a>
-              <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+              <div class="photoLinkDsp" v-if="currentResumeInfo.jobPerson.photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+              <div class="photoLinkDsp" v-if="!currentResumeInfo.jobPerson.photoLinkDsp" :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"></div>
               <div class="resume-detail_info cj-flex">
                 <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
                   <!--姓名-->
@@ -695,7 +696,8 @@
         <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'" target="_blank" class="resume_download">
           <i class="el-icon-download"></i>&nbsp;下载简历
         </a>
-        <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+        <div class="photoLinkDsp" v-if="currentResumeInfo.jobPerson.photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
+        <div class="photoLinkDsp" v-if="!currentResumeInfo.jobPerson.photoLinkDsp" :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"></div>
         <div class="resume-detail_info cj-flex">
           <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
             <!--姓名-->
