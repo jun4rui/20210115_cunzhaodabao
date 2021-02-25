@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <!--<meta content="width=1920, user-scalable=yes" name="viewport">-->
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
-  <title></title>
+  <title>线上招聘会</title>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/vue/dist/vue.min.js"></script>
   <link href="node_modules/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
@@ -273,6 +273,9 @@
           <div v-if="currentResumeInfo" class="resume-detail">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
               <!--头像-->
+              <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'" target="_blank" class="resume_download">
+                <i class="el-icon-download"></i>&nbsp;下载简历
+              </a>
               <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
               <div class="resume-detail_info cj-flex">
                 <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
@@ -689,6 +692,9 @@
     <div v-if="currentResumeInfo" class="resume-detail">
       <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
         <!--头像-->
+        <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'" target="_blank" class="resume_download">
+          <i class="el-icon-download"></i>&nbsp;下载简历
+        </a>
         <div class="photoLinkDsp" :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"></div>
         <div class="resume-detail_info cj-flex">
           <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
