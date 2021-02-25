@@ -513,7 +513,7 @@
         <div class="out_border_2">
           <!-- 在线求职者列表 -->
           <div id="job-seeker_list" :class="{'online': currentPersonShowStatus===1}" v-if="jobSeekerList">
-            <div class="job-seeker_item" v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 " :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}" v-for="item in jobSeekerList">
+            <div class="job-seeker_item" v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 " :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout, 'cj-hide':!item.cvId}" v-for="item in jobSeekerList">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
               <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
