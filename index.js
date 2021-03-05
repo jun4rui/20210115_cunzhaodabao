@@ -181,9 +181,9 @@ var mainModel = new Vue({
     getEndTime: function() {
       var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes());
       //判断活动是否开始
-      if((parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes())/60-24)>0){
+      if ((parseInt(moment.duration(moment(mainModel.activityTime) - moment()).asMinutes()) / 60 - 24) > 0) {
         this.activityAlreadyStarted = false;
-      }else{
+      } else {
         this.activityAlreadyStarted = true;
       }
 
@@ -213,7 +213,6 @@ var mainModel = new Vue({
           hour: _hour,
           min:  _min
         };
-
 
         console.log('activityEndTime:', this.activityEndTime);
       }
@@ -389,8 +388,17 @@ var mainModel = new Vue({
     getRecruitList: function(inCompanyId) {
       //首先清空原来的当前企业职位列表
       this.currentRecruitList = null;
+
+      var _portUrl    = '/wxCompany/wxCompanyRecruits';//默认接口是线上招聘会的
+      var _postParams = {companyId: inCompanyId};//默认的参数
+      //判断招聘会是线上还是线下
+      if (this.activityInfo.activityPattern === 2) {
+        _portUrl = '/wxCompany/wxCompanyRecruitsForSite';//改为现场招聘会接口
+        _postParams.recruitDate = this.activityInfo.holdingTime.substr(0,10);//增加相关参数
+      }
+
       //获取新的当前企业职位列表ID，并放到当前职位列表变量中
-      $.post(_SERVER + '/wxCompany/wxCompanyRecruits', {companyId: inCompanyId}, function(response) {
+      $.post(_SERVER + _portUrl, _postParams, function(response) {
         if (response.errCode === '00') {
           this.currentRecruitList = response.data;
         } else {
