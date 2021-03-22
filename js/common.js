@@ -133,7 +133,7 @@ function strReplaceChar(inStr, inStartPos, inReplaceNum, inChar){
   var _strList = inStr.split('');
   var _counter = 0;
   for (var i=0; i<_strList.length;i++){
-    console.log(_strList[i], inStartPos, inReplaceNum);
+    //console.log(_strList[i], inStartPos, inReplaceNum);
     if (i>inStartPos && _counter<inReplaceNum){
       _strList[i] = inChar;
       _counter++;

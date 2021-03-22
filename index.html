@@ -522,7 +522,7 @@
               <div class="online_status offline">离线</div>
               <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
               <div class="avatar" :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(item.personId%4+1)+'.png)'"></div>
-              <div class="name">{{ item.personName }}</div>
+              <div class="name">{{ strReplaceChar(item.personName,0,5,'*') }}</div>
               <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
               <div class="info">
                 {{ item.graduateSchool ? item.graduateSchool : '-未登记学校信息-' }}<br>
