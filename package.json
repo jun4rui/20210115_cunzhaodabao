@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cssobj": "^1.3.6",
     "element-ui": "^2.14.1",
+    "hotkeys-js": "^3.8.7",
     "jquery": "^1.12.4",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
