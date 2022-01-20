@@ -88,9 +88,11 @@
 
 	.memo {
 	  color:       #FFF;
-	  font-size:   16px;
+	  font-size:   14px;
 	  font-weight: bold;
-	  text-shadow: 1px 1px #878787;
+	  line-height: 25px;
+	  text-align:  center;
+	  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
 	}
   }
 
