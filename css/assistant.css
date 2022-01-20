@@ -2,7 +2,7 @@
   position: fixed;
   right: 0;
   top: calc(100vh - 30px);
-  transition: top 0.2s ease-out;
+  transition: top 0.4s ease-out;
   width: 55px;
   z-index: 9999999999; }
   #online-assistant .assistant-item {
@@ -39,7 +39,7 @@
           position: absolute;
           right: 5px;
           top: 5px;
-          transition: transform 0.2s ease-out;
+          transition: transform 0.2s ease-out 0.4s;
           width: 20px; }
       #online-assistant .assistant-item.qq > .content {
         padding: 15px 0;
