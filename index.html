@@ -46,6 +46,10 @@
       <div v-if="!activityInfo.otherUrl" class="desc">{{ nl2br(activityInfo.remark || '') }}</div>
       <div v-if="!activityInfo.otherUrl" class="memo">
         <div>{{ nl2br(activityInfo.productIntr || '') }}</div>
+        <div>{{ activityInfo.activityAddress }}</div>
+        <div>
+          {{ activityInfo.holdingTime.substr(0, 10) }} {{ activityInfo.holdingZone }}
+        </div>
       </div>
     </div>
     <!--/标题区-->
@@ -880,7 +884,7 @@
   <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
-<script src="index.js?v=12"></script>
+<script src="index.js?v=123"></script>
 <script>
   //根据浏览器窗口宽度计算内容框体宽度
   (function() {
