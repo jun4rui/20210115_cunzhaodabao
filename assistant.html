@@ -1,53 +1,41 @@
-<link rel="stylesheet" href="css/assistant.css">
-
+<link href="css/assistant.css" rel="stylesheet">
 <!--助手HTML部分-->
-<div id="online-assistant" class="rela">
-	<!--QQ联系-->
-	<div class="assistant-item abs qq">
-		<div class="title">在线客服</div>
-		<div class="content">
-			<ul>
-				<li>
-					<a href="http://wpa.qq.com/msgrd?v=3&uin=249429235&site=qq&menu=yes">孙旺</a>
-				</li>
-				
-				<li>
-					<a href="http://wpa.qq.com/msgrd?v=3&uin=915771322&site=qq&menu=yes">刘巧琳</a>
-				</li>
-				<li>
-					<a href="http://wpa.qq.com/msgrd?v=3&uin=11406032&site=qq&menu=yes">吴慧娜</a>
-				</li>
-				
-				
-				<li>
-					<a href="http://wpa.qq.com/msgrd?v=3&uin=286265985&site=qq&menu=yes">彭程</a>
-				</li>
-				<li>
-					<a href="http://wpa.qq.com/msgrd?v=3&uin=328016414&site=qq&menu=yes">孙艳</a>
-				</li>
-				
-			</ul>
-			<div class="hotline">
-				<span>咨询热线</span>
-				85063729
-			</div>
-		</div>
-	</div>
-
+<div id="online-assistant" class="rela open">
+  <!--QQ联系-->
+  <div class="assistant-item abs qq">
+    <div class="title">
+      在线客服
+      <div class="flag"></div>
+    </div>
+    <div class="content">
+      <ul>
+        <li>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=249429235&site=qq&menu=yes">孙旺</a>
+        </li>
+        <li>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=915771322&site=qq&menu=yes">刘巧琳</a>
+        </li>
+        <li>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=11406032&site=qq&menu=yes">吴慧娜</a>
+        </li>
+        <li>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=286265985&site=qq&menu=yes">彭程</a>
+        </li>
+        <li>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=328016414&site=qq&menu=yes">孙艳</a>
+        </li>
+      </ul>
+      <div class="hotline">
+        <span>咨询热线</span>
+        85063729
+      </div>
+    </div>
+  </div>
 </div>
 <!--助手SCRIPT部分-->
 <script>
-	function adjustAssistant() {
-		$('#online-assistant').css({
-			"top": ($(window).height() - 291) / 2
-		});
-	}
-
-	$('#online-assistant').ready(function () {
-		adjustAssistant();
-	});
-	$(window).resize(function () {
-		adjustAssistant();
-	});
+  $('#online-assistant .assistant-item .title').click(function() {
+    $('#online-assistant').toggleClass('open');
+  });
 </script>
 <!--/在线助手代码部分-->
