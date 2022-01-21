@@ -322,7 +322,7 @@
                     </li>
                   </ul>
                   <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
-                  <div v-if="recruitItem.welfare" class="welfare"></div>
+                  <div v-if="recruitItem.welfare" class="welfare">{{ recruitItem.welfare }}</div>
                   <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
                 </div>
               </div>
@@ -719,6 +719,7 @@
             </ul>
             <!--TODO 现场接口中没有这个字段，无法显示，需要后端加上-->
             <div v-if="recruitItem.welfare" class="welfare">
+              {{ recruitItem.welfare }}
             </div>
             <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
           </div>
