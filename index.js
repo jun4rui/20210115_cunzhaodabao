@@ -628,7 +628,13 @@ var mainModel = new Vue({
     }, //退出登陆
     logout:             function() {
       window.sessionStorage.setItem('online_exit', '1');
-      window.location.href = window.location.href.substr(0, window.location.href.indexOf('?'));
+      //TODO 因为企业登出接口现在302而且没有返回值，暂时先调用后1000ms再刷新页面
+      $.post('//www.hnrcsc.com/web/recruit/logout.action');
+      $.post('//www.hnrcsc.com/web/seekjob/logout!json.action');
+      setTimeout(function() {
+        window.location.href = window.location.href.substr(0, window.location.href.indexOf('?'));
+      }, 1000);
+
     }, //个人查看消息（打开聊天窗口）
     viewMessage:        function() {
       //如果没有对话列表，则提示并返回

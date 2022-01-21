@@ -159,6 +159,62 @@
   <!-- /Banner -->
   <!--消息对话框Dialog-->
   <el-dialog id="chat-dialog" :title="targetUser.name" :visible.sync="chatDiaglogVisible" center @close="clearChatTargetUser">
+    <!--职位详情子Dialog-->
+    <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
+      <div v-if="currentRecruitInfo">
+        <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
+        <ul class="cri-recruit-info split">
+          <li>{{ currentRecruitInfo.salary }}</li>
+          <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
+          <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
+          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+        </ul>
+        <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
+        <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
+        <div class="cri_content">
+          <ul v-if="currentRecruitInfo.welfare" class="cri-welfare">
+            <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
+          </ul>
+        </div>
+        <div class="cri_subtitle">职位要求</div>
+        <div class="cri_content">
+          <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
+          </div>
+        </div>
+        <!--投递职位按钮-->
+        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <!--/投递职位按钮-->
+        <!--
+        address: "长沙市望城区雷锋大道1389号"
+        companyId: "2144184"
+        companyIdStr: "D889B54CAA4B8485"
+        companyName: "春风行动企业测试账号6"
+        contactPerson: "人力资源部"
+        deptName: ""
+        detail: "任职要求：
+        ↵222222222
+        ↵
+        ↵岗位描述：333333333
+        ↵
+        ↵
+        ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        entProp: "有限责任公司"
+        fax: null
+        industry: "机械行业"
+        location: "湖南省长沙市"
+        lowerEdu: "其它"
+        persons: "3001-5000人"
+        phone: "0731-"
+        recruitName: "厂长"
+        recruitPersons: "500"
+        refreshDate: "2021-01-29 10:12:34"
+        salary: "1000元以下"
+        welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
+        workYears: "不限"
+        -->
+      </div>
+    </el-dialog>
+    <!--/职位详情子Dialog-->
     <!--聊天区域面板-->
     <div id="chat-dialog_panel">
       <!--对话列表-->
@@ -236,7 +292,9 @@
               <!--职位列表-->
               <div class="company-info-recruit-list">
                 <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
-                  <div class="job-title">{{ recruitItem.recruitName }}</div>
+                  <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
+                    {{ recruitItem.recruitName }}
+                  </div>
                   <ul class="recruit-other-info split">
                     <li>
                       <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
@@ -263,9 +321,8 @@
                       招{{ recruitItem.persons }}人
                     </li>
                   </ul>
-                  <div class="welfare">
-                    绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
-                  </div>
+                  <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
+                  <div v-if="recruitItem.welfare" class="welfare"></div>
                   <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
                 </div>
               </div>
@@ -556,7 +613,7 @@
   <!-- 企业详情Dialog -->
   <el-dialog id="company-info" :visible.sync="companyInfoDialog" class="company-info" title="公司详情" width="600px">
     <!--职位详情子Dialog-->
-    <el-dialog id="recruit-info" :visible.sync="recruitInfoDialog" append-to-body title="职位详情" width="600px">
+    <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
       <div v-if="currentRecruitInfo">
         <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
         <ul class="cri-recruit-info split">
@@ -660,8 +717,8 @@
                 招{{ recruitItem.persons }}人
               </li>
             </ul>
-            <div class="welfare">
-              绩效奖金、岗前培训、扁平管理、岗位晋升、弹性工作、餐补、交通补助
+            <!--TODO 现场接口中没有这个字段，无法显示，需要后端加上-->
+            <div v-if="recruitItem.welfare" class="welfare">
             </div>
             <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
           </div>

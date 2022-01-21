@@ -178,7 +178,7 @@ ul, li {
 .cj-table td {
   border: 1px solid #DDD; }
 
-.cj-ellipsis, .company-item .recruit-list .recruit-list_panel .recruit-item, #job-seeker_list .job-seeker_item .position, #recruit-info .el-dialog .el-dialog__body .cri-welfare li, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel li .nike-name, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .name {
+.cj-ellipsis, .company-item .recruit-list .recruit-list_panel .recruit-item, #job-seeker_list .job-seeker_item .position, .recruit-info .el-dialog .el-dialog__body .cri-welfare li, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel li .nike-name, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
@@ -1026,24 +1026,24 @@ ul, li {
       #job-seeker_list .job-seeker_item .online_status.offline {
         display: none; }
 
-#recruit-info .el-dialog {
+.recruit-info .el-dialog {
   background: #FFF url(../images/bg_info_bottom.png) no-repeat bottom center;
   background-size: contain;
   padding-bottom: 20px; }
-  #recruit-info .el-dialog .el-dialog__body {
+  .recruit-info .el-dialog .el-dialog__body {
     color: #666;
     font-size: 14px;
     line-height: 2;
     padding: 20px 30px; }
-    #recruit-info .el-dialog .el-dialog__body .cri-company-name {
+    .recruit-info .el-dialog .el-dialog__body .cri-company-name {
       background: url(../images/icon_company@2x.png) no-repeat left center;
       background-size: 18px 18px;
       text-indent: 22px; }
-    #recruit-info .el-dialog .el-dialog__body .cri-recruit-name {
+    .recruit-info .el-dialog .el-dialog__body .cri-recruit-name {
       color: #333;
       font-size: 16px;
       font-weight: bold; }
-    #recruit-info .el-dialog .el-dialog__body .cri_subtitle {
+    .recruit-info .el-dialog .el-dialog__body .cri_subtitle {
       background: url(../images/icon_2dot@2x.png) no-repeat left center;
       background-size: 14px 10px;
       color: #333;
@@ -1051,12 +1051,12 @@ ul, li {
       font-weight: bold;
       margin-top: 20px;
       text-indent: 22px; }
-    #recruit-info .el-dialog .el-dialog__body .cri_content {
+    .recruit-info .el-dialog .el-dialog__body .cri_content {
       color: #666;
       font-size: 14px;
       line-height: 25px;
       padding-left: 22px; }
-    #recruit-info .el-dialog .el-dialog__body .cri-welfare li {
+    .recruit-info .el-dialog .el-dialog__body .cri-welfare li {
       background: #DDF3FF;
       border-radius: 5px;
       color: #166CEC;
@@ -1067,7 +1067,7 @@ ul, li {
       margin: 0 6px 6px 0;
       text-align: center;
       width: 80px; }
-    #recruit-info .el-dialog .el-dialog__body .post-resume {
+    .recruit-info .el-dialog .el-dialog__body .post-resume {
       background: linear-gradient(93.34deg, #2D95F9 0%, #1062E9 100%);
       border-radius: 7px;
       box-shadow: 0 0 6px 1px rgba(166, 166, 166, 0.25);
