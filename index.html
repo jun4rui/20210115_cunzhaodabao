@@ -43,7 +43,7 @@
     <!--标题区-->
     <div v-if="activityInfo" id="title_panel">
       <div v-if="!activityInfo.otherUrl" class="title">{{ activityInfo.productName }}</div>
-      <div v-if="!activityInfo.otherUrl" class="desc">{{ nl2br(activityInfo.remark || '') }}</div>
+      <div v-if="!activityInfo.otherUrl" class="desc">主办单位：{{ nl2br(activityInfo.remark || '') }}</div>
       <div v-if="!activityInfo.otherUrl" class="memo">
         <div>{{ nl2br(activityInfo.productIntr || '') }}</div>
         <div>{{ activityInfo.activityAddress }}</div>
