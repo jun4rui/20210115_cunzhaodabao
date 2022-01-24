@@ -437,6 +437,7 @@ var mainModel = new Vue({
           if (this.activityInfo.activityPattern === 1) this.currentRecruitInfo = response.data;
           if (this.activityInfo.activityPattern === 2) {
             this.currentRecruitInfo = {
+              recruitId:      response.data.recruitId,
               address:        response.data.address,
               companyId:      response.data.companyId,
               companyIdStr:   '',//现场接口没有这个字段
@@ -980,16 +981,14 @@ var mainModel = new Vue({
         if (this.loginMode === 'company') {
           this.selfUser = {
             username: 'c' + this.companyUserInfo.companyId.toString() + 'test',  //TODO 测试中，加后缀_test,
-            nickname: this.companyUserInfo.companyName.substr(0, 21),
-            password: '88888888',
+            nickname: this.companyUserInfo.companyName.substr(0, 21), password: '88888888',
           };
         }
         //如果是个人
         if (this.loginMode === 'person') {
           this.selfUser = {
             username: 'p' + this.personUserInfo.personId.toString() + 'test',  //TODO 测试中，加后缀_test,,
-            nickname: this.personUserInfo.personName.substr(0, 21),
-            password: '88888888',
+            nickname: this.personUserInfo.personName.substr(0, 21), password: '88888888',
           };
         }
 
