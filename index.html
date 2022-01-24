@@ -12,7 +12,7 @@
   <script src="node_modules/moment/moment.js"></script>
   <script src="node_modules/moment/locale/zh-cn.js"></script>
   <script src="js/common.js"></script>
-  <link href="css/index.css" rel="stylesheet">
+  <link href="css/index.css?v=20220124" rel="stylesheet">
   <link href="js/barragerjs/dist/css/barrager.css" rel="stylesheet">
   <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
   <script src="node_modules/lodash/lodash.min.js"></script>
@@ -256,7 +256,7 @@
           <!--/聊天功能菜单-->
           <!--消息发送-->
               <div id="chat-input">
-                  <el-input id="input-message" v-model="chatMessage" :rows="2" placeholder="请输入内容，可用CTRL+ENTER发送信息" type="textarea"></el-input>
+                  <el-input id="input-message" v-model="chatMessage" :rows="5" placeholder="请输入内容，可用CTRL+ENTER发送信息" type="textarea"></el-input>
                   <div class="cj-flex cj-flex-nowrap cj-align-items-center" style="justify-content: flex-end;padding-top: 10px">
                       <!--<el-button @click="clearChatTargetUser" type="warning" slot="prepend" icon="el-icon-close">离开</el-button>-->
                       <el-button slot="append" icon="el-icon-upload2" type="primary" @click="sendChatMessage">发送</el-button>

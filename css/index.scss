@@ -1305,7 +1305,8 @@
 	flex-direction: column;
 	height:         75vh;
 	margin:         10vh 100px !important;
-	min-width:      90vw;
+	//min-width:      90vw;
+	min-width:      1200px;
 
 	.el-dialog__header {
 	  background: none;
@@ -1334,8 +1335,9 @@
 		overflow:        hidden;
 
 		#conversations_panel {
-		  overflow: auto;
-		  width:    390px;
+		  min-width: 200px;
+		  overflow:  auto;
+		  width:     390px;
 
 		  li {
 			align-items:     center;
@@ -1388,6 +1390,7 @@
 		  flex-direction:  column;
 		  flex-grow:       1;
 		  justify-content: flex-start;
+		  min-width:       400px;
 		  //聊天信息
 		  #chat-message {
 			box-sizing: border-box;
@@ -1497,6 +1500,7 @@
 		#chat-area_other {
 		  align-items: stretch;
 		  display:     flex;
+		  min-width:   560px;
 		  width:       600px;
 
 		  .model {

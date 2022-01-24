@@ -1380,7 +1380,7 @@ ul, li {
     flex-direction: column;
     height: 75vh;
     margin: 10vh 100px !important;
-    min-width: 90vw; }
+    min-width: 1200px; }
     #chat-dialog .el-dialog .el-dialog__header {
       background: none;
       height: 0;
@@ -1402,6 +1402,7 @@ ul, li {
         justify-content: space-around;
         overflow: hidden; }
         #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel {
+          min-width: 200px;
           overflow: auto;
           width: 390px; }
           #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #conversations_panel li {
@@ -1441,7 +1442,8 @@ ul, li {
           display: flex;
           flex-direction: column;
           flex-grow: 1;
-          justify-content: flex-start; }
+          justify-content: flex-start;
+          min-width: 400px; }
           #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message {
             box-sizing: border-box;
             display: block;
@@ -1504,6 +1506,7 @@ ul, li {
         #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other {
           align-items: stretch;
           display: flex;
+          min-width: 560px;
           width: 600px; }
           #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other .model {
             display: none; }
