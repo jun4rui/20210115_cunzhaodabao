@@ -239,7 +239,14 @@
             <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
             <div class="chat-info">
               <span class="name">{{ item.from_username }}</span>
-              <span class="message">{{ item.message }}</span>
+              <span class="message">
+                {{
+                  (item.message === '-用户进入视频聊天室-') && (item.from_id === mainModel.targetUser.id)
+                      ? '对方进入视频面试间'
+                      : item.message
+                }}
+                <el-button v-if="(item.message==='-用户进入视频聊天室-') && (item.from_id===mainModel.targetUser.id)" round size="mini" type="success" @click="chatViewVideo">进入视频面试间</el-button>
+              </span>
               <span class="time">{{ moment(new Date(item.timestamp)).format('YYYY-MM-DD hh:mm:ss') }}</span>
             </div>
           </li>
