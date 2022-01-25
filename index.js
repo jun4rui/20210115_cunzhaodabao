@@ -693,6 +693,12 @@ var mainModel = new Vue({
       this.targetUser = {
         name: inPersonName, id: 'p' + inPersonId.toString() + 'test', //TODO 测试中，加入后缀_test
       };
+
+      //如果不延迟200ms，则消息不一定能获取到
+      setTimeout(function() {
+        this.chatViewPersonResume();
+      }.bind(this), 200);
+
     }, //开始和企业聊天 只有个人登陆以后才可以调用
     chatToCompany:       function(inCompanyName, inCompanyId) {
       console.log(`开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`);
@@ -918,6 +924,10 @@ var mainModel = new Vue({
       if (this.targetUser.id.indexOf('c') === 0) {
         this.getCurrentCompanyInfo(this.targetId);
         this.getRecruitList(this.targetId);
+      }
+      //如果是p开头的，则直接显示简历信息
+      if (this.targetUser.id.indexOf('p') === 0) {
+        this.chatViewPersonResume();
       }
     }, // 聊天启动步骤
     chatStartup:         function() {
