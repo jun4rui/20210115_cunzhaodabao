@@ -12,7 +12,7 @@
   <script src="node_modules/moment/moment.js"></script>
   <script src="node_modules/moment/locale/zh-cn.js"></script>
   <script src="js/common.js"></script>
-  <link href="css/index.css?v=20220124" rel="stylesheet">
+  <link href="css/index.css" rel="stylesheet">
   <link href="js/barragerjs/dist/css/barrager.css" rel="stylesheet">
   <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
   <script src="node_modules/lodash/lodash.min.js"></script>
@@ -113,17 +113,21 @@
           </ul>
           <div v-if="personUserInfo" id="person-info_panel">
             <!--<div class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>-->
-            <!--无头像-->
-            <div v-if="!personUserInfo.photoLink" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'" class="avatar"></div>
-            <!--有头像-->
-            <div v-if="personUserInfo.photoLink" :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'" class="avatar"></div>
+            <el-tooltip class="item" content="点击访问个人中心" effect="dark" placement="top">
+              <!--无头像-->
+              <div v-if="!personUserInfo.photoLink" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'" class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+              <!--有头像-->
+              <div v-if="personUserInfo.photoLink" :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'" class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+            </el-tooltip>
             <a class="name">{{ personUserInfo.personName }}</a>
             <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
             <div class="logout" @click="logout">退出</div>
           </div>
           <div v-if="companyUserInfo" id="company-info_panel">
-            <div v-if="!companyUserInfo.logoUrl" :style="'background-image:url(images/icon_login_company@2x.png)'" class="avatar"></div>
-            <div v-if="companyUserInfo.logoUrl" :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'" class="avatar"></div>
+            <el-tooltip class="item" content="点击访问企业后台" effect="dark" placement="top">
+              <div v-if="!companyUserInfo.logoUrl" :style="'background-image:url(images/icon_login_company@2x.png)'" class="avatar" onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+              <div v-if="companyUserInfo.logoUrl" :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'" class="avatar" onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+            </el-tooltip>
             <a class="name">{{ companyUserInfo.userName }}</a>
             <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
             <div class="logout" @click="logout">退出</div>

@@ -1229,6 +1229,7 @@ ul, li {
     background-size: contain;
     border: 2px solid #C7C4C4;
     border-radius: 50%;
+    cursor: pointer;
     display: block;
     height: 68px;
     left: 0;
