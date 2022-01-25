@@ -694,7 +694,13 @@ var mainModel = new Vue({
       }
 
       if (this.companyUserInfo === null) {
-        this.$message.error('请登陆企业账号，并确认已参加该场招聘会。');
+        // this.$message.error('请登陆企业账号，并确认已参加该场招聘会。');
+        this.$notify.error({
+          title:                    '错误',
+          dangerouslyUseHTMLString: true,
+          duration:                 0,
+          message:                  '需要<a href="javascript:void(0);" onClick="mainModel.userLogin(\'company\')">登陆企业账号</a>，并确认已参加该场招聘会方可使用该功能。',
+        });
         return false;
       }
       this.$message.info(`开始聊天（企业）：${inPersonName} ${inPersonId}`);
