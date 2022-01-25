@@ -301,7 +301,16 @@ var mainModel = new Vue({
         num:        this.danmuNum,
       }, function(response) {
         if (response.errCode === '00') {
-          this.danmuList = response.data;
+          this.danmuList = response.data.map(function(item) {
+            if (item.length > 30) {
+              var _tempItem = item.split(' ');
+              if (_tempItem.length === 3) {
+                _tempItem[1] = _tempItem[1].substr(0, 20) + '...';
+                item         = _tempItem.join(' ');
+              }
+            }
+            return item;
+          });
           console.log('装弹完毕！');
         } else {
           this.$message.error(response.errMsg);
