@@ -1,6 +1,6 @@
 <link href="css/assistant.css" rel="stylesheet">
 <!--助手HTML部分-->
-<div id="online-assistant" class="rela open">
+<div id="online-assistant" class="cj-hide rela open">
   <!--QQ联系-->
   <div class="assistant-item abs qq">
     <div class="title">
@@ -34,8 +34,19 @@
 </div>
 <!--助手SCRIPT部分-->
 <script>
+  (function() {
+    if (window.sessionStorage.getItem('assistant_status') === 'open') {
+      $('#online-assistant').addClass('open').removeClass('cj-hide');
+    } else {
+      $('#online-assistant').removeClass('open cj-hide');
+    }
+  })();
   $('#online-assistant .assistant-item .title').click(function() {
-    $('#online-assistant').toggleClass('open');
+    if ($('#online-assistant').toggleClass('open').hasClass('open')) {
+      window.sessionStorage.setItem('assistant_status', 'open');
+    } else {
+      window.sessionStorage.setItem('assistant_status', '');
+    }
   });
 </script>
 <!--/在线助手代码部分-->
