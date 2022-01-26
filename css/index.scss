@@ -1557,6 +1557,15 @@
 }
 
 //简历详情
+.person-resume--history {
+  display:        block;
+  padding-bottom: 1em;
+
+  .person-resume__history__item {
+	margin-right: .5em;
+  }
+}
+
 .resume-detail {
   position: relative;
 

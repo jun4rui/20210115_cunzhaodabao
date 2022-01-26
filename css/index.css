@@ -1538,6 +1538,12 @@ ul, li {
             #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_other .person-resume .resume-detail {
               flex-grow: 1; }
 
+.person-resume--history {
+  display: block;
+  padding-bottom: 1em; }
+  .person-resume--history .person-resume__history__item {
+    margin-right: .5em; }
+
 .resume-detail {
   position: relative; }
   .resume-detail .resume_download {

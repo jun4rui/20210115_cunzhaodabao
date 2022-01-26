@@ -356,6 +356,19 @@
         <!--/在线聊天模块-->
         <!--个人简历模块-->
         <div class="person-resume model">
+          <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
+            <!--有投递职位的-->
+            <div v-if="currentResumeInfo.postHistory.length>0">
+              <span>已投递公司职位：</span>
+              <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item" size="mini" type="success">
+                {{ item }}
+              </el-tag>
+            </div>
+            <!--没有投递过职位的-->
+            <div v-if="currentResumeInfo.postHistory.length===0">
+              <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
+            </div>
+          </div>
           <div v-if="currentResumeInfo" class="resume-detail">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
               <!--头像-->
@@ -776,7 +789,20 @@
   </el-dialog>
   <!-- /邀请函Dialog -->
   <!--简历详情Dialog-->
-  <el-dialog :visible.sync="resumeInfoDialog" title="简历详情" width="600px">
+  <el-dialog :visible.sync="resumeInfoDialog" class="resume-detail__dialog" title="简历详情" width="600px">
+    <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
+      <!--有投递职位的-->
+      <div v-if="currentResumeInfo.postHistory.length>0">
+        <span>已投递公司职位：</span>
+        <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item" size="mini" type="success">
+          {{ item }}
+        </el-tag>
+      </div>
+      <!--没有投递过职位的-->
+      <div v-if="currentResumeInfo.postHistory.length===0">
+        <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
+      </div>
+    </div>
     <div v-if="currentResumeInfo" class="resume-detail">
       <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
         <!--头像-->

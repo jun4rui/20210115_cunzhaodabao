@@ -524,6 +524,19 @@ var mainModel = new Vue({
         console.log('resume data', response);
         if (response.map.status === '00') {
           this.currentResumeInfo = response.map;
+
+          //成功后立刻异步查询该用户投递本企业的历史信息
+          $.post(_SERVER + '/personCenter/getActivityRecruitFolder',
+              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId},
+              function(response2) {
+                if (response2.errCode === '00') {
+                  // console.log('用户投递历史：', response2);
+                  this.currentResumeInfo.postHistory = response2.data;
+                } else {
+                  this.$message.warning('获取该求职者投递历史错误');
+                }
+              }.bind(this));
+          
         } else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
@@ -549,10 +562,24 @@ var mainModel = new Vue({
       //从接口获取简历信息到当前简历变量
       //调用接口获取展会详情
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
+      //PS: 这个接口是不同的所以不能用_SERVER
       $.post('//www.hnrcsc.com/web' + '/recruit/view/cvJsonList.action?cvId=' + inCvId, function(response) {
         console.log('resume data', response);
         if (response.map.status === '00') {
           this.currentResumeInfo = response.map;
+
+          //成功后立刻异步查询该用户投递本企业的历史信息
+          $.post(_SERVER + '/personCenter/getActivityRecruitFolder',
+              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId},
+              function(response2) {
+                if (response2.errCode === '00') {
+                  // console.log('用户投递历史：', response2);
+                  this.currentResumeInfo.postHistory = response2.data;
+                } else {
+                  this.$message.warning('获取该求职者投递历史错误');
+                }
+              }.bind(this));
+
         } else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
@@ -1093,7 +1120,6 @@ var mainModel = new Vue({
       //获取用户简历列表
       $.post(_SERVER + '/personCenter/listPersonCv', {personId: this.targetId}, function(response) {
         if (response.errCode === '00') {
-
           //获取用户默认简历ID
           var _tempCvId = 0;
           for (var i = 0; i < response.data.length; i++) {
