@@ -239,14 +239,22 @@
             <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
             <div class="chat-info">
               <span class="name">{{ item.from_username }}</span>
-              <span class="message">
-                {{
-                  (item.message === '-用户进入视频聊天室-') && (item.from_id === mainModel.targetUser.id)
-                      ? '对方邀请你进入视频面试间'
-                      : item.message
-                }}
-                <el-button v-if="(item.message==='-用户进入视频聊天室-') && (item.from_id===mainModel.targetUser.id)" round size="mini" type="success" @click="chatViewVideo">接受</el-button>
-                <el-button v-if="(item.message==='-用户进入视频聊天室-') && (item.from_id===mainModel.targetUser.id)" round size="mini" type="danger" @click="sendMessage('-已拒绝邀请-');">拒绝</el-button>
+              <!--普通文字消息-->
+              <span v-if="item.extras===''" class="message">{{ item.message }}</span>
+              <!--系统信息消息-->
+              <span v-if="item.extras!==''" class="info">
+                <!--视频面试的-->
+                <div v-if="item.extras.type==='0002'" class="cj-block cj-text-center">
+                  {{ item.from_id === mainModel.targetUser.id ? '对方向您发起视频面试邀请' : '您邀请对方进行视频面试' }}
+                  <div v-if="item.from_id === mainModel.targetUser.id">
+                    <el-button round size="mini" type="success" @click="accept2videoChat">接受</el-button>
+                    <el-button round size="mini" type="danger" @click="sendMessage('-',{type:'0003',msg:''});">拒绝</el-button>
+                  </div>
+                </div>
+                <!--拒绝视频面试的-->
+                <div v-if="item.extras.type==='0003'" class="cj-block cj-text-center">
+                  {{ item.from_id === mainModel.targetUser.id ? '对方拒绝了您的视频面试邀请' : '您拒绝了对方的视频面试邀请' }}
+                </div>
               </span>
               <span class="time">{{ moment(new Date(item.timestamp)).format('YYYY-MM-DD hh:mm:ss') }}</span>
             </div>
@@ -255,13 +263,13 @@
         <span class="chat-message_footer">
               <!--聊天功能菜单-->
               <div id="chat-function_menu">
-                <div v-if="personUserInfo" class="cj-inline-block" @click="chatViewCompanyInfo">
-                  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>
-                </div>
-                <div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">
-                  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>
-                </div>
-                <div class="cj-inline-block" @click="chatViewVideo">
+                <!--<div v-if="personUserInfo" class="cj-inline-block" @click="chatViewCompanyInfo">-->
+                <!--  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>-->
+                <!--</div>-->
+                <!--<div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">-->
+                <!--  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>-->
+                <!--</div>-->
+                <div class="cj-inline-block" @click="invite2videoChat">
                   <el-button icon="el-icon-video-camera-solid" plain size="mini" type="primary">视频沟通</el-button>
                 </div>
               </div>

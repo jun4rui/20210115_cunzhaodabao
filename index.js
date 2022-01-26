@@ -89,6 +89,7 @@ var mainModel = new Vue({
               from_id:         msgItem.content.from_id,
               target_username: msgItem.content.target_name,
               message:         msgItem.content.msg_body.text,
+              extras:          msgItem.content.msg_body.extras ? msgItem.content.msg_body.extras : '',
               timestamp:       msgItem.content.create_time,
             };
           });
@@ -106,6 +107,7 @@ var mainModel = new Vue({
             from_id:         item.content.from_id,
             target_username: item.content.target_name,
             message:         item.content.msg_body.text,
+            extras:          item.content.msg_body.extras ? item.content.msg_body.extras : '',
             timestamp:       item.content.create_time,
           });
         }
@@ -127,7 +129,11 @@ var mainModel = new Vue({
         if (msgItem.target_username === this.targetUser.name) {
           console.log(`_sendMsg有`, index, msgItem.from_username);
           _sendMsg.push({
-            from_username: msgItem.from_username, target_username: msgItem.target_username, message: msgItem.message, timestamp: msgItem.timestamp,
+            from_username:   msgItem.from_username,
+            target_username: msgItem.target_username,
+            message:         msgItem.message,
+            extras:          msgItem.extras ? msgItem.extras : '',
+            timestamp:       msgItem.timestamp,
           });
         }
       }.bind(this));
@@ -800,7 +806,7 @@ var mainModel = new Vue({
         }
       }.bind(this));
     }, // 聊天发送消息comp`
-    sendMessage:         function(inMsgStr) {
+    sendMessage:         function(inMsgStr, inExtras) {
       if (this.targetUser.id === '') {
         alert('请选择一个用户');
         return false;
@@ -817,9 +823,18 @@ var mainModel = new Vue({
         return false;
       }
 
+      /* *
+       * 约定：
+       * sendMessage如果发送特殊消息（事件）的话，inMsgStr默认不能为空！extras中保存{type/类型:'',msg/信息:''}
+       * type表：
+       *  0001  仅作为显示msg字段用
+       *  0002  邀请对方进行视频面试
+       *  0003  拒绝对面的视频面试
+       * */
+
       JIM.sendSingleMsg({
         // 'target_username': this.targetUsername,
-        'target_username': this.targetUser.id, 'content': inMsgStr, 'appkey': this.chatInfo.appkey,
+        'target_username': this.targetUser.id, 'content': inMsgStr, 'appkey': this.chatInfo.appkey, 'extras': inExtras ? inExtras : '',
       }).onSuccess(function(data, msg) {
         console.log('发送消息', data.code, data.message, data.target_username);
         //data.code 返回码
@@ -834,6 +849,7 @@ var mainModel = new Vue({
           from_id:         this.selfUser.id,
           target_username: this.targetUser.name,
           message:         inMsgStr,
+          extras:          inExtras ? inExtras : '',
           timestamp:       new Date().getTime(),
         });
         setTimeout(function() {
@@ -1100,11 +1116,19 @@ var mainModel = new Vue({
       $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
       $('#chat-area_other .model').removeClass('active');
       $('#chat-area_other .person-resume.model').addClass('active');
-    }, //聊天用打开视频聊天
-    chatViewVideo:        function() {
-      //TEST 测试一下进入视频聊天室
-      this.sendMessage('-用户进入视频聊天室-');
-
+    },
+    //接受对方的视频邀请
+    accept2videoChat: function() {
+      this.chatViewVideo();
+    },
+    //邀请对方进行视频聊天
+    invite2videoChat: function() {
+      //邀请对方进入视频聊天室的系统消息
+      this.sendMessage('-', {type: '0002', msg: ''});
+      this.chatViewVideo();
+    },
+    //聊天用打开视频聊天
+    chatViewVideo: function() {
       //区分当前账号是个人还是公司
       //个人方式
       if (this.personUserInfo !== null) {

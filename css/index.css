@@ -100,7 +100,7 @@ ul, li {
 .cj-block, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .avatar {
   display: block; }
 
-.cj-inline-block, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .message {
+.cj-inline-block, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .message, #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .info {
   display: inline-block; }
 
 .cj-label {
@@ -1477,6 +1477,14 @@ ul, li {
                 border-radius: 11px;
                 padding: 15px;
                 width: 218px; }
+              #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li > .chat-info > .info {
+                background-color: #FFF;
+                border-radius: 0;
+                box-shadow: 3px 3px 2px #E5E1E1;
+                font-weight: bold;
+                min-height: 20px;
+                padding: 15px;
+                width: 218px; }
               #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li.self {
                 flex-direction: row-reverse; }
                 #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li.self > .avatar {
@@ -1490,6 +1498,9 @@ ul, li {
                     padding-right: .5em;
                     text-align: right; }
                   #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li.self > .chat-info > .message {
+                    background-color: #3080FF;
+                    color: #FFF; }
+                  #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li.self > .chat-info > .info {
                     background-color: #3080FF;
                     color: #FFF; }
                   #chat-dialog .el-dialog .el-dialog__body #chat-dialog_panel #chat-area_panel #chat-message > li.self > .chat-info > .time {

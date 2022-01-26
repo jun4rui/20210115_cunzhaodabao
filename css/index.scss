@@ -1448,6 +1448,17 @@
 				  padding:          15px;
 				  width:            218px;
 				}
+
+				> .info {
+				  @extend .cj-inline-block;
+				  background-color: #FFF;
+				  border-radius:    0;
+				  box-shadow:       3px 3px 2px #E5E1E1;
+				  font-weight:      bold;
+				  min-height:       20px;
+				  padding:          15px;
+				  width:            218px;
+				}
 			  }
 
 			  &.self {
@@ -1471,6 +1482,11 @@
 				  }
 
 				  > .message {
+					background-color: #3080FF;
+					color:            #FFF;
+				  }
+
+				  > .info {
 					background-color: #3080FF;
 					color:            #FFF;
 				  }
