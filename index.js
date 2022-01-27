@@ -240,6 +240,8 @@ var mainModel = new Vue({
             this.activityPattern = response.data.activityPattern;
             this.activityTime    = response.data.endDate;
 
+            this.getJobSeekerList();  //用来获取匹配场次、企业的求职者信息
+
             //根据约定因为活动都是线上，活动结束时间统一设置为当天23点59分59秒，所以做如下操作
             this.activityTime = moment(response.data.endDate).
                 set('hour', 23).
@@ -283,8 +285,9 @@ var mainModel = new Vue({
     //加载求职者列表
     getJobSeekerList: function() {
       $.post(_SERVER + '/activity/getOnsiteAndInvestList', {
-        activityId: this.activityId, //holdingTime: this.activityInfo.holdingTime.substr(0, 10),//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
-        //companyId:  this.companyId || '1458',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
+        activityId:  this.activityId,
+        holdingTime: this.activityInfo ? this.activityInfo.holdingTime.substr(0, 10) : '',//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
+        companyId:   this.companyUserInfo ? this.companyUserInfo.companyId : '',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
       }, function(response) {
         if (response.errCode === '00') {
           //测试数据里面personName有null导致程序异常，这里修复一下
@@ -536,7 +539,7 @@ var mainModel = new Vue({
                   this.$message.warning('获取该求职者投递历史错误');
                 }
               }.bind(this));
-          
+
         } else {
           this.$message.error(response.map.errorMessage);
           this.resumeInfoDialog = false;
@@ -624,6 +627,7 @@ var mainModel = new Vue({
             this.$message.success('系统检测您已经使用企业方式登录过，正在加载企业账户信息……');
             this.loginMode = 'company';
             this.getCompanyUserInfo();
+            this.getJobSeekerList();  //重新加载求职责信息，用来获取是否投递过简历
           }
         }.bind(this));
       }

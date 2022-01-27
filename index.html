@@ -92,8 +92,10 @@
             <!--/个人搜索条-->
             <!--个人离线在线切换-->
             <ul id="person-status_switch" class="status_switch">
-              <li v-if="currentPersonShowStatus===0" @click="currentPersonShowStatus=1">全部求职者</li>
-              <li v-if="currentPersonShowStatus===1" class="active" @click="currentPersonShowStatus=0">在线求职者</li>
+              <li :class="{active:currentPersonShowStatus===0}" @click="currentPersonShowStatus=0">全部求职者</li>
+              <li :class="{active:currentPersonShowStatus===1}" @click="currentPersonShowStatus=1">仅在线</li>
+              <li :class="{active:currentPersonShowStatus===2}" @click="currentPersonShowStatus=2">仅离线</li>
+              <li :class="{active:currentPersonShowStatus===3}" @click="currentPersonShowStatus=3">仅已投递</li>
             </ul>
             <!--/个人离线在线切换-->
           </div>
@@ -615,8 +617,8 @@
       <div class="out_border_1">
         <div class="out_border_2">
           <!-- 在线求职者列表 -->
-          <div v-if="jobSeekerList" id="job-seeker_list" :class="{'online': currentPersonShowStatus===1}">
-            <div v-for="item in jobSeekerList" v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 " :class="{'offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout, 'cj-hide':!item.cvId}" class="job-seeker_item">
+          <div v-if="jobSeekerList" id="job-seeker_list" :class="{'online': currentPersonShowStatus===1,'offline':currentPersonShowStatus===2, 'posted':currentPersonShowStatus===3}">
+            <div v-for="item in jobSeekerList" v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 " :class="{'posted':item.investCv && item.investCv!=='0','offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout, 'cj-hide':!item.cvId}" class="job-seeker_item">
               <div class="online_status online">在线</div>
               <div class="online_status offline">离线</div>
               <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->

@@ -453,19 +453,21 @@
 	background:    #DCF8FF;
 	border-radius: 5px;
 	color:         #5B98D3;
+	cursor:        pointer;
 	display:       inline-block;
-	font-size:     14px;
 
+	font-size:     14px;
 	font-weight:   bold;
 	height:        41px;
 	line-height:   41px;
 	margin-right:  6px;
+
 	overflow:      hidden;
-
 	position:      relative;
-	text-align:    center;
 
-	width:         124px;
+	//width:         124px;
+	text-align:    center;
+	width:         100px;
 
 	&.active {
 	  color: #FF5C00;
@@ -677,8 +679,23 @@
   padding:          40px 25px 20px 35px;
   width:            100%;
 
+  //仅显示在线
   &.online {
 	.job-seeker_item.offline {
+	  display: none !important;
+	}
+  }
+
+  //仅显示离线
+  &.offline {
+	.job-seeker_item:not(.offline) {
+	  display: none !important;
+	}
+  }
+
+  //仅显示已投递
+  &.posted {
+	.job-seeker_item:not(.posted) {
 	  display: none !important;
 	}
   }
