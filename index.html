@@ -95,7 +95,9 @@
               <li :class="{active:currentPersonShowStatus===0}" @click="currentPersonShowStatus=0">全部求职者</li>
               <li :class="{active:currentPersonShowStatus===1}" @click="currentPersonShowStatus=1">仅在线</li>
               <li :class="{active:currentPersonShowStatus===2}" @click="currentPersonShowStatus=2">仅离线</li>
-              <li :class="{active:currentPersonShowStatus===3}" @click="currentPersonShowStatus=3">仅已投递</li>
+              <li v-if="companyUserInfo" :class="{active:currentPersonShowStatus===3}" @click="currentPersonShowStatus=3">
+                仅已投递
+              </li>
             </ul>
             <!--/个人离线在线切换-->
           </div>
