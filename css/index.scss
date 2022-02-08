@@ -743,6 +743,22 @@
 	  }
 	}
 
+	&.posted {
+	  &:after {
+		background:    #FFB154;
+		border-radius: 0 0 5px 0;
+		color:         #FFF;
+		content:       '已投递';
+		display:       block;
+		font-size:     12px;
+		left:          0;
+		position:      absolute;
+		text-align:    center;
+		top:           0;
+		width:         4em;
+	  }
+	}
+
 	.avatar {
 	  height:   80px;
 	  left:     20px;
