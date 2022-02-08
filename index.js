@@ -54,15 +54,34 @@ var mainModel = new Vue({
     }, chatInfo:          null,  //记录JM必要的信息
     chatFilterStr:        '',    //“入场求职者”过滤关键字（字符串）
     tabName:              'job',    //tab名称
+    oldUnreadMsgCount:    0,
     /*~聊天相关属性*/
 
   }, computed: {
     //获得未读消息总数
     unreadMsgCount:        function() {
       var _unreadMsgCount = 0;
-      this.offlineConversations.map(function(item) {
+      var _unreadList     = [];
+      var _diff           = 0;//消息相差
+      var _offMsg         = this.offlineConversations.map(function(item) {
+        return {key: item.key, unread_msg_count: item.unread_msg_count};
+      });
+      var _onMsg          = this.conversations.map(function(item) {
+        return {key: item.key, unread_msg_count: item.unread_msg_count};
+      });
+
+      _unreadList = _.uniqBy(_unreadList.concat(_onMsg, _offMsg), 'key');
+      _unreadList.map(function(item) {
         _unreadMsgCount += item.unread_msg_count;
       });
+
+      _diff = _unreadMsgCount - this.oldUnreadMsgCount;
+
+      // console.log('unreadMsgCount:', _unreadMsgCount, _unreadList, _offMsg, _onMsg, '相差：', _unreadMsgCount - this.oldUnreadMsgCount);
+      if (_diff > 0) {
+        this.$message.success('您收到' + _diff + '条新消息，请注意查收。');
+      }
+      this.oldUnreadMsgCount = _unreadMsgCount;
       return _unreadMsgCount;
     }, //获取target的id
     targetId:              function() {
@@ -285,9 +304,8 @@ var mainModel = new Vue({
     //加载求职者列表
     getJobSeekerList: function() {
       $.post(_SERVER + '/activity/getOnsiteAndInvestList', {
-        activityId:  this.activityId,
-        holdingTime: this.activityInfo ? this.activityInfo.holdingTime.substr(0, 10) : '',//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
-        companyId:   this.companyUserInfo ? this.companyUserInfo.companyId : '',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
+        activityId: this.activityId, holdingTime: this.activityInfo ? this.activityInfo.holdingTime.substr(0, 10) : '',//TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
+        companyId:  this.companyUserInfo ? this.companyUserInfo.companyId : '',//TODO 看看如果企业登陆没登陆对这个处理是否有影响
       }, function(response) {
         if (response.errCode === '00') {
           //测试数据里面personName有null导致程序异常，这里修复一下
@@ -530,8 +548,7 @@ var mainModel = new Vue({
 
           //成功后立刻异步查询该用户投递本企业的历史信息
           $.post(_SERVER + '/personCenter/getActivityRecruitFolder',
-              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId},
-              function(response2) {
+              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId}, function(response2) {
                 if (response2.errCode === '00') {
                   // console.log('用户投递历史：', response2);
                   this.currentResumeInfo.postHistory = response2.data;
@@ -573,8 +590,7 @@ var mainModel = new Vue({
 
           //成功后立刻异步查询该用户投递本企业的历史信息
           $.post(_SERVER + '/personCenter/getActivityRecruitFolder',
-              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId},
-              function(response2) {
+              {activityId: this.activityId, companyId: this.companyUserInfo.companyId, personId: response.map.jobPersonReg.personId}, function(response2) {
                 if (response2.errCode === '00') {
                   // console.log('用户投递历史：', response2);
                   this.currentResumeInfo.postHistory = response2.data;
@@ -1146,19 +1162,16 @@ var mainModel = new Vue({
       $('#chat-area_other .video-chat').attr('src', '');//为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
       $('#chat-area_other .model').removeClass('active');
       $('#chat-area_other .person-resume.model').addClass('active');
-    },
-    //接受对方的视频邀请
-    accept2videoChat: function() {
+    }, //接受对方的视频邀请
+    accept2videoChat:     function() {
       this.chatViewVideo();
-    },
-    //邀请对方进行视频聊天
-    invite2videoChat: function() {
+    }, //邀请对方进行视频聊天
+    invite2videoChat:     function() {
       //邀请对方进入视频聊天室的系统消息
       this.sendMessage('-', {type: '0002', msg: ''});
       this.chatViewVideo();
-    },
-    //聊天用打开视频聊天
-    chatViewVideo: function() {
+    }, //聊天用打开视频聊天
+    chatViewVideo:        function() {
       //区分当前账号是个人还是公司
       //个人方式
       if (this.personUserInfo !== null) {
