@@ -743,7 +743,7 @@ var mainModel = new Vue({
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
-        //TODO return false;
+        return false;//DEBUG 注释这里可无限制chat
       }
 
       if (this.companyUserInfo === null) {
@@ -773,7 +773,7 @@ var mainModel = new Vue({
 
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
-        //TODO return false
+        return false;//DEBUG 注释本行可chat
       }
 
       if (this.personUserInfo === null) {
