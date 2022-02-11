@@ -328,6 +328,8 @@ var mainModel = new Vue({
         num:        this.danmuNum,
       }, function(response) {
         if (response.errCode === '00') {
+          //时间过滤，现在设置成过滤掉60分钟以上的
+          response.data  = response.data.filter(item => parseInt(item.split(' ')[0]) < 60);
           this.danmuList = response.data.map(function(item) {
             if (item.length > 30) {
               var _tempItem = item.split(' ');
