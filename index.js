@@ -191,17 +191,29 @@ var mainModel = new Vue({
       }
     }, //获得距离展会结束时间还有多久
     getEndTime:    function() {
-      var _tempTime = parseInt(moment.duration(moment(mainModel.activityTime) - moment()).
-          asMinutes());
+      var _startTime   = this.activityInfo.holdingTime;
+      //考虑到如果有holdingZone，则使用
+      var _holdingZone = this.activityInfo.holdingZone;
+      if (_holdingZone.indexOf('-') > -1 && _holdingZone.split('-').length === 2) {
+        _startTime = _startTime.substr(0, 10) + ' ' + _holdingZone.split('-')[0] + ':00';
+      }
+      console.log('startTime:', _startTime);
+
       //判断活动是否开始
-      if ((parseInt(moment.duration(moment(mainModel.activityTime) - moment()).
-          asMinutes()) / 60 - 24) > 0) {
+      if (moment.duration(moment(_startTime) - moment()).asMinutes() > 0) {
         this.activityAlreadyStarted = false;
       } else {
         this.activityAlreadyStarted = true;
       }
 
-      console.log(_tempTime);
+      //默认计算时间是开始时间
+      var _tempTime = parseInt(moment.duration(moment(_startTime) - moment()).asMinutes());
+      //如果活动已经开始，则计算时间换算为结束时间
+      if (this.activityAlreadyStarted) {
+        _tempTime = parseInt(moment.duration(moment(this.activityTime) - moment()).asMinutes());
+      }
+
+      console.log('剩余时间：', _tempTime);
       //如果时间是负数，则三个数都返回0
       if (_tempTime < 0) {
         this.activityEndTime = {
@@ -261,12 +273,18 @@ var mainModel = new Vue({
 
             this.getJobSeekerList();  //用来获取匹配场次、企业的求职者信息
 
-            //根据约定因为活动都是线上，活动结束时间统一设置为当天23点59分59秒，所以做如下操作
-            this.activityTime = moment(response.data.endDate).
-                set('hour', 23).
-                set('minute', 59).
-                set('second', 59).
-                format('YYYY-MM-DD HH:mm:ss');
+            //delete 根据约定因为活动都是线上，活动结束时间统一设置为当天23点59分59秒，所以做如下操作
+            //考虑到如果有holdingZone，则使用
+            var _holdingZone = this.activityInfo.holdingZone;
+            if (_holdingZone.indexOf('-') > -1 && _holdingZone.split('-').length === 2) {
+              this.activityTime = response.data.endDate.substr(0, 10) + ' ' + _holdingZone.split('-')[1] + ':00';
+            } else {
+              this.activityTime = moment(response.data.endDate).
+                  set('hour', 23).
+                  set('minute', 59).
+                  set('second', 59).
+                  format('YYYY-MM-DD HH:mm:ss');
+            }
 
             //然后立刻算出当前时间离结束时间还有多久
             this.getEndTime();
