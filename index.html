@@ -1018,9 +1018,10 @@
       if (window.innerWidth < 1367) {
         obj['.company-item'].zoom    = '0.935';
         obj['.job-seeker_item'].zoom = '0.935';
-      } else {
-        obj['.company-item'].zoom    = '1';
-        obj['.job-seeker_item'].zoom = '1';
+      }
+      if (window.innerWidth < 1200) {
+        obj['.company-item'].zoom    = '0.85';
+        obj['.job-seeker_item'].zoom = '0.85';
       }
 
       obj['#top-bar'].width            = (_baseWidth) + 'px';
