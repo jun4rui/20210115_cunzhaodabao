@@ -54,8 +54,15 @@ var mainModel = new Vue({
     }, chatInfo:          null,  //记录JM必要的信息
     chatFilterStr:        '',    //“入场求职者”过滤关键字（字符串）
     tabName:              'job',    //tab名称
-    oldUnreadMsgCount:    0,
-    /*~聊天相关属性*/
+    oldUnreadMsgCount:    0, /*~聊天相关属性*/
+
+    /*离线模式相关*/
+    afkMode:             false,   //离线模式状态
+    afkMessage:          '',      //离线模式自动回复信息
+    afkCustomizeMessage: '',      //自定义离线消息
+    afkTime:             0,       //设定离开的时间（毫秒数）
+    afkComeMessage:      [],      //AFK后发过来的消息列表（等待发送自动回复信息用的）
+    /*～离线模式相关*/
 
   }, computed: {
     //获得未读消息总数
@@ -64,13 +71,34 @@ var mainModel = new Vue({
       var _unreadList     = [];
       var _diff           = 0;//消息相差
       var _offMsg         = this.offlineConversations.map(function(item) {
-        return {key: item.key, unread_msg_count: item.unread_msg_count};
+        return {key: item.key, unread_msg_count: item.unread_msg_count, from_username: item.from_username, mtime: null};
       });
       var _onMsg          = this.conversations.map(function(item) {
-        return {key: item.key, unread_msg_count: item.unread_msg_count};
+        return {
+          key:              item.key,
+          unread_msg_count: item.unread_msg_count,
+          from_username:    item.username,
+          mtime:            item.mtime,
+          afkKey:           item.username.toString() + '_' + item.unread_msg_count.toString(),//因为过来同一个消息发送人只有一条记录，这样离线自动回复会导致只自动回复一次。如果同一个人发送多次也仅仅只有一条记录，所以将发送人和未读消息数合在一起作为独特的KEY，用来保证同一个人每次发送都会被记录下来
+        };
       });
 
+      //判断在线消息中需要自动回复的
+      _onMsg.map(function(item) {
+        //在设置为离线的时候，将时间大于afkTime的未读消息推送到afkComMessage去
+        // console.log('检测自动回复：', mainModel.afkMode, item.mtime, mainModel.afkTime, item.unread_msg_count);
+        if (mainModel.afkMode && item.mtime > mainModel.afkTime && item.unread_msg_count > 0) {
+          // console.log('自动回复：', item);
+          mainModel.afkComeMessage = _.uniqBy(mainModel.afkComeMessage.concat([item]), 'afkKey');
+        }
+      });
+      //调用离线消息自动回复的方法
+      if (this.afkMode) {
+        this.autoResponse();
+      }
+
       _unreadList = _.uniqBy(_unreadList.concat(_onMsg, _offMsg), 'key');
+      console.log('_unreadList:', _unreadList);
       _unreadList.map(function(item) {
         _unreadMsgCount += item.unread_msg_count;
       });
@@ -169,8 +197,40 @@ var mainModel = new Vue({
       return this.targetUser.id !== '';
     }, /*~聊天相关*/
   }, methods:  {
-    //检查当前时间，是不是在活动开始和结束时间范围内。结束时间（因为默认是最后一天0点）按照时间+1天计算（用来表示第二天0点）
-    checkDateTime: function() {
+    //自动回复消息
+    autoResponse: function() {
+      if (this.afkComeMessage.length === 0) return false;
+
+      //循环将消息发送
+      while (this.afkComeMessage.length > 0) {
+        var _item = this.afkComeMessage.pop();
+        console.log('调用方法:', _item.from_username, this.afkMessage);
+
+        JIM.sendSingleMsg({
+          // 'target_username': this.targetUsername,
+          'target_username': _item.from_username,
+          'content':         '自动回复：' + mainModel.afkMessage,
+          'appkey':          mainModel.chatInfo.appkey,
+        });
+      }
+
+    },
+    //设置afk
+    setAfkON:               function(inMessage) {
+      this.afkMessage = inMessage;
+      this.afkMode    = true;
+      this.afkTime    = new Date().getTime();
+    }, setAfkOFF:           function() {
+      this.afkMessage = '';
+      this.afkMode    = false;
+      this.afkTime    = 0;
+    }, setCustomizeMessage: function() {
+      this.afkMessage = this.afkCustomizeMessage;
+      this.afkMode    = true;
+      this.afkTime    = new Date().getTime();
+      this.$refs.afkChat.doClose();
+    }, //检查当前时间，是不是在活动开始和结束时间范围内。结束时间（因为默认是最后一天0点）按照时间+1天计算（用来表示第二天0点）
+    checkDateTime:          function() {
       //如果当前没有获得招聘会信息，则默认返回false
       if (!this.activityInfo) {
         return false;
@@ -190,14 +250,14 @@ var mainModel = new Vue({
         }
       }
     }, //获得距离展会结束时间还有多久
-    getEndTime:    function() {
+    getEndTime:             function() {
       var _startTime   = this.activityInfo.holdingTime;
       //考虑到如果有holdingZone，则使用
       var _holdingZone = this.activityInfo.holdingZone;
       if (_holdingZone.indexOf('-') > -1 && _holdingZone.split('-').length === 2) {
         _startTime = _startTime.substr(0, 10) + ' ' + _holdingZone.split('-')[0] + ':00';
       }
-      console.log('startTime:', _startTime);
+      // console.log('startTime:', _startTime);
 
       //判断活动是否开始
       if (moment.duration(moment(_startTime) - moment()).asMinutes() > 0) {
@@ -213,7 +273,7 @@ var mainModel = new Vue({
         _tempTime = parseInt(moment.duration(moment(this.activityTime) - moment()).asMinutes());
       }
 
-      console.log('剩余时间：', _tempTime);
+      // console.log('剩余时间：', _tempTime);
       //如果时间是负数，则三个数都返回0
       if (_tempTime < 0) {
         this.activityEndTime = {
@@ -239,7 +299,7 @@ var mainModel = new Vue({
         console.log('activityEndTime:', this.activityEndTime);
       }
     }, //获取场次ID
-    getActivityId: function() {
+    getActivityId:          function() {
       //算法：根据优先级别，首先从sessionStorage中获取activityid，然后再从url获取activityid，然后再判断是否获取到activityId
       var _tempActivityId = getParameterValue(window.location.href, 'activityid')
           ? getParameterValue(window.location.href, 'activityid')
@@ -627,7 +687,7 @@ var mainModel = new Vue({
     },
 
     //登陆
-    userLogin:          function(inMode) {
+    userLogin:              function(inMode) {
       if (inMode === 'person') {
         window.localStorage.setItem('backurl',
             window.location.href.indexOf('?') > -1 ? window.location.href.substr(0, window.location.href.indexOf('?')) + '?mode=person' : window.location.href +
@@ -643,7 +703,7 @@ var mainModel = new Vue({
         return false;
       }
     }, //自动登录（用获取个人和企业登陆状态接口，看哪个能返回已登录信息来判断）
-    autoLogin:          function() {
+    autoLogin:              function() {
       //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
       //如果前端标记了退出状态，则不要自动登录
       if (window.sessionStorage.getItem('online_exit') !== '1') {
@@ -667,8 +727,87 @@ var mainModel = new Vue({
           }
         }.bind(this));
       }
+    }, //TODO DEBUG 用户登录
+    debugCompanyUserInfo:   function() {
+      //{"agreementState":1,"backend":false,"companyId":1458,"companyName":"湖南人才网","email":"125493680@qq.com","emailVerifyFlag":"N","enCompanyId":"82FC3F6BF4CF7CAC","expireTime":"2022-02-17T19:23:17","flexEndDate":null,"flexStartDate":null,"isFlexable":false,"lastLoginDate":"2022-02-17T17:23:17","loginIp":"161.117.249.226","loginTimes":555,"logoUrl":null,"maxDownload":6000,"maxRecruitment":500,"maxSmInterview":1000,"maxSmInvitation":0,"maxVideoInterview":2000,"mbrEndDate":"2022-08-26T00:00:00","mbrStartDate":"2021-08-26T00:00:00","memberState":1,"orderId":136569,"password":"","remainVideoInterview":2000,"salesId":0,"stars":0,"usedVideoInterview":0,"userName":"hnrcw"}
+      this.companyUserInfo = {
+        'agreementState':       1,
+        'backend':              false,
+        'companyId':            1458,
+        'companyName':          '湖南人才网',
+        'email':                '125493680@qq.com',
+        'emailVerifyFlag':      'N',
+        'enCompanyId':          '82FC3F6BF4CF7CAC',
+        'expireTime':           '2022-02-17T19:23:17',
+        'flexEndDate':          null,
+        'flexStartDate':        null,
+        'isFlexable':           false,
+        'lastLoginDate':        '2022-02-17T17:23:17',
+        'loginIp':              '161.117.249.226',
+        'loginTimes':           555,
+        'logoUrl':              null,
+        'maxDownload':          6000,
+        'maxRecruitment':       500,
+        'maxSmInterview':       1000,
+        'maxSmInvitation':      0,
+        'maxVideoInterview':    2000,
+        'mbrEndDate':           '2022-08-26T00:00:00',
+        'mbrStartDate':         '2021-08-26T00:00:00',
+        'memberState':          1,
+        'orderId':              136569,
+        'password':             '',
+        'remainVideoInterview': 2000,
+        'salesId':              0,
+        'stars':                0,
+        'usedVideoInterview':   0,
+        'userName':             'hnrcw',
+      };
+      //企业签到操作
+      // this.companySign();
+      this.loginMode = 'company';
+      //登陆聊天账号
+      this.readyChat();
+      //企业登录后Tab默认切换到求职大厅的人才列表处
+      this.currentTab = 1;
+    }, debugPersonUserInfo: function() {
+      //{"agreementState":1,"clickedTimes":683,"createDt":"2012-08-03T00:00:00","cvComplete":true,"eduComplete":true,"email":"ju*************om","emailVerifyFlag":"false","enPersonId":"92D9F6E2013EC15C","genderCode":"01","lastLoginDt":"2022-02-17T10:44:02","lastLoginIp":"192.168.3.192","loginTimes":0,"map":{"applyNum":0,"siteApplyNum":11,"noticeNum":0,"viewAndVideoAddCounts":0,"isElite":false,"cvCount":3,"reservNum":0},"oldPassword":"12345678","password":"","personComplete":true,"personId":1685117,"personName":"曹珺1","photoLink":"photos\/2020\/1685117.jpg","recentClickedTimes":78,"tipFlag":"true","userName":"jun4rui"}
+      window.sessionStorage.removeItem('online_exit');
+      this.personUserInfo = this.companyUserInfo = null;
+      this.personUserInfo = {
+        'agreementState':     1,
+        'clickedTimes':       683,
+        'createDt':           '2012-08-03T00:00:00',
+        'cvComplete':         true,
+        'eduComplete':        true,
+        'email':              'ju*************om',
+        'emailVerifyFlag':    'false',
+        'enPersonId':         '92D9F6E2013EC15C',
+        'genderCode':         '01',
+        'lastLoginDt':        '2022-02-17T10:44:02',
+        'lastLoginIp':        '192.168.3.192',
+        'loginTimes':         0,
+        'map':                {
+          'applyNum': 0, 'siteApplyNum': 11, 'noticeNum': 0, 'viewAndVideoAddCounts': 0, 'isElite': false, 'cvCount': 3, 'reservNum': 0,
+        },
+        'oldPassword':        '12345678',
+        'password':           '',
+        'personComplete':     true,
+        'personId':           1685117,
+        'personName':         '曹珺1',
+        'photoLink':          'photos\/2020\/1685117.jpg',
+        'recentClickedTimes': 78,
+        'tipFlag':            'true',
+        'userName':           'jun4rui',
+      };
+      //个人签到
+      this.personSign();
+      this.loginMode = 'person';
+      //登陆聊天账号
+      this.readyChat();
+      //个人登录后Tab默认切换到招聘大厅的企业列表处
+      this.currentTab = 0;
     }, //获取个人用户登陆信息
-    getPersonUserInfo:  function() {
+    getPersonUserInfo:      function() {
       //清除自动登录标记
       window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
@@ -688,7 +827,7 @@ var mainModel = new Vue({
         }
       }.bind(this));
     }, //获取企业用户登陆信息
-    getCompanyUserInfo: function() {
+    getCompanyUserInfo:     function() {
       //清除自动登录标记
       window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
@@ -709,7 +848,7 @@ var mainModel = new Vue({
         }
       }.bind(this));
     }, //退出登陆
-    logout:             function() {
+    logout:                 function() {
       window.sessionStorage.setItem('online_exit', '1');
       //TODO 因为企业登出接口现在302而且没有返回值，暂时先调用后1000ms再刷新页面
       $.post('//www.hnrcsc.com/web/recruit/logout.action');
@@ -719,7 +858,7 @@ var mainModel = new Vue({
       }, 1000);
 
     }, //个人查看消息（打开聊天窗口）
-    viewMessage:        function() {
+    viewMessage:            function() {
       //如果没有对话列表，则提示并返回
       if (!this.conversations || this.conversations.length === 0) {
         this.$message.warning('抱歉，您没有任何对话消息。');
@@ -763,7 +902,7 @@ var mainModel = new Vue({
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
-        return false;//DEBUG 注释这里可无限制chat
+        // return false;//DEBUG 注释这里可无限制chat
       }
 
       if (this.companyUserInfo === null) {
@@ -793,7 +932,7 @@ var mainModel = new Vue({
 
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
-        return false;//DEBUG 注释本行可chat
+        // return false;//DEBUG 注释本行可chat
       }
 
       if (this.personUserInfo === null) {
@@ -874,6 +1013,7 @@ var mainModel = new Vue({
       }.bind(this));
     }, // 聊天发送消息comp`
     sendMessage:         function(inMsgStr, inExtras) {
+      console.log('对方的ID:', this.targetUser.id);
       if (this.targetUser.id === '') {
         alert('请选择一个用户');
         return false;
@@ -1128,7 +1268,7 @@ var mainModel = new Vue({
       //检查信息是否齐全
       if (this.companyUserInfo === null || this.activityId === null) {
         console.log('企业签到失败，参数不全');
-        return false;
+        return false;//DEBUG 关闭这个可以避免企业签到
       }
 
       //调用报名签到接口
@@ -1140,7 +1280,7 @@ var mainModel = new Vue({
           console.log('企业签到成功！', response);
         } else {
           this.$message.error('企业签到失败！' + response.errMsg);
-          this.companyUserInfo = null;//签到失败，就清空企业信息
+          this.companyUserInfo = null;//签到失败，就清空企业信息 //DEBUG 关闭这里
         }
       }.bind(this));
     },

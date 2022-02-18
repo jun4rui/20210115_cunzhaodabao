@@ -276,6 +276,17 @@
                 <div class="cj-inline-block" @click="invite2videoChat">
                   <el-button icon="el-icon-video-camera-solid" plain size="mini" type="primary">视频沟通</el-button>
                 </div>
+
+                <el-popover v-if="!afkMode" ref="afkChat" placement="top" trigger="click" width="300">
+                  <div class="afk-message" @click="setAfkON('你好，我现在有事不在，一会再和你联系……')">你好，我现在有事不在，一会再和你联系……</div>
+                  <div class="afk-message" @click="setAfkON('工作中，请勿打扰。')">工作中，请勿打扰。</div>
+                  <div class="afk-message" @click="setAfkON('我去吃饭了，一会再联系。')">我去吃饭了，一会再联系。</div>
+                  <el-input v-model="afkCustomizeMessage" class="afk-customize-message input-with-select" maxlength="30" placeholder="请输入自定义离线消息">
+                      <el-button slot="append" icon="el-icon-success" @click="setCustomizeMessage()"></el-button>
+                  </el-input>
+                  <el-button slot="reference" plain size="mini" type="success">当前在线</el-button>
+                </el-popover>
+                <el-button v-if="afkMode" plain size="mini" type="danger" @click='setAfkOFF'>当前离线</el-button>
               </div>
           <!--/聊天功能菜单-->
           <!--消息发送-->

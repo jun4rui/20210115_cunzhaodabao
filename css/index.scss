@@ -1544,6 +1544,7 @@
 			#chat-function_menu {
 			  padding: 0 0 5px 0;
 			}
+
 		  }
 		}
 
@@ -1773,5 +1774,47 @@
 		filter: drop-shadow(1px 1px 1px #C0C0C0);
 	  }
 	}
+  }
+}
+
+
+//离线预设文字
+.afk-message {
+  background-color:   #FFF;
+  background-image:   none;
+  border:             1px solid #DCDFE6;
+  border-radius:      0;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+  color:              #606266;
+  cursor:             pointer;
+  display:            inline-block;
+  font-size:          12px;
+  height:             40px;
+  line-height:        40px;
+  margin-bottom:      -1px;
+  outline:            0;
+  padding:            0 15px;
+  -webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  transition:         border-color .2s cubic-bezier(.645, .045, .355, 1);
+  width:              100%;
+
+  &:first-of-type {
+	border-radius: 4px 4px 0 0;
+  }
+
+  &:hover {
+	background-color: #458FFC;
+	color:            #FFF;
+  }
+}
+
+.afk-customize-message {
+  .el-input__inner {
+	border-radius: 0 0 0 4px;
+  }
+
+  .el-input-group__append {
+	border-radius: 0 0 4px 0;
   }
 }
