@@ -281,7 +281,19 @@ var mainModel = new Vue({
               target_username: item.from_username,
               content: '离线自动回复：' + mainModel.afkMessage,
               appkey: mainModel.chatInfo.appkey,
-            });
+            }).onSuccess(
+              function (data, msg) {
+                console.log('自动回复成功', item, data, msg);
+
+                this.sendMessageList.push({
+                  from_username: this.selfUser.nickname,
+                  from_id: this.selfUser.id,
+                  target_username: this.targetUser.name,
+                  message: '离线自动回复：' + mainModel.afkMessage,
+                  timestamp: new Date().getTime(),
+                });
+              }.bind(this)
+            );
             this.afkComeMessage[index].responseStatus = true;
             // console.log('auto response:', this.afkComeMessage[index]);
           }
@@ -1586,7 +1598,7 @@ return _msgTime > _activityTime;
       //检查信息是否齐全
       if (this.companyUserInfo === null || this.activityId === null) {
         console.log('企业签到失败，参数不全');
-        return false; //DEBUG 关闭这个可以避免企业签到
+        // return false; //DEBUG 关闭这个可以避免企业签到
       }
 
       //调用报名签到接口
@@ -1603,7 +1615,7 @@ return _msgTime > _activityTime;
             console.log('企业签到成功！', response);
           } else {
             this.$message.error('企业签到失败！' + response.errMsg);
-            this.companyUserInfo = null; //签到失败，就清空企业信息 //DEBUG 关闭这里
+            // this.companyUserInfo = null; //签到失败，就清空企业信息 //DEBUG 关闭这里
           }
         }.bind(this)
       );

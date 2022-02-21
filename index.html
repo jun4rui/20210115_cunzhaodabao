@@ -1,302 +1,302 @@
 <!DOCTYPE html>
 <html lang="zh_CN">
 <head>
-    <meta charset="UTF-8">
-    <!--<meta content="width=1920, user-scalable=yes" name="viewport">-->
-    <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>线上招聘会</title>
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/vue/dist/vue.min.js"></script>
-    <link href="node_modules/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
-    <script src="node_modules/element-ui/lib/index.js"></script>
-    <script src="node_modules/moment/moment.js"></script>
-    <script src="node_modules/moment/locale/zh-cn.js"></script>
-    <script src="js/common.js"></script>
-    <link href="css/index.css?v=20220218" rel="stylesheet">
-    <link href="js/barragerjs/dist/css/barrager.css" rel="stylesheet">
-    <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
-    <script src="node_modules/lodash/lodash.min.js"></script>
-    <script src="js/jmessage-sdk-web-2.6.0/jmessage-sdk-web.2.6.0.min.js"></script>
-    <script src="node_modules/cssobj/dist/cssobj.min.js"></script>
-    <!--搜狐pv库，加入returnCitySN对象-->
-    <script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
-    <!--热键功能-->
-    <script src="node_modules/hotkeys-js/dist/hotkeys.min.js"></script>
+  <meta charset="UTF-8">
+  <!--<meta content="width=1920, user-scalable=yes" name="viewport">-->
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>线上招聘会</title>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <link href="node_modules/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+  <script src="node_modules/element-ui/lib/index.js"></script>
+  <script src="node_modules/moment/moment.js"></script>
+  <script src="node_modules/moment/locale/zh-cn.js"></script>
+  <script src="js/common.js"></script>
+  <link href="css/index.css?v=20220218" rel="stylesheet">
+  <link href="js/barragerjs/dist/css/barrager.css" rel="stylesheet">
+  <script src="js/barragerjs/dist/js/jquery.barrager.min.js"></script>
+  <script src="node_modules/lodash/lodash.min.js"></script>
+  <script src="js/jmessage-sdk-web-2.6.0/jmessage-sdk-web.2.6.0.min.js"></script>
+  <script src="node_modules/cssobj/dist/cssobj.min.js"></script>
+  <!--搜狐pv库，加入returnCitySN对象-->
+  <script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
+  <!--热键功能-->
+  <script src="node_modules/hotkeys-js/dist/hotkeys.min.js"></script>
 </head>
 <body>
 <!--主内容-->
 <div id="main">
-    <!-- Header -->
-    <div id="header">
-        <div class="header_panel">
-            <a class="to_home" href="/">返回首页</a>
-            <ul v-if="activityRecord" id="count_panel" class="cj-hide">
-                <li>浏览量&nbsp;<span>{{ activityRecord.pageviews }}</span>，</li>
-                <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
-                <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
+  <!-- Header -->
+  <div id="header">
+    <div class="header_panel">
+      <a class="to_home" href="/">返回首页</a>
+      <ul v-if="activityRecord" id="count_panel" class="cj-hide">
+        <li>浏览量&nbsp;<span>{{ activityRecord.pageviews }}</span>，</li>
+        <li>参会企业&nbsp;<span>{{ activityRecord.companyCount }}</span>，</li>
+        <li>招聘人数&nbsp;<span>{{ activityRecord.requireCount }}</span></li>
+      </ul>
+    </div>
+  </div>
+  <!-- /Header -->
+  <!-- Banner -->
+  <div v-if="activityInfo" id="banner"
+       :style="{backgroundImage:'url('+(activityInfo.otherUrl?activityInfo.otherUrl:'./images/banner.png')+')'}">
+    <!--标题区-->
+    <div v-if="activityInfo" id="title_panel">
+      <div v-if="!activityInfo.otherUrl" class="title">{{ activityInfo.productName }}</div>
+      <div v-if="!activityInfo.otherUrl" class="desc">主办单位：{{ nl2br(activityInfo.remark || "") }}</div>
+      <div v-if="!activityInfo.otherUrl" class="memo">
+        <div>{{ nl2br(activityInfo.productIntr || "") }}</div>
+        <div>{{ activityInfo.activityAddress }}</div>
+        <div>
+          {{ activityInfo.holdingTime.substr(0, 10) }} {{ activityInfo.holdingZone }}
+        </div>
+      </div>
+    </div>
+    <!--/标题区-->
+    <div class="banner_panel-antiAdGuard">
+      <!--弹幕区-->
+      <div id="danmu"></div>
+      <!--/弹幕区-->
+      <!--功能区-->
+      <div id="func_panel">
+        <div class="func_panel_left">
+          <!--Tab-->
+          <ul id="tab">
+            <li :class="{'active':currentTab===0}" @click="currentTab=0">招聘大厅</li>
+            <li :class="{'active':currentTab===1}" @click="currentTab=1">求职者大厅</li>
+          </ul>
+          <!--/Tab-->
+          <!--招聘大厅用-->
+          <div v-if="currentTab===0" id="recruitment_section"
+               class="cj-flex cj-justify-content-start cj-align-items-center">
+            <!--企业搜索条-->
+            <div id="company-search_panel" class="keyword_search">
+              <input v-model="searchCompanyKeyword" placeholder="请输入您要搜索的企业或职位名称" type="text">
+              <button type="button">搜索</button>
+            </div>
+            <!--/企业搜索条-->
+            <!--企业离线在线切换-->
+            <ul id="company-status_switch" class="status_switch">
+              <li v-if="currentCompanyShowStatus===0" @click="currentCompanyShowStatus=1">全部企业</li>
+              <li v-if="currentCompanyShowStatus===1" class="active" @click="currentCompanyShowStatus=0">
+                在线企业
+              </li>
             </ul>
+            <!--/企业离线在线切换-->
+          </div>
+          <!--/招聘大厅用-->
+          <!--求职大厅用-->
+          <div v-if="currentTab===1" id="jobseeker_section"
+               class="cj-flex cj-justify-content-start cj-align-items-center">
+            <!--个人搜索条-->
+            <div id="person-search_panel" class="keyword_search">
+              <input v-model="searchPersonKeyword" placeholder="请输入您要搜索的求职者名称或学历或职位" type="text">
+              <button type="button">搜索</button>
+            </div>
+            <!--/个人搜索条-->
+            <!--个人离线在线切换-->
+            <ul id="person-status_switch" class="status_switch">
+              <li :class="{active:currentPersonShowStatus===0}" @click="currentPersonShowStatus=0">全部求职者
+              </li>
+              <li :class="{active:currentPersonShowStatus===1}" @click="currentPersonShowStatus=1">仅在线
+              </li>
+              <li :class="{active:currentPersonShowStatus===2}" @click="currentPersonShowStatus=2">仅离线
+              </li>
+              <li v-if="companyUserInfo" :class="{active:currentPersonShowStatus===3}"
+                  @click="currentPersonShowStatus=3">
+                仅已投递
+              </li>
+            </ul>
+            <!--/个人离线在线切换-->
+          </div>
+          <!--/求职大厅用-->
         </div>
+        <div class="func_panel_right">
+          <!--登录区-->
+          <ul v-if="!personUserInfo && !companyUserInfo" id="login_panel">
+            <li id="person_login">
+              <img alt="个人登陆" src="images/icon_login_person.png">
+              <span class="login_button" @click="userLogin('person')">个人登陆</span>
+            </li>
+            <li id="company_login">
+              <img alt="企业登陆" src="images/icon_login_company.png">
+              <span class="login_button" @click="userLogin('company')">企业登陆</span>
+            </li>
+          </ul>
+          <div v-if="personUserInfo" id="person-info_panel">
+            <!--<div class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>-->
+            <el-tooltip class="item" content="点击访问个人中心" effect="dark" placement="top">
+              <!--无头像-->
+              <div v-if="!personUserInfo.photoLink"
+                   :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"
+                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+              <!--有头像-->
+              <div v-if="personUserInfo.photoLink"
+                   :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'"
+                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+            </el-tooltip>
+            <a class="name">{{ personUserInfo.personName }}</a>
+            <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
+            <div class="logout" @click="logout">退出</div>
+          </div>
+          <div v-if="companyUserInfo" id="company-info_panel">
+            <el-tooltip class="item" content="点击访问企业后台" effect="dark" placement="top">
+              <div v-if="!companyUserInfo.logoUrl"
+                   :style="'background-image:url(images/icon_login_company@2x.png)'" class="avatar"
+                   onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+              <div v-if="companyUserInfo.logoUrl"
+                   :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'"
+                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+            </el-tooltip>
+            <a class="name">{{ companyUserInfo.userName }}</a>
+            <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
+            <div class="logout" @click="logout">退出</div>
+          </div>
+          <!--/登录区-->
+          <!--倒计时区-->
+          <div id="countdown_panel">
+            <div v-if="activityAlreadyStarted" class="title">会议结束倒计时</div>
+            <div v-if="!activityAlreadyStarted" class="title">会议开始倒计时</div>
+            <div v-if="activityEndTime" id="countdown_time" class="cj-block">
+              <span v-if="activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
+              <span v-if="!activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
+              <span class="char">天</span>
+              <span class="time">{{ activityEndTime.hour }}</span>
+              <span class="char">时</span>
+              <span class="time">{{ activityEndTime.min }}</span>
+              <span class="char">分</span>
+            </div>
+            <div id="goto_panel">
+              <div v-if="!personUserInfo && !companyUserInfo && activityInfo.wordpressId"
+                   id="view-invitation-card" @click="activityDescDialog=true;"></div>
+              <div v-if="personUserInfo" id="view-invitation-card_long"
+                   @click="activityDescDialog=true;"></div>
+              <!--TODO 没有做所以先去掉-->
+              <!--<a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo">&lt;!&ndash;TODO 这里还没有链接&ndash;&gt;</a>-->
+              <!--<a id="order-exhibition_long" href="#" v-if="companyUserInfo">&lt;!&ndash;TODO 这里还没有链接&ndash;&gt;</a>-->
+            </div>
+          </div>
+          <!--/倒计时区-->
+        </div>
+      </div>
+      <!--/功能区-->
     </div>
-    <!-- /Header -->
-    <!-- Banner -->
-    <div v-if="activityInfo" id="banner"
-         :style="{backgroundImage:'url('+(activityInfo.otherUrl?activityInfo.otherUrl:'./images/banner.png')+')'}">
-        <!--标题区-->
-        <div v-if="activityInfo" id="title_panel">
-            <div v-if="!activityInfo.otherUrl" class="title">{{ activityInfo.productName }}</div>
-            <div v-if="!activityInfo.otherUrl" class="desc">主办单位：{{ nl2br(activityInfo.remark || '') }}</div>
-            <div v-if="!activityInfo.otherUrl" class="memo">
-                <div>{{ nl2br(activityInfo.productIntr || '') }}</div>
-                <div>{{ activityInfo.activityAddress }}</div>
-                <div>
-                    {{ activityInfo.holdingTime.substr(0, 10) }} {{ activityInfo.holdingZone }}
-                </div>
-            </div>
+  </div>
+  <!-- /Banner -->
+  <!--消息对话框Dialog-->
+  <el-dialog id="chat-dialog" :title="targetUser.name" :visible.sync="chatDiaglogVisible" center
+             @close="clearChatTargetUser">
+    <!--职位详情子Dialog-->
+    <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
+      <div v-if="currentRecruitInfo">
+        <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
+        <ul class="cri-recruit-info split">
+          <li>{{ currentRecruitInfo.salary }}</li>
+          <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
+          <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
+          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+        </ul>
+        <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
+        <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
+        <div class="cri_content">
+          <ul v-if="currentRecruitInfo.welfare" class="cri-welfare">
+            <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
+          </ul>
         </div>
-        <!--/标题区-->
-        <div class="banner_panel-antiAdGuard">
-            <!--弹幕区-->
-            <div id="danmu"></div>
-            <!--/弹幕区-->
-            <!--功能区-->
-            <div id="func_panel">
-                <div class="func_panel_left">
-                    <!--Tab-->
-                    <ul id="tab">
-                        <li :class="{'active':currentTab===0}" @click="currentTab=0">招聘大厅</li>
-                        <li :class="{'active':currentTab===1}" @click="currentTab=1">求职者大厅</li>
-                    </ul>
-                    <!--/Tab-->
-                    <!--招聘大厅用-->
-                    <div v-if="currentTab===0" id="recruitment_section"
-                         class="cj-flex cj-justify-content-start cj-align-items-center">
-                        <!--企业搜索条-->
-                        <div id="company-search_panel" class="keyword_search">
-                            <input v-model="searchCompanyKeyword" placeholder="请输入您要搜索的企业或职位名称" type="text">
-                            <button type="button">搜索</button>
-                        </div>
-                        <!--/企业搜索条-->
-                        <!--企业离线在线切换-->
-                        <ul id="company-status_switch" class="status_switch">
-                            <li v-if="currentCompanyShowStatus===0" @click="currentCompanyShowStatus=1">全部企业</li>
-                            <li v-if="currentCompanyShowStatus===1" class="active" @click="currentCompanyShowStatus=0">
-                                在线企业
-                            </li>
-                        </ul>
-                        <!--/企业离线在线切换-->
-                    </div>
-                    <!--/招聘大厅用-->
-                    <!--求职大厅用-->
-                    <div v-if="currentTab===1" id="jobseeker_section"
-                         class="cj-flex cj-justify-content-start cj-align-items-center">
-                        <!--个人搜索条-->
-                        <div id="person-search_panel" class="keyword_search">
-                            <input v-model="searchPersonKeyword" placeholder="请输入您要搜索的求职者名称或学历或职位" type="text">
-                            <button type="button">搜索</button>
-                        </div>
-                        <!--/个人搜索条-->
-                        <!--个人离线在线切换-->
-                        <ul id="person-status_switch" class="status_switch">
-                            <li :class="{active:currentPersonShowStatus===0}" @click="currentPersonShowStatus=0">全部求职者
-                            </li>
-                            <li :class="{active:currentPersonShowStatus===1}" @click="currentPersonShowStatus=1">仅在线
-                            </li>
-                            <li :class="{active:currentPersonShowStatus===2}" @click="currentPersonShowStatus=2">仅离线
-                            </li>
-                            <li v-if="companyUserInfo" :class="{active:currentPersonShowStatus===3}"
-                                @click="currentPersonShowStatus=3">
-                                仅已投递
-                            </li>
-                        </ul>
-                        <!--/个人离线在线切换-->
-                    </div>
-                    <!--/求职大厅用-->
-                </div>
-                <div class="func_panel_right">
-                    <!--登录区-->
-                    <ul v-if="!personUserInfo && !companyUserInfo" id="login_panel">
-                        <li id="person_login">
-                            <img alt="个人登陆" src="images/icon_login_person.png">
-                            <span class="login_button" @click="userLogin('person')">个人登陆</span>
-                        </li>
-                        <li id="company_login">
-                            <img alt="企业登陆" src="images/icon_login_company.png">
-                            <span class="login_button" @click="userLogin('company')">企业登陆</span>
-                        </li>
-                    </ul>
-                    <div v-if="personUserInfo" id="person-info_panel">
-                        <!--<div class="avatar" :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"></div>-->
-                        <el-tooltip class="item" content="点击访问个人中心" effect="dark" placement="top">
-                            <!--无头像-->
-                            <div v-if="!personUserInfo.photoLink"
-                                 :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"
-                                 class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
-                            <!--有头像-->
-                            <div v-if="personUserInfo.photoLink"
-                                 :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'"
-                                 class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
-                        </el-tooltip>
-                        <a class="name">{{ personUserInfo.personName }}</a>
-                        <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
-                        <div class="logout" @click="logout">退出</div>
-                    </div>
-                    <div v-if="companyUserInfo" id="company-info_panel">
-                        <el-tooltip class="item" content="点击访问企业后台" effect="dark" placement="top">
-                            <div v-if="!companyUserInfo.logoUrl"
-                                 :style="'background-image:url(images/icon_login_company@2x.png)'" class="avatar"
-                                 onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
-                            <div v-if="companyUserInfo.logoUrl"
-                                 :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'"
-                                 class="avatar" onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
-                        </el-tooltip>
-                        <a class="name">{{ companyUserInfo.userName }}</a>
-                        <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
-                        <div class="logout" @click="logout">退出</div>
-                    </div>
-                    <!--/登录区-->
-                    <!--倒计时区-->
-                    <div id="countdown_panel">
-                        <div v-if="activityAlreadyStarted" class="title">会议结束倒计时</div>
-                        <div v-if="!activityAlreadyStarted" class="title">会议开始倒计时</div>
-                        <div v-if="activityEndTime" id="countdown_time" class="cj-block">
-                            <span v-if="activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
-                            <span v-if="!activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
-                            <span class="char">天</span>
-                            <span class="time">{{ activityEndTime.hour }}</span>
-                            <span class="char">时</span>
-                            <span class="time">{{ activityEndTime.min }}</span>
-                            <span class="char">分</span>
-                        </div>
-                        <div id="goto_panel">
-                            <div v-if="!personUserInfo && !companyUserInfo && activityInfo.wordpressId"
-                                 id="view-invitation-card" @click="activityDescDialog=true;"></div>
-                            <div v-if="personUserInfo" id="view-invitation-card_long"
-                                 @click="activityDescDialog=true;"></div>
-                            <!--TODO 没有做所以先去掉-->
-                            <!--<a id="order-exhibition" href="#" v-if="!personUserInfo && !companyUserInfo">&lt;!&ndash;TODO 这里还没有链接&ndash;&gt;</a>-->
-                            <!--<a id="order-exhibition_long" href="#" v-if="companyUserInfo">&lt;!&ndash;TODO 这里还没有链接&ndash;&gt;</a>-->
-                        </div>
-                    </div>
-                    <!--/倒计时区-->
-                </div>
-            </div>
-            <!--/功能区-->
+        <div class="cri_subtitle">职位要求</div>
+        <div class="cri_content">
+          <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
+          </div>
         </div>
-    </div>
-    <!-- /Banner -->
-    <!--消息对话框Dialog-->
-    <el-dialog id="chat-dialog" :title="targetUser.name" :visible.sync="chatDiaglogVisible" center
-               @close="clearChatTargetUser">
-        <!--职位详情子Dialog-->
-        <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
-            <div v-if="currentRecruitInfo">
-                <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
-                <ul class="cri-recruit-info split">
-                    <li>{{ currentRecruitInfo.salary }}</li>
-                    <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
-                    <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
-                    <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
-                </ul>
-                <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
-                <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
-                <div class="cri_content">
-                    <ul v-if="currentRecruitInfo.welfare" class="cri-welfare">
-                        <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
-                    </ul>
-                </div>
-                <div class="cri_subtitle">职位要求</div>
-                <div class="cri_content">
-                    <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
-                    </div>
-                </div>
-                <!--投递职位按钮-->
-                <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
-                <!--/投递职位按钮-->
-                <!--
-                address: "长沙市望城区雷锋大道1389号"
-                companyId: "2144184"
-                companyIdStr: "D889B54CAA4B8485"
-                companyName: "春风行动企业测试账号6"
-                contactPerson: "人力资源部"
-                deptName: ""
-                detail: "任职要求：
-                ↵222222222
-                ↵
-                ↵岗位描述：333333333
-                ↵
-                ↵
-                ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
-                entProp: "有限责任公司"
-                fax: null
-                industry: "机械行业"
-                location: "湖南省长沙市"
-                lowerEdu: "其它"
-                persons: "3001-5000人"
-                phone: "0731-"
-                recruitName: "厂长"
-                recruitPersons: "500"
-                refreshDate: "2021-01-29 10:12:34"
-                salary: "1000元以下"
-                welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
-                workYears: "不限"
-                -->
-            </div>
-        </el-dialog>
-        <!--/职位详情子Dialog-->
-        <!--聊天区域面板-->
-        <div id="chat-dialog_panel">
-            <!--对话列表-->
-            <div id="conversations_panel">
-                <ul>
-                    <li v-for="item in conversations" :class="{active:item.nickName==targetUser.name}" class="cj-block"
-                        @click="readMsg(item.nickName, item.name)">
-                        <img alt="avatar" class="avatar" src="images/avatar_man_3.png">
-                        <span class="nike-name">{{ item.nickName }}</span>
-                        <span v-if="item.unread_msg_count>0" class="new">{{ item.unread_msg_count }}</span>
-                    </li>
-                </ul>
-            </div>
-            <!--/对话列表-->
-            <!--对话框-->
-            <div id="chat-area_panel">
-                <ul id="chat-message">
-                    <li v-for="item in currentMsg" :class="{self: item.from_id!==mainModel.targetUser.id}">
-                        <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
-                        <div class="chat-info">
-                            <span class="name">{{ item.from_username }}</span>
-                            <!--普通文字消息-->
-                            <span v-if="item.extras===''" class="message">{{ item.message }}</span>
-                            <!--系统信息消息-->
-                            <span v-if="item.extras!==''" class="info">
+        <!--投递职位按钮-->
+        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <!--/投递职位按钮-->
+        <!--
+        address: "长沙市望城区雷锋大道1389号"
+        companyId: "2144184"
+        companyIdStr: "D889B54CAA4B8485"
+        companyName: "春风行动企业测试账号6"
+        contactPerson: "人力资源部"
+        deptName: ""
+        detail: "任职要求：
+        ↵222222222
+        ↵
+        ↵岗位描述：333333333
+        ↵
+        ↵
+        ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        entProp: "有限责任公司"
+        fax: null
+        industry: "机械行业"
+        location: "湖南省长沙市"
+        lowerEdu: "其它"
+        persons: "3001-5000人"
+        phone: "0731-"
+        recruitName: "厂长"
+        recruitPersons: "500"
+        refreshDate: "2021-01-29 10:12:34"
+        salary: "1000元以下"
+        welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
+        workYears: "不限"
+        -->
+      </div>
+    </el-dialog>
+    <!--/职位详情子Dialog-->
+    <!--聊天区域面板-->
+    <div id="chat-dialog_panel">
+      <!--对话列表-->
+      <div id="conversations_panel">
+        <ul>
+          <li v-for="item in conversations" :class="{active:item.nickName==targetUser.name}" class="cj-block"
+              @click="readMsg(item.nickName, item.name)">
+            <img alt="avatar" class="avatar" src="images/avatar_man_3.png">
+            <span class="nike-name">{{ item.nickName }}</span>
+            <span v-if="item.unread_msg_count>0" class="new">{{ item.unread_msg_count }}</span>
+          </li>
+        </ul>
+      </div>
+      <!--/对话列表-->
+      <!--对话框-->
+      <div id="chat-area_panel">
+        <ul id="chat-message">
+          <li v-for="item in currentMsg" :class="{self: item.from_id!==mainModel.targetUser.id}">
+            <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
+            <div class="chat-info">
+              <span class="name">{{ item.from_username }}</span>
+              <!--普通文字消息-->
+              <span v-if="item.extras===''" class="message">{{ item.message }}</span>
+              <!--系统信息消息-->
+              <span v-if="item.extras!==''" class="info">
                 <!--视频面试的-->
                 <div v-if="item.extras.type==='0002'" class="cj-block cj-text-center">
-                  {{ item.from_id === mainModel.targetUser.id ? '对方向您发起视频面试邀请' : '您邀请对方进行视频面试' }}
+                  {{ item.from_id === mainModel.targetUser.id ? "对方向您发起视频面试邀请" : "您邀请对方进行视频面试" }}
                   <div v-if="item.from_id === mainModel.targetUser.id">
                     <el-button round size="mini" type="success" @click="accept2videoChat">接受</el-button>
                     <el-button round size="mini" type="danger"
                                @click="sendMessage('-',{type:'0003',msg:''});">拒绝</el-button>
                   </div>
                 </div>
-                                <!--拒绝视频面试的-->
+                <!--拒绝视频面试的-->
                 <div v-if="item.extras.type==='0003'" class="cj-block cj-text-center">
-                  {{ item.from_id === mainModel.targetUser.id ? '对方拒绝了您的视频面试邀请' : '您拒绝了对方的视频面试邀请' }}
+                  {{ item.from_id === mainModel.targetUser.id ? "对方拒绝了您的视频面试邀请" : "您拒绝了对方的视频面试邀请" }}
                 </div>
               </span>
-                            <span class="time">{{
-                                    moment(new Date(item.timestamp)).format('YYYY-MM-DD hh:mm:ss')
-                                }}</span>
-                        </div>
-                    </li>
-                </ul>
-                <span class="chat-message_footer">
+              <span class="time">{{
+                  moment(new Date(item.timestamp)).format("YYYY-MM-DD hh:mm:ss")
+                }}</span>
+            </div>
+          </li>
+        </ul>
+        <span class="chat-message_footer">
               <!--聊天功能菜单-->
               <div id="chat-function_menu">
                 <!--<div v-if="personUserInfo" class="cj-inline-block" @click="chatViewCompanyInfo">-->
-                  <!--  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>-->
-                  <!--</div>-->
-                  <!--<div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">-->
-                  <!--  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>-->
-                  <!--</div>-->
+                <!--  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>-->
+                <!--</div>-->
+                <!--<div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">-->
+                <!--  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>-->
+                <!--</div>-->
                 <div class="cj-inline-block" @click="invite2videoChat">
                   <el-button icon="el-icon-video-camera-solid" plain size="mini" type="primary">视频沟通</el-button>
                 </div>
@@ -311,10 +311,10 @@
                   </el-input>
                   <el-button slot="reference" plain size="mini" type="success">当前在线</el-button>
                 </el-popover>
-                <el-button v-if="afkMode" plain size="mini" type="danger" @click='setAfkOFF'>当前离线</el-button>
+                <el-button v-if="afkMode" plain size="mini" type="danger" @click="setAfkOFF">当前离线</el-button>
               </div>
-                    <!--/聊天功能菜单-->
-                    <!--消息发送-->
+          <!--/聊天功能菜单-->
+          <!--消息发送-->
               <div id="chat-input">
                   <el-input id="input-message" v-model="chatMessage" :rows="5" placeholder="请输入内容，可用CTRL+ENTER发送信息"
                             type="textarea"></el-input>
@@ -325,808 +325,809 @@
                                  @click="sendChatMessage">发送</el-button>
                   </div>
               </div>
-                    <!--/消息发送-->
+          <!--/消息发送-->
           </span>
-            </div>
-            <!--/对话框-->
-            <!--其他信息区域-->
-            <div id="chat-area_other">
-                <!--企业信息模块-->
-                <div class="company-info model active">
-                    <div v-if="currentCompanyInfo">
-                        <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
-                        <ul class="company-info_other split">
-                            <li>{{ currentCompanyInfo.entProp }}</li>
-                            <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : '-人数未填写-' }}</li>
-                            <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}</li>
-                        </ul>
-                        <div class="company-info_address">{{
-                                currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-'
-                            }}
-                        </div>
-                        <div class="company-info_subtitle">企业简介</div>
-                        <div class="company-info_content company-info_desc cj-ellipsis-multiline">
-                            {{ currentCompanyInfo.companyInfo }}
-                            <div class="unfold" @click="doFold('#chat-area_other')">【展开】</div>
-                            <div class="fold" @click="doFold('#chat-area_other')">【收拢】</div>
-                        </div>
-                        <div class="company-info_subtitle">招聘职位</div>
-                        <div class="company-info_content">
-                            <!--职位列表-->
-                            <div class="company-info-recruit-list">
-                                <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
-                                    <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
-                                        {{ recruitItem.recruitName }}
-                                    </div>
-                                    <ul class="recruit-other-info split">
-                                        <li>
-                                            <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
-                                            <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
-                                            <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
-                                            <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
-                                            <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
-                                            <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
-                                            <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
-                                            <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
-                                            <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
-                                            <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
-                                            <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
-                                            <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
-                                            <span v-if="recruitItem.salary==='面议'">面议</span>
-                                        </li>
-                                        <li>
-                                            学历要求{{ recruitItem.lowerEdu }}
-                                        </li>
-                                        <li>
-                                            经验{{ recruitItem.workYears }}
-                                        </li>
-                                        <li>
-                                            招{{ recruitItem.persons }}人
-                                        </li>
-                                    </ul>
-                                    <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
-                                    <div v-if="recruitItem.welfare" class="welfare">{{ recruitItem.welfare }}</div>
-                                    <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
-                                </div>
-                            </div>
-                            <!--/职位列表-->
-                        </div>
-                    </div>
-                </div>
-                <!--/企业信息模块-->
-                <!--在线聊天模块-->
-                <iframe class="video-chat model" frameborder="0"></iframe>
-                <!--/在线聊天模块-->
-                <!--个人简历模块-->
-                <div class="person-resume model">
-                    <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
-                        <!--有投递职位的-->
-                        <div v-if="currentResumeInfo.postHistory.length>0">
-                            <span>已投递公司职位：</span>
-                            <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item"
-                                    size="mini" type="success">
-                                {{ item }}
-                            </el-tag>
-                        </div>
-                        <!--没有投递过职位的-->
-                        <div v-if="currentResumeInfo.postHistory.length===0">
-                            <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
-                        </div>
-                    </div>
-                    <div v-if="currentResumeInfo" class="resume-detail">
-                        <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
-                            <!--头像-->
-                            <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'"
-                               class="resume_download" target="_blank">
-                                <i class="el-icon-download"></i>&nbsp;下载简历
-                            </a>
-                            <div v-if="currentResumeInfo.jobPerson.photoLinkDsp"
-                                 :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"
-                                 class="photoLinkDsp"></div>
-                            <div v-if="!currentResumeInfo.jobPerson.photoLinkDsp"
-                                 :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"
-                                 class="photoLinkDsp"></div>
-                            <div class="resume-detail_info cj-flex">
-                                <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
-                                    <!--姓名-->
-                                    <div class="personName cj-inline-block">{{
-                                            currentResumeInfo.jobPerson.personName
-                                        }}
-                                    </div>
-                                    <!--社会在职-->
-                                    <div class="personTypeDsp cj-inline-block">
-                                        {{ currentResumeInfo.jobPerson.personTypeDsp }}
-                                    </div>
-                                </div>
-                                <ul class="resume-other_info split">
-                                    <li>
-                                        <!--性别-->
-                                        {{ currentResumeInfo.jobPerson.genderDsp }}
-                                    </li>
-                                    <li>
-                                        <!--年龄-->
-                                        {{ currentResumeInfo.jobPerson.age }}
-                                    </li>
-                                    <li>
-                                        <!--工作年限-->
-                                        {{ currentResumeInfo.jobPerson.workYears }}年工作经验
-                                    </li>
-                                    <li>
-                                        <!--学历-->
-                                        {{ currentResumeInfo.jobPerson.highestEduDsp }}
-                                    </li>
-                                </ul>
-                                <div class="resume-detail_concat">
-                                    <!--手机号码-->
-                                    <div class="mobilePhone cj-inline-block">{{
-                                            currentResumeInfo.jobPerson.mobilePhone
-                                        }}
-                                    </div>
-                                    <!--电子邮箱-->
-                                    <div class="email cj-inline-block">{{
-                                            currentResumeInfo.jobPerson.email
-                                                    ? currentResumeInfo.jobPerson.email
-                                                    : '-未填-'
-                                        }}
-                                    </div>
-                                    <!--现居地-->
-                                    <div class="currLocDsp cj-inline-block">{{
-                                            currentResumeInfo.jobPerson.currLocDsp
-                                        }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--教育经历-->
-                        <div v-if="currentResumeInfo.personEduList" class="jobPersonEduList">
-                            <div class="resume-detail_subtitle">教育经历</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.personEduList">
-                                    {{ item.personEduDsp }}
-                                </div>
-                            </div>
-                            <ul>
-                            </ul>
-                        </div>
-                        <!--期待岗位-->
-                        <div class="position">
-                            <div class="resume-detail_subtitle">意向岗位</div>
-                            <div class="resume-detail_content">
-                                <!--意向岗位-->
-                                <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
-                                <!--工作性质-->
-                                <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
-                                <!--工作地点-->
-                                <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
-                                <!--从事行业-->
-                                <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
-                                <!--期待月薪-->
-                                <div class="salaryRangeDsp">期待月薪：{{
-                                        currentResumeInfo.jobPersonCv.salaryRangeDsp
-                                    }}
-                                </div>
-                                <!--到岗时间-->
-                                <div class="availableInDaysDsp">到岗时间：{{
-                                        currentResumeInfo.jobPersonCv.availableInDaysDsp
-                                    }}
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="currentResumeInfo.jobPersonCv">
-                            <div class="resume-detail_subtitle">个人自述</div>
-                            <div class="resume-detail_content"
-                                 v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
-                            <div class="resume-detail_subtitle">其他说明</div>
-                            <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
-                        </div>
-                        <!--工作经验-->
-                        <div v-if="currentResumeInfo.personJobHistList">
-                            <div class="resume-detail_subtitle">工作经验</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.personJobHistList">
-                                    <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                                        <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                                item.endDate
-                                                        ? item.endDate.substr(0, 7)
-                                                        : '至今'
-                                            }}
-                                        </div>
-                                        <div>{{ item.positionName }}</div>
-                                    </div>
-                                    <div>{{ item.companyName }}</div>
-                                    <div v-html="item.achievement4Disp"></div>
-                                    <br>
-                                </div>
-                            </div>
-                        </div>
-                        <!--项目经验-->
-                        <div v-if="currentResumeInfo.personProjectList">
-                            <div class="resume-detail_subtitle">项目经验</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.personProjectList">
-                                    <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                                        <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                                item.endDate
-                                                        ? item.endDate.substr(0, 7)
-                                                        : '至今'
-                                            }}
-                                        </div>
-                                        <div>{{ item.projectName }}</div>
-                                    </div>
-                                    <div v-html="item.projectDetail4Disp"></div>
-                                    <div v-html="item.responsibility4Disp"></div>
-                                    <div v-html="item.keyTechnology4Disp"></div>
-                                    <br>
-                                </div>
-                            </div>
-                        </div>
-                        <!--技能-->
-                        <div v-if="currentResumeInfo.personItSkillList">
-                            <div class="resume-detail_subtitle">技能</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.personItSkillList">
-                                    {{ item.personItSkillDsp }}
-                                </div>
-                            </div>
-                        </div>
-                        <!--资格证书-->
-                        <div v-if="currentResumeInfo.personProCertList">
-                            <div class="resume-detail_subtitle">资格证书</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.personProCertList">
-                                    {{ item.personProCertDsp }}
-                                </div>
-                            </div>
-                        </div>
-                        <!--职业教育培训-->
-                        <div v-if="currentResumeInfo.trainingList">
-                            <div class="resume-detail_subtitle">职业教育培训</div>
-                            <div class="resume-detail_content">
-                                <div v-for="item in currentResumeInfo.trainingList">
-                                    <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                                        <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                                item.endDate
-                                                        ? item.endDate.substr(0, 7)
-                                                        : '至今'
-                                            }}
-                                        </div>
-                                        <div>{{ item.projectName }}</div>
-                                    </div>
-                                    <div v-html="item.trainingOrgDsp"></div>
-                                    <div v-html="item.trainingNameDsp"></div>
-                                    <div v-html="item.trainingDetailDsp"></div>
-                                    <br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/个人简历模块-->
-            </div>
-            <!--/其他信息区域-->
-        </div>
-        <!--/聊天区域面板-->
-    </el-dialog>
-    <!--/消息对话框Dialog-->
-    <!-- Tab容器 -->
-    <div id="tab_content">
-        <!-- 招聘大厅 -->
-        <div v-if="currentTab===0" id="recruitment-hall" class="tab_item">
-            <div id="top-bar"></div>
-            <div class="out_panel_top1"></div>
-            <div class="out_panel_top2"></div>
-            <div class="out_border_1">
-                <div class="out_border_2">
-                    <div v-if="companyList" :class="{'online': currentCompanyShowStatus===1}"
-                         class="company-list_panel">
-                        <!--展位单元-->
-                        <div v-for="item in companyList"
-                             v-if="item.companyName.indexOf(searchCompanyKeyword)>-1 || JSON.stringify(item.recruitModelList).indexOf(searchCompanyKeyword.trim())>-1"
-                             :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}"
-                             class="company-item">
-                            <!--<div class="DEBUG" style=" z-index: 9999999999; position: absolute; color:#FFF;">{{}}</div>-->
-                            <!--公司名称-->
-                            <div class="company_name" title="点击查看详情" @click="showCurrentCompanyInfo(item.companyId)">
-                                <span>{{ item.companyName }}</span>
-                            </div>
-                            <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
-                            <!--职位列表-->
-                            <!--根据业务要求，点击查看职位列表改成点击查看企业详情和职位列表<div @click="showRecruitList(item.companyId)" class="recruit-list">-->
-                            <div class="recruit-list" @click="showCurrentCompanyInfo(item.companyId)">
-                                <div class="recruit-list_panel" title="点击投递职位">
-                                    <div class="recruit-item">
-                                        <div class="see-more">查看更多</div>
-                                    </div>
-                                    <div v-for="(recruitItem, recruitIndex) in item.recruitModelList"
-                                         v-if="item.recruitModelList" class="recruit-item">
-                                        <div class="job-title">{{
-                                                (parseInt(recruitIndex) + 1) + '. ' + recruitItem.jobTitle
-                                            }}
-                                        </div>
-                                        <div v-if="recruitItem.salary==='1000元以下'" class="salary">1K内</div>
-                                        <div v-if="recruitItem.salary==='1500-2000元'" class="salary">1.5-2K</div>
-                                        <div v-if="recruitItem.salary==='2000-2500元'" class="salary">2-2.5K</div>
-                                        <div v-if="recruitItem.salary==='2500-3000元'" class="salary">2.5-3K</div>
-                                        <div v-if="recruitItem.salary==='3000-3500元'" class="salary">3-3.5K</div>
-                                        <div v-if="recruitItem.salary==='3500-4000元'" class="salary">3.5-4K</div>
-                                        <div v-if="recruitItem.salary==='4000-5000元'" class="salary">4-5K</div>
-                                        <div v-if="recruitItem.salary==='5000-6000元'" class="salary">5-6K</div>
-                                        <div v-if="recruitItem.salary==='6000-8000元'" class="salary">6-8K</div>
-                                        <div v-if="recruitItem.salary==='8000-10000元'" class="salary">8-10K</div>
-                                        <div v-if="recruitItem.salary==='10000-15000元'" class="salary">10-15K</div>
-                                        <div v-if="recruitItem.salary==='15000元以上'" class="salary">15K以上</div>
-                                        <div v-if="recruitItem.salary==='面议'" class="salary">面议</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--HR-->
-                            <div :style="{backgroundImage:'url(images/pic_hr_'+(item.companyId%16+1)+'.png)'}"
-                                 class="hr"></div>
-                            <!--Table-->
-                            <div class="table"></div>
-                            <!--JobSeeker-->
-                            <div :style="{backgroundImage:'url(images/pic_jobseeker_'+(item.companyId%8+1)+'.png)'}"
-                                 class="job-seeker"></div>
-                            <!--Chair-->
-                            <div class="chair"></div>
-                            <!--立即沟通-->
-                            <div class="to-chat" @click="chatToCompany(item.companyName, item.companyId)">立即沟通</div>
-                            <div class="to-chat offline" @click="chatToCompany(item.companyName, item.companyId)">
-                                给TA留言（离线）
-                            </div>
-                        </div>
-                        <!--/展位单元-->
-                    </div>
-                </div>
-            </div>
-            <div class="out_panel_bottom2"></div>
-            <div class="out_panel_bottom1"></div>
-        </div>
-        <!-- /招聘大厅 -->
-        <!-- 求职大厅 -->
-        <div v-if="currentTab===1" id="job-hall" class="tab_item">
-            <div class="out_panel_top1">
-                <div class="title_panel">
-                    <div class="title"></div>
-                </div>
-            </div>
-            <div class="out_panel_top2"></div>
-            <div class="out_border_1">
-                <div class="out_border_2">
-                    <!-- 在线求职者列表 -->
-                    <div v-if="jobSeekerList" id="job-seeker_list"
-                         :class="{'online': currentPersonShowStatus===1,'offline':currentPersonShowStatus===2, 'posted':currentPersonShowStatus===3}">
-                        <div v-for="item in jobSeekerList"
-                             v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 "
-                             :class="{'posted':item.investCv && item.investCv!=='0','offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout, 'cj-hide':!item.cvId}"
-                             class="job-seeker_item">
-                            <div class="online_status online">在线</div>
-                            <div class="online_status offline">离线</div>
-                            <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
-                            <div :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(item.personId%4+1)+'.png)'"
-                                 class="avatar"></div>
-                            <div class="name">{{ strReplaceChar(item.personName, 0, 5, '*') }}</div>
-                            <div class="position">{{ item.positionCode ? item.positionCode : '-暂无-' }}</div>
-                            <div class="info">
-                                {{ item.graduateSchool ? item.graduateSchool : '-未登记学校信息-' }}<br>
-                                {{ item.major ? item.major : '-专业未填-' }}/{{
-                                    item.highestEdu
-                                            ? item.highestEdu + '学历'
-                                            : '-学历未填-'
-                                }}<br>
-                                {{ item.workYears }}年工作经验
-                            </div>
-                            <div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通
-                            </div>
-                            <div class="chat-now offline" @click="chatToPerson(item.personName, item.personId)">给TA留言
-                            </div>
-                            <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
-                        </div>
-                    </div>
-                    <!-- /在线求职者列表 -->
-                </div>
-            </div>
-            <div class="out_panel_bottom2"></div>
-            <div class="out_panel_bottom1"></div>
-        </div>
-        <!-- /求职大厅 -->
-    </div>
-    <!-- /Tab容器 -->
-    <!-- 区域内放置Dialog -->
-    <!-- 企业详情Dialog -->
-    <el-dialog id="company-info" :visible.sync="companyInfoDialog" class="company-info" title="公司详情" width="600px">
-        <!--职位详情子Dialog-->
-        <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
-            <div v-if="currentRecruitInfo">
-                <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
-                <ul class="cri-recruit-info split">
-                    <li>{{ currentRecruitInfo.salary }}</li>
-                    <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
-                    <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
-                    <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
-                </ul>
-                <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
-                <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
-                <div class="cri_content">
-                    <ul v-if="currentRecruitInfo.welfare" class="cri-welfare">
-                        <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
-                    </ul>
-                </div>
-                <div class="cri_subtitle">职位要求</div>
-                <div class="cri_content">
-                    <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
-                    </div>
-                </div>
-                <!--投递职位按钮-->
-                <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
-                <!--/投递职位按钮-->
-                <!--
-                address: "长沙市望城区雷锋大道1389号"
-                companyId: "2144184"
-                companyIdStr: "D889B54CAA4B8485"
-                companyName: "春风行动企业测试账号6"
-                contactPerson: "人力资源部"
-                deptName: ""
-                detail: "任职要求：
-                ↵222222222
-                ↵
-                ↵岗位描述：333333333
-                ↵
-                ↵
-                ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
-                entProp: "有限责任公司"
-                fax: null
-                industry: "机械行业"
-                location: "湖南省长沙市"
-                lowerEdu: "其它"
-                persons: "3001-5000人"
-                phone: "0731-"
-                recruitName: "厂长"
-                recruitPersons: "500"
-                refreshDate: "2021-01-29 10:12:34"
-                salary: "1000元以下"
-                welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
-                workYears: "不限"
-                -->
-            </div>
-        </el-dialog>
-        <!--/职位详情子Dialog-->
-        <div v-if="currentCompanyInfo">
+      </div>
+      <!--/对话框-->
+      <!--其他信息区域-->
+      <div id="chat-area_other">
+        <!--企业信息模块-->
+        <div class="company-info model active">
+          <div v-if="currentCompanyInfo">
             <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
             <ul class="company-info_other split">
-                <li>{{ currentCompanyInfo.entProp }}</li>
-                <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : '-人数未填写-' }}</li>
-                <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : '-未填写-' }}</li>
+              <li>{{ currentCompanyInfo.entProp }}</li>
+              <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : "-人数未填写-" }}</li>
+              <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : "-未填写-" }}</li>
             </ul>
             <div class="company-info_address">{{
-                    currentCompanyInfo.address ? currentCompanyInfo.address : '-公司地址未填写-'
-                }}
+                currentCompanyInfo.address ? currentCompanyInfo.address : "-公司地址未填写-"
+              }}
             </div>
             <div class="company-info_subtitle">企业简介</div>
             <div class="company-info_content company-info_desc cj-ellipsis-multiline">
-                {{ currentCompanyInfo.companyInfo }}
-                <div class="unfold" @click="doFold('#company-info')">【展开】</div>
-                <div class="fold" @click="doFold('#company-info')">【收拢】</div>
+              {{ currentCompanyInfo.companyInfo }}
+              <div class="unfold" @click="doFold('#chat-area_other')">【展开】</div>
+              <div class="fold" @click="doFold('#chat-area_other')">【收拢】</div>
             </div>
             <div class="company-info_subtitle">招聘职位</div>
             <div class="company-info_content">
-                <!--职位列表-->
-                <div class="company-info-recruit-list">
-                    <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
-                        <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
-                            {{ recruitItem.recruitName }}
-                        </div>
-                        <ul class="recruit-other-info split">
-                            <li>
-                                <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
-                                <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
-                                <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
-                                <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
-                                <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
-                                <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
-                                <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
-                                <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
-                                <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
-                                <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
-                                <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
-                                <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
-                                <span v-if="recruitItem.salary==='面议'">面议</span>
-                            </li>
-                            <li>
-                                学历要求{{ recruitItem.lowerEdu }}
-                            </li>
-                            <li>
-                                经验{{ recruitItem.workYears }}
-                            </li>
-                            <li>
-                                招{{ recruitItem.persons }}人
-                            </li>
-                        </ul>
-                        <!--TODO 现场接口中没有这个字段，无法显示，需要后端加上-->
-                        <div v-if="recruitItem.welfare" class="welfare">
-                            {{ recruitItem.welfare }}
-                        </div>
-                        <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
-                    </div>
+              <!--职位列表-->
+              <div class="company-info-recruit-list">
+                <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
+                  <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
+                    {{ recruitItem.recruitName }}
+                  </div>
+                  <ul class="recruit-other-info split">
+                    <li>
+                      <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
+                      <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
+                      <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
+                      <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
+                      <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
+                      <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
+                      <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
+                      <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
+                      <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
+                      <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
+                      <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
+                      <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
+                      <span v-if="recruitItem.salary==='面议'">面议</span>
+                    </li>
+                    <li>
+                      学历要求{{ recruitItem.lowerEdu }}
+                    </li>
+                    <li>
+                      经验{{ recruitItem.workYears }}
+                    </li>
+                    <li>
+                      招{{ recruitItem.persons }}人
+                    </li>
+                  </ul>
+                  <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
+                  <div v-if="recruitItem.welfare" class="welfare">{{ recruitItem.welfare }}</div>
+                  <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
                 </div>
-                <!--/职位列表-->
+              </div>
+              <!--/职位列表-->
             </div>
+          </div>
         </div>
-        <span slot="footer" class="dialog-footer"></span>
-    </el-dialog>
-    <!-- /企业详情Dialog -->
-    <!-- 职位详情Dialog -->
-    <!-- /职位详情Dialog -->
-    <!-- 职位列表和投递 -->
-    <el-dialog id="recruit-list_dialog" :visible.sync="recruitListDialog" title="选择面试职位" width="520px">
-        <div v-for="item in currentRecruitList" v-if="currentRecruitList">
-            <el-radio v-model="currentRecruitChecked" :label="item.recruitId" border>{{ item.recruitName }}</el-radio>
-        </div>
-        <div slot="footer" class="dialog-footer">
-            <span id="recruit-list_submit" @click="recruitListSubmit()">投递简历</span>
-        </div>
-    </el-dialog>
-    <!-- /职位列表和投递 -->
-    <!-- 邀请函Dialog -->
-    <el-dialog id="activity-desc__dialog" :visible.sync="activityDescDialog" title="邀请函" width="600px">
-        <div v-if="activityDesc">
-            <div class="cj-text-center">
-                <h1>{{ activityDesc.postTitle }}</h1>
-                <h4>{{ activityDesc.postDate }}</h4>
-            </div>
-            <div style="text-indent:2em;" v-html="nl2br(activityDesc.postContent)"></div>
-        </div>
-        <span slot="footer" class="dialog-footer">
-    </span>
-    </el-dialog>
-    <!-- /邀请函Dialog -->
-    <!--简历详情Dialog-->
-    <el-dialog :visible.sync="resumeInfoDialog" class="resume-detail__dialog" title="简历详情" width="600px">
-        <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
+        <!--/企业信息模块-->
+        <!--在线聊天模块-->
+        <iframe class="video-chat model" frameborder="0"></iframe>
+        <!--/在线聊天模块-->
+        <!--个人简历模块-->
+        <div class="person-resume model">
+          <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
             <!--有投递职位的-->
             <div v-if="currentResumeInfo.postHistory.length>0">
-                <span>已投递公司职位：</span>
-                <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item" size="mini"
-                        type="success">
-                    {{ item }}
-                </el-tag>
+              <span>已投递公司职位：</span>
+              <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item"
+                      size="mini" type="success">
+                {{ item }}
+              </el-tag>
             </div>
             <!--没有投递过职位的-->
             <div v-if="currentResumeInfo.postHistory.length===0">
-                <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
+              <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
             </div>
-        </div>
-        <div v-if="currentResumeInfo" class="resume-detail">
+          </div>
+          <div v-if="currentResumeInfo" class="resume-detail">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
-                <!--头像-->
-                <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'"
-                   class="resume_download" target="_blank">
-                    <i class="el-icon-download"></i>&nbsp;下载简历
-                </a>
-                <div v-if="currentResumeInfo.jobPerson.photoLinkDsp"
-                     :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"
-                     class="photoLinkDsp"></div>
-                <div v-if="!currentResumeInfo.jobPerson.photoLinkDsp"
-                     :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"
-                     class="photoLinkDsp"></div>
-                <div class="resume-detail_info cj-flex">
-                    <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
-                        <!--姓名-->
-                        <div class="personName cj-inline-block">{{ currentResumeInfo.jobPerson.personName }}</div>
-                        <!--社会在职-->
-                        <div class="personTypeDsp cj-inline-block">{{ currentResumeInfo.jobPerson.personTypeDsp }}</div>
-                    </div>
-                    <ul class="resume-other_info split">
-                        <li>
-                            <!--性别-->
-                            {{ currentResumeInfo.jobPerson.genderDsp }}
-                        </li>
-                        <li>
-                            <!--年龄-->
-                            {{ currentResumeInfo.jobPerson.age }}
-                        </li>
-                        <li>
-                            <!--工作年限-->
-                            {{ currentResumeInfo.jobPerson.workYears }}年工作经验
-                        </li>
-                        <li>
-                            <!--学历-->
-                            {{ currentResumeInfo.jobPerson.highestEduDsp }}
-                        </li>
-                    </ul>
-                    <div class="resume-detail_concat">
-                        <!--手机号码-->
-                        <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
-                        <!--电子邮箱-->
-                        <div class="email cj-inline-block">{{
-                                currentResumeInfo.jobPerson.email
-                                        ? currentResumeInfo.jobPerson.email
-                                        : '-未填-'
-                            }}
-                        </div>
-                        <!--现居地-->
-                        <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
-                    </div>
+              <!--头像-->
+              <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'"
+                 class="resume_download" target="_blank">
+                <i class="el-icon-download"></i>&nbsp;下载简历
+              </a>
+              <div v-if="currentResumeInfo.jobPerson.photoLinkDsp"
+                   :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"
+                   class="photoLinkDsp"></div>
+              <div v-if="!currentResumeInfo.jobPerson.photoLinkDsp"
+                   :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"
+                   class="photoLinkDsp"></div>
+              <div class="resume-detail_info cj-flex">
+                <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
+                  <!--姓名-->
+                  <div class="personName cj-inline-block">{{
+                      currentResumeInfo.jobPerson.personName
+                    }}
+                  </div>
+                  <!--社会在职-->
+                  <div class="personTypeDsp cj-inline-block">
+                    {{ currentResumeInfo.jobPerson.personTypeDsp }}
+                  </div>
                 </div>
+                <ul class="resume-other_info split">
+                  <li>
+                    <!--性别-->
+                    {{ currentResumeInfo.jobPerson.genderDsp }}
+                  </li>
+                  <li>
+                    <!--年龄-->
+                    {{ currentResumeInfo.jobPerson.age }}
+                  </li>
+                  <li>
+                    <!--工作年限-->
+                    {{ currentResumeInfo.jobPerson.workYears }}年工作经验
+                  </li>
+                  <li>
+                    <!--学历-->
+                    {{ currentResumeInfo.jobPerson.highestEduDsp }}
+                  </li>
+                </ul>
+                <div class="resume-detail_concat">
+                  <!--手机号码-->
+                  <div class="mobilePhone cj-inline-block">{{
+                      currentResumeInfo.jobPerson.mobilePhone
+                    }}
+                  </div>
+                  <!--电子邮箱-->
+                  <div class="email cj-inline-block">{{
+                      currentResumeInfo.jobPerson.email
+                        ? currentResumeInfo.jobPerson.email
+                        : "-未填-"
+                    }}
+                  </div>
+                  <!--现居地-->
+                  <div class="currLocDsp cj-inline-block">{{
+                      currentResumeInfo.jobPerson.currLocDsp
+                    }}
+                  </div>
+                </div>
+              </div>
             </div>
             <!--教育经历-->
             <div v-if="currentResumeInfo.personEduList" class="jobPersonEduList">
-                <div class="resume-detail_subtitle">教育经历</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.personEduList">
-                        {{ item.personEduDsp }}
-                    </div>
+              <div class="resume-detail_subtitle">教育经历</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personEduList">
+                  {{ item.personEduDsp }}
                 </div>
-                <ul>
-                </ul>
+              </div>
+              <ul>
+              </ul>
             </div>
             <!--期待岗位-->
             <div class="position">
-                <div class="resume-detail_subtitle">意向岗位</div>
-                <div class="resume-detail_content">
-                    <!--意向岗位-->
-                    <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
-                    <!--工作性质-->
-                    <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
-                    <!--工作地点-->
-                    <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
-                    <!--从事行业-->
-                    <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
-                    <!--期待月薪-->
-                    <div class="salaryRangeDsp">期待月薪：{{ currentResumeInfo.jobPersonCv.salaryRangeDsp }}</div>
-                    <!--到岗时间-->
-                    <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
+              <div class="resume-detail_subtitle">意向岗位</div>
+              <div class="resume-detail_content">
+                <!--意向岗位-->
+                <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
+                <!--工作性质-->
+                <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
+                <!--工作地点-->
+                <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
+                <!--从事行业-->
+                <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
+                <!--期待月薪-->
+                <div class="salaryRangeDsp">期待月薪：{{
+                    currentResumeInfo.jobPersonCv.salaryRangeDsp
+                  }}
                 </div>
+                <!--到岗时间-->
+                <div class="availableInDaysDsp">到岗时间：{{
+                    currentResumeInfo.jobPersonCv.availableInDaysDsp
+                  }}
+                </div>
+              </div>
             </div>
             <div v-if="currentResumeInfo.jobPersonCv">
-                <div class="resume-detail_subtitle">个人自述</div>
-                <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
-                <div class="resume-detail_subtitle">其他说明</div>
-                <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
+              <div class="resume-detail_subtitle">个人自述</div>
+              <div class="resume-detail_content"
+                   v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
+              <div class="resume-detail_subtitle">其他说明</div>
+              <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
             </div>
             <!--工作经验-->
             <div v-if="currentResumeInfo.personJobHistList">
-                <div class="resume-detail_subtitle">工作经验</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.personJobHistList">
-                        <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                            <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                    item.endDate
-                                            ? item.endDate.substr(0, 7)
-                                            : '至今'
-                                }}
-                            </div>
-                            <div>{{ item.positionName }}</div>
-                        </div>
-                        <div>{{ item.companyName }}</div>
-                        <div v-html="item.achievement4Disp"></div>
-                        <br>
+              <div class="resume-detail_subtitle">工作经验</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personJobHistList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                        item.endDate
+                          ? item.endDate.substr(0, 7)
+                          : "至今"
+                      }}
                     </div>
+                    <div>{{ item.positionName }}</div>
+                  </div>
+                  <div>{{ item.companyName }}</div>
+                  <div v-html="item.achievement4Disp"></div>
+                  <br>
                 </div>
+              </div>
             </div>
             <!--项目经验-->
             <div v-if="currentResumeInfo.personProjectList">
-                <div class="resume-detail_subtitle">项目经验</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.personProjectList">
-                        <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                            <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                    item.endDate
-                                            ? item.endDate.substr(0, 7)
-                                            : '至今'
-                                }}
-                            </div>
-                            <div>{{ item.projectName }}</div>
-                        </div>
-                        <div v-html="item.projectDetail4Disp"></div>
-                        <div v-html="item.responsibility4Disp"></div>
-                        <div v-html="item.keyTechnology4Disp"></div>
-                        <br>
+              <div class="resume-detail_subtitle">项目经验</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personProjectList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                        item.endDate
+                          ? item.endDate.substr(0, 7)
+                          : "至今"
+                      }}
                     </div>
+                    <div>{{ item.projectName }}</div>
+                  </div>
+                  <div v-html="item.projectDetail4Disp"></div>
+                  <div v-html="item.responsibility4Disp"></div>
+                  <div v-html="item.keyTechnology4Disp"></div>
+                  <br>
                 </div>
+              </div>
             </div>
             <!--技能-->
             <div v-if="currentResumeInfo.personItSkillList">
-                <div class="resume-detail_subtitle">技能</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.personItSkillList">
-                        {{ item.personItSkillDsp }}
-                    </div>
+              <div class="resume-detail_subtitle">技能</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personItSkillList">
+                  {{ item.personItSkillDsp }}
                 </div>
+              </div>
             </div>
             <!--资格证书-->
             <div v-if="currentResumeInfo.personProCertList">
-                <div class="resume-detail_subtitle">资格证书</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.personProCertList">
-                        {{ item.personProCertDsp }}
-                    </div>
+              <div class="resume-detail_subtitle">资格证书</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.personProCertList">
+                  {{ item.personProCertDsp }}
                 </div>
+              </div>
             </div>
             <!--职业教育培训-->
             <div v-if="currentResumeInfo.trainingList">
-                <div class="resume-detail_subtitle">职业教育培训</div>
-                <div class="resume-detail_content">
-                    <div v-for="item in currentResumeInfo.trainingList">
-                        <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
-                            <div>{{ item.startDate ? item.startDate.substr(0, 7) : '至今' }}至{{
-                                    item.endDate
-                                            ? item.endDate.substr(0, 7)
-                                            : '至今'
-                                }}
-                            </div>
-                            <div>{{ item.projectName }}</div>
-                        </div>
-                        <div v-html="item.trainingOrgDsp"></div>
-                        <div v-html="item.trainingNameDsp"></div>
-                        <div v-html="item.trainingDetailDsp"></div>
-                        <br>
+              <div class="resume-detail_subtitle">职业教育培训</div>
+              <div class="resume-detail_content">
+                <div v-for="item in currentResumeInfo.trainingList">
+                  <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+                    <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                        item.endDate
+                          ? item.endDate.substr(0, 7)
+                          : "至今"
+                      }}
                     </div>
+                    <div>{{ item.projectName }}</div>
+                  </div>
+                  <div v-html="item.trainingOrgDsp"></div>
+                  <div v-html="item.trainingNameDsp"></div>
+                  <div v-html="item.trainingDetailDsp"></div>
+                  <br>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-        <span slot="footer" class="dialog-footer">
-    </span>
-    </el-dialog>
-    <!--/简历详情Dialog-->
-    <!-- 登录提示Dialog -->
-    <el-dialog id="login__dialog" :visible.sync="loginDialog" title="您还没有登录，请选择角色" width="600px">
-        <div class="login__dialog__panel cj-flex cj-justify-content-center cj-align-items-center">
-            <div class="login__dialog__link" style="background-image:url(images/login_person.svg)" target="_blank"
-                 @click="userLogin('person')">
-                个人登录
+        <!--/个人简历模块-->
+      </div>
+      <!--/其他信息区域-->
+    </div>
+    <!--/聊天区域面板-->
+  </el-dialog>
+  <!--/消息对话框Dialog-->
+  <!-- Tab容器 -->
+  <div id="tab_content">
+    <!-- 招聘大厅 -->
+    <div v-if="currentTab===0" id="recruitment-hall" class="tab_item">
+      <div id="top-bar"></div>
+      <div class="out_panel_top1"></div>
+      <div class="out_panel_top2"></div>
+      <div class="out_border_1">
+        <div class="out_border_2">
+          <div v-if="companyList" :class="{'online': currentCompanyShowStatus===1}"
+               class="company-list_panel">
+            <!--展位单元-->
+            <div v-for="item in companyList"
+                 v-if="item.companyName.indexOf(searchCompanyKeyword)>-1 || JSON.stringify(item.recruitModelList).indexOf(searchCompanyKeyword.trim())>-1"
+                 :class="{'offline': !item.lastUpdateDate || moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout}"
+                 class="company-item">
+              <!--<div class="DEBUG" style=" z-index: 9999999999; position: absolute; color:#FFF;">{{}}</div>-->
+              <!--公司名称-->
+              <div class="company_name" title="点击查看详情" @click="showCurrentCompanyInfo(item.companyId)">
+                <span>{{ item.companyName }}</span>
+              </div>
+              <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
+              <!--职位列表-->
+              <!--根据业务要求，点击查看职位列表改成点击查看企业详情和职位列表<div @click="showRecruitList(item.companyId)" class="recruit-list">-->
+              <div class="recruit-list" @click="showCurrentCompanyInfo(item.companyId)">
+                <div class="recruit-list_panel" title="点击投递职位">
+                  <div class="recruit-item">
+                    <div class="see-more">查看更多</div>
+                  </div>
+                  <div v-for="(recruitItem, recruitIndex) in item.recruitModelList"
+                       v-if="item.recruitModelList" class="recruit-item">
+                    <div class="job-title">{{
+                        (parseInt(recruitIndex) + 1) + ". " + recruitItem.jobTitle
+                      }}
+                    </div>
+                    <div v-if="recruitItem.salary==='1000元以下'" class="salary">1K内</div>
+                    <div v-if="recruitItem.salary==='1500-2000元'" class="salary">1.5-2K</div>
+                    <div v-if="recruitItem.salary==='2000-2500元'" class="salary">2-2.5K</div>
+                    <div v-if="recruitItem.salary==='2500-3000元'" class="salary">2.5-3K</div>
+                    <div v-if="recruitItem.salary==='3000-3500元'" class="salary">3-3.5K</div>
+                    <div v-if="recruitItem.salary==='3500-4000元'" class="salary">3.5-4K</div>
+                    <div v-if="recruitItem.salary==='4000-5000元'" class="salary">4-5K</div>
+                    <div v-if="recruitItem.salary==='5000-6000元'" class="salary">5-6K</div>
+                    <div v-if="recruitItem.salary==='6000-8000元'" class="salary">6-8K</div>
+                    <div v-if="recruitItem.salary==='8000-10000元'" class="salary">8-10K</div>
+                    <div v-if="recruitItem.salary==='10000-15000元'" class="salary">10-15K</div>
+                    <div v-if="recruitItem.salary==='15000元以上'" class="salary">15K以上</div>
+                    <div v-if="recruitItem.salary==='面议'" class="salary">面议</div>
+                  </div>
+                </div>
+              </div>
+              <!--HR-->
+              <div :style="{backgroundImage:'url(images/pic_hr_'+(item.companyId%16+1)+'.png)'}"
+                   class="hr"></div>
+              <!--Table-->
+              <div class="table"></div>
+              <!--JobSeeker-->
+              <div :style="{backgroundImage:'url(images/pic_jobseeker_'+(item.companyId%8+1)+'.png)'}"
+                   class="job-seeker"></div>
+              <!--Chair-->
+              <div class="chair"></div>
+              <!--立即沟通-->
+              <div class="to-chat" @click="chatToCompany(item.companyName, item.companyId)">立即沟通</div>
+              <div class="to-chat offline" @click="chatToCompany(item.companyName, item.companyId)">
+                给TA留言（离线）
+              </div>
             </div>
-            <div class="login__dialog__link" style="background-image:url(images/login_company.svg)" target="_blank"
-                 @click="userLogin('company')">
-                企业登录
-            </div>
+            <!--/展位单元-->
+          </div>
         </div>
-        <span slot="footer" class="dialog-footer">
-    </span>
+      </div>
+      <div class="out_panel_bottom2"></div>
+      <div class="out_panel_bottom1"></div>
+    </div>
+    <!-- /招聘大厅 -->
+    <!-- 求职大厅 -->
+    <div v-if="currentTab===1" id="job-hall" class="tab_item">
+      <div class="out_panel_top1">
+        <div class="title_panel">
+          <div class="title"></div>
+        </div>
+      </div>
+      <div class="out_panel_top2"></div>
+      <div class="out_border_1">
+        <div class="out_border_2">
+          <!-- 在线求职者列表 -->
+          <div v-if="jobSeekerList" id="job-seeker_list"
+               :class="{'online': currentPersonShowStatus===1,'offline':currentPersonShowStatus===2, 'posted':currentPersonShowStatus===3}">
+            <div v-for="item in jobSeekerList"
+                 v-if="searchPersonKeyword.trim()==='' || (item.personName.indexOf(searchPersonKeyword)>-1 || (item.highestEdu||'').indexOf(searchPersonKeyword)>-1) || (item.positionCode||'').indexOf(searchPersonKeyword)>-1 "
+                 :class="{'posted':item.investCv && item.investCv!=='0','offline':moment().diff(moment(item.lastUpdateDate),'minutes')>offlineTimeout, 'cj-hide':!item.cvId}"
+                 class="job-seeker_item">
+              <div class="online_status online">在线</div>
+              <div class="online_status offline">离线</div>
+              <!--<span>{{item.lastUpdateDate}} {{moment().diff(moment(item.lastUpdateDate),'minutes')}}</span>-->
+              <div
+                :style="'background-image:url(images/avatar_'+(item.genderCode==='01'?'man':'woman')+'_'+(item.personId%4+1)+'.png)'"
+                class="avatar"></div>
+              <div class="name">{{ strReplaceChar(item.personName, 0, 5, "*") }}</div>
+              <div class="position">{{ item.positionCode ? item.positionCode : "-暂无-" }}</div>
+              <div class="info">
+                {{ item.graduateSchool ? item.graduateSchool : "-未登记学校信息-" }}<br>
+                {{ item.major ? item.major : "-专业未填-" }}/{{
+                  item.highestEdu
+                    ? item.highestEdu + "学历"
+                    : "-学历未填-"
+                }}<br>
+                {{ item.workYears }}年工作经验
+              </div>
+              <div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通
+              </div>
+              <div class="chat-now offline" @click="chatToPerson(item.personName, item.personId)">给TA留言
+              </div>
+              <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
+            </div>
+          </div>
+          <!-- /在线求职者列表 -->
+        </div>
+      </div>
+      <div class="out_panel_bottom2"></div>
+      <div class="out_panel_bottom1"></div>
+    </div>
+    <!-- /求职大厅 -->
+  </div>
+  <!-- /Tab容器 -->
+  <!-- 区域内放置Dialog -->
+  <!-- 企业详情Dialog -->
+  <el-dialog id="company-info" :visible.sync="companyInfoDialog" class="company-info" title="公司详情" width="600px">
+    <!--职位详情子Dialog-->
+    <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
+      <div v-if="currentRecruitInfo">
+        <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
+        <ul class="cri-recruit-info split">
+          <li>{{ currentRecruitInfo.salary }}</li>
+          <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
+          <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
+          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+        </ul>
+        <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
+        <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
+        <div class="cri_content">
+          <ul v-if="currentRecruitInfo.welfare" class="cri-welfare">
+            <li v-for="item in currentRecruitInfo.welfare.split(',')" :title="item">{{ item }}</li>
+          </ul>
+        </div>
+        <div class="cri_subtitle">职位要求</div>
+        <div class="cri_content">
+          <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
+          </div>
+        </div>
+        <!--投递职位按钮-->
+        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <!--/投递职位按钮-->
+        <!--
+        address: "长沙市望城区雷锋大道1389号"
+        companyId: "2144184"
+        companyIdStr: "D889B54CAA4B8485"
+        companyName: "春风行动企业测试账号6"
+        contactPerson: "人力资源部"
+        deptName: ""
+        detail: "任职要求：
+        ↵222222222
+        ↵
+        ↵岗位描述：333333333
+        ↵
+        ↵
+        ↵薪酬福利：顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        entProp: "有限责任公司"
+        fax: null
+        industry: "机械行业"
+        location: "湖南省长沙市"
+        lowerEdu: "其它"
+        persons: "3001-5000人"
+        phone: "0731-"
+        recruitName: "厂长"
+        recruitPersons: "500"
+        refreshDate: "2021-01-29 10:12:34"
+        salary: "1000元以下"
+        welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
+        workYears: "不限"
+        -->
+      </div>
     </el-dialog>
-    <!-- /登录提示Dialog -->
-    <!-- /区域内放置Dialog -->
+    <!--/职位详情子Dialog-->
+    <div v-if="currentCompanyInfo">
+      <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
+      <ul class="company-info_other split">
+        <li>{{ currentCompanyInfo.entProp }}</li>
+        <li>{{ currentCompanyInfo.persons ? currentCompanyInfo.persons : "-人数未填写-" }}</li>
+        <li>{{ currentCompanyInfo.industry ? currentCompanyInfo.industry : "-未填写-" }}</li>
+      </ul>
+      <div class="company-info_address">{{
+          currentCompanyInfo.address ? currentCompanyInfo.address : "-公司地址未填写-"
+        }}
+      </div>
+      <div class="company-info_subtitle">企业简介</div>
+      <div class="company-info_content company-info_desc cj-ellipsis-multiline">
+        {{ currentCompanyInfo.companyInfo }}
+        <div class="unfold" @click="doFold('#company-info')">【展开】</div>
+        <div class="fold" @click="doFold('#company-info')">【收拢】</div>
+      </div>
+      <div class="company-info_subtitle">招聘职位</div>
+      <div class="company-info_content">
+        <!--职位列表-->
+        <div class="company-info-recruit-list">
+          <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
+            <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
+              {{ recruitItem.recruitName }}
+            </div>
+            <ul class="recruit-other-info split">
+              <li>
+                <span v-if="recruitItem.salary==='1000元以下'">1K内</span>
+                <span v-if="recruitItem.salary==='1500-2000元'">1.5-2K</span>
+                <span v-if="recruitItem.salary==='2000-2500元'">2-2.5K</span>
+                <span v-if="recruitItem.salary==='2500-3000元'">2.5-3K</span>
+                <span v-if="recruitItem.salary==='3000-3500元'">3-3.5K</span>
+                <span v-if="recruitItem.salary==='3500-4000元'">3.5-4K</span>
+                <span v-if="recruitItem.salary==='4000-5000元'">4-5K</span>
+                <span v-if="recruitItem.salary==='5000-6000元'">5-6K</span>
+                <span v-if="recruitItem.salary==='6000-8000元'">6-8K</span>
+                <span v-if="recruitItem.salary==='8000-10000元'">8-10K</span>
+                <span v-if="recruitItem.salary==='10000-15000元'">10-15K</span>
+                <span v-if="recruitItem.salary==='15000元以上'">15K以上</span>
+                <span v-if="recruitItem.salary==='面议'">面议</span>
+              </li>
+              <li>
+                学历要求{{ recruitItem.lowerEdu }}
+              </li>
+              <li>
+                经验{{ recruitItem.workYears }}
+              </li>
+              <li>
+                招{{ recruitItem.persons }}人
+              </li>
+            </ul>
+            <!--TODO 现场接口中没有这个字段，无法显示，需要后端加上-->
+            <div v-if="recruitItem.welfare" class="welfare">
+              {{ recruitItem.welfare }}
+            </div>
+            <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
+          </div>
+        </div>
+        <!--/职位列表-->
+      </div>
+    </div>
+    <span slot="footer" class="dialog-footer"></span>
+  </el-dialog>
+  <!-- /企业详情Dialog -->
+  <!-- 职位详情Dialog -->
+  <!-- /职位详情Dialog -->
+  <!-- 职位列表和投递 -->
+  <el-dialog id="recruit-list_dialog" :visible.sync="recruitListDialog" title="选择面试职位" width="520px">
+    <div v-for="item in currentRecruitList" v-if="currentRecruitList">
+      <el-radio v-model="currentRecruitChecked" :label="item.recruitId" border>{{ item.recruitName }}</el-radio>
+    </div>
+    <div slot="footer" class="dialog-footer">
+      <span id="recruit-list_submit" @click="recruitListSubmit()">投递简历</span>
+    </div>
+  </el-dialog>
+  <!-- /职位列表和投递 -->
+  <!-- 邀请函Dialog -->
+  <el-dialog id="activity-desc__dialog" :visible.sync="activityDescDialog" title="邀请函" width="600px">
+    <div v-if="activityDesc">
+      <div class="cj-text-center">
+        <h1>{{ activityDesc.postTitle }}</h1>
+        <h4>{{ activityDesc.postDate }}</h4>
+      </div>
+      <div style="text-indent:2em;" v-html="nl2br(activityDesc.postContent)"></div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!-- /邀请函Dialog -->
+  <!--简历详情Dialog-->
+  <el-dialog :visible.sync="resumeInfoDialog" class="resume-detail__dialog" title="简历详情" width="600px">
+    <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
+      <!--有投递职位的-->
+      <div v-if="currentResumeInfo.postHistory.length>0">
+        <span>已投递公司职位：</span>
+        <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item" size="mini"
+                type="success">
+          {{ item }}
+        </el-tag>
+      </div>
+      <!--没有投递过职位的-->
+      <div v-if="currentResumeInfo.postHistory.length===0">
+        <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
+      </div>
+    </div>
+    <div v-if="currentResumeInfo" class="resume-detail">
+      <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
+        <!--头像-->
+        <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'"
+           class="resume_download" target="_blank">
+          <i class="el-icon-download"></i>&nbsp;下载简历
+        </a>
+        <div v-if="currentResumeInfo.jobPerson.photoLinkDsp"
+             :style="{backgroundImage:'url('+currentResumeInfo.jobPerson.photoLinkDsp+')'}"
+             class="photoLinkDsp"></div>
+        <div v-if="!currentResumeInfo.jobPerson.photoLinkDsp"
+             :style="{backgroundImage:'url(/web/static/img/qiuzhenxiang_90X126.jpg)'}"
+             class="photoLinkDsp"></div>
+        <div class="resume-detail_info cj-flex">
+          <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
+            <!--姓名-->
+            <div class="personName cj-inline-block">{{ currentResumeInfo.jobPerson.personName }}</div>
+            <!--社会在职-->
+            <div class="personTypeDsp cj-inline-block">{{ currentResumeInfo.jobPerson.personTypeDsp }}</div>
+          </div>
+          <ul class="resume-other_info split">
+            <li>
+              <!--性别-->
+              {{ currentResumeInfo.jobPerson.genderDsp }}
+            </li>
+            <li>
+              <!--年龄-->
+              {{ currentResumeInfo.jobPerson.age }}
+            </li>
+            <li>
+              <!--工作年限-->
+              {{ currentResumeInfo.jobPerson.workYears }}年工作经验
+            </li>
+            <li>
+              <!--学历-->
+              {{ currentResumeInfo.jobPerson.highestEduDsp }}
+            </li>
+          </ul>
+          <div class="resume-detail_concat">
+            <!--手机号码-->
+            <div class="mobilePhone cj-inline-block">{{ currentResumeInfo.jobPerson.mobilePhone }}</div>
+            <!--电子邮箱-->
+            <div class="email cj-inline-block">{{
+                currentResumeInfo.jobPerson.email
+                  ? currentResumeInfo.jobPerson.email
+                  : "-未填-"
+              }}
+            </div>
+            <!--现居地-->
+            <div class="currLocDsp cj-inline-block">{{ currentResumeInfo.jobPerson.currLocDsp }}</div>
+          </div>
+        </div>
+      </div>
+      <!--教育经历-->
+      <div v-if="currentResumeInfo.personEduList" class="jobPersonEduList">
+        <div class="resume-detail_subtitle">教育经历</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personEduList">
+            {{ item.personEduDsp }}
+          </div>
+        </div>
+        <ul>
+        </ul>
+      </div>
+      <!--期待岗位-->
+      <div class="position">
+        <div class="resume-detail_subtitle">意向岗位</div>
+        <div class="resume-detail_content">
+          <!--意向岗位-->
+          <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
+          <!--工作性质-->
+          <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
+          <!--工作地点-->
+          <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
+          <!--从事行业-->
+          <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
+          <!--期待月薪-->
+          <div class="salaryRangeDsp">期待月薪：{{ currentResumeInfo.jobPersonCv.salaryRangeDsp }}</div>
+          <!--到岗时间-->
+          <div class="availableInDaysDsp">到岗时间：{{ currentResumeInfo.jobPersonCv.availableInDaysDsp }}</div>
+        </div>
+      </div>
+      <div v-if="currentResumeInfo.jobPersonCv">
+        <div class="resume-detail_subtitle">个人自述</div>
+        <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.selfCommentDsp"></div>
+        <div class="resume-detail_subtitle">其他说明</div>
+        <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
+      </div>
+      <!--工作经验-->
+      <div v-if="currentResumeInfo.personJobHistList">
+        <div class="resume-detail_subtitle">工作经验</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personJobHistList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                  item.endDate
+                    ? item.endDate.substr(0, 7)
+                    : "至今"
+                }}
+              </div>
+              <div>{{ item.positionName }}</div>
+            </div>
+            <div>{{ item.companyName }}</div>
+            <div v-html="item.achievement4Disp"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+      <!--项目经验-->
+      <div v-if="currentResumeInfo.personProjectList">
+        <div class="resume-detail_subtitle">项目经验</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personProjectList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                  item.endDate
+                    ? item.endDate.substr(0, 7)
+                    : "至今"
+                }}
+              </div>
+              <div>{{ item.projectName }}</div>
+            </div>
+            <div v-html="item.projectDetail4Disp"></div>
+            <div v-html="item.responsibility4Disp"></div>
+            <div v-html="item.keyTechnology4Disp"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+      <!--技能-->
+      <div v-if="currentResumeInfo.personItSkillList">
+        <div class="resume-detail_subtitle">技能</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personItSkillList">
+            {{ item.personItSkillDsp }}
+          </div>
+        </div>
+      </div>
+      <!--资格证书-->
+      <div v-if="currentResumeInfo.personProCertList">
+        <div class="resume-detail_subtitle">资格证书</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.personProCertList">
+            {{ item.personProCertDsp }}
+          </div>
+        </div>
+      </div>
+      <!--职业教育培训-->
+      <div v-if="currentResumeInfo.trainingList">
+        <div class="resume-detail_subtitle">职业教育培训</div>
+        <div class="resume-detail_content">
+          <div v-for="item in currentResumeInfo.trainingList">
+            <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-between">
+              <div>{{ item.startDate ? item.startDate.substr(0, 7) : "至今" }}至{{
+                  item.endDate
+                    ? item.endDate.substr(0, 7)
+                    : "至今"
+                }}
+              </div>
+              <div>{{ item.projectName }}</div>
+            </div>
+            <div v-html="item.trainingOrgDsp"></div>
+            <div v-html="item.trainingNameDsp"></div>
+            <div v-html="item.trainingDetailDsp"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!--/简历详情Dialog-->
+  <!-- 登录提示Dialog -->
+  <el-dialog id="login__dialog" :visible.sync="loginDialog" title="您还没有登录，请选择角色" width="600px">
+    <div class="login__dialog__panel cj-flex cj-justify-content-center cj-align-items-center">
+      <div class="login__dialog__link" style="background-image:url(images/login_person.svg)" target="_blank"
+           @click="userLogin('person')">
+        个人登录
+      </div>
+      <div class="login__dialog__link" style="background-image:url(images/login_company.svg)" target="_blank"
+           @click="userLogin('company')">
+        企业登录
+      </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+    </span>
+  </el-dialog>
+  <!-- /登录提示Dialog -->
+  <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
-<script src="index.js?v=20220218abcdefgh"></script>
+<script src="index.js?v=20220221a"></script>
 <script>
   //根据浏览器窗口宽度计算内容框体宽度
   (function() {
     var obj = {
-      '#top-bar': {width: '1780px'},
-      '.out_panel_top1': {width: '1780px'},
-      '.out_panel_bottom2': {width: '1780px'},
-      '.out_panel_top2': {width: '1780px'},
-      '.out_panel_bottom1': {width: '1780px'},
-      '.out_border_1': {width: '1746px'},
-      '.company-list_panel': {width: '1712px'},
-      '.company-item': {zoom: 1},
-      '.job-seeker_item': {zoom: 1},
+      "#top-bar": {width: "1780px"},
+      ".out_panel_top1": {width: "1780px"},
+      ".out_panel_bottom2": {width: "1780px"},
+      ".out_panel_top2": {width: "1780px"},
+      ".out_panel_bottom1": {width: "1780px"},
+      ".out_border_1": {width: "1746px"},
+      ".company-list_panel": {width: "1712px"},
+      ".company-item": {zoom: 1},
+      ".job-seeker_item": {zoom: 1},
     };
     var cssResult = cssobj(obj);
 
     function reCalcSize() {
       // console.log('WIDTH:' + window.innerWidth + ', HEIGHT:' + window.innerHeight);
-      var _baseWidth = '1780';
+      var _baseWidth = "1780";
       if (window.innerWidth < 1780) {
         _baseWidth = window.innerWidth;
       }
       if (window.innerWidth < 1367) {
-        obj['.company-item'].zoom = '0.935';
-        obj['.job-seeker_item'].zoom = '0.935';
+        obj[".company-item"].zoom = "0.935";
+        obj[".job-seeker_item"].zoom = "0.935";
       }
       if (window.innerWidth < 1200) {
-        obj['.company-item'].zoom = '0.85';
-        obj['.job-seeker_item'].zoom = '0.85';
+        obj[".company-item"].zoom = "0.85";
+        obj[".job-seeker_item"].zoom = "0.85";
       }
 
-      obj['#top-bar'].width = (_baseWidth) + 'px';
-      obj['.out_panel_top1'].width = (_baseWidth) + 'px';
-      obj['.out_panel_top2'].width = (_baseWidth) + 'px';
-      obj['.out_panel_bottom1'].width = (_baseWidth) + 'px';
-      obj['.out_panel_bottom2'].width = (_baseWidth) + 'px';
-      obj['.out_border_1'].width = (_baseWidth - 34) + 'px';
-      obj['.company-list_panel'].width = (_baseWidth - 68) + 'px';
+      obj["#top-bar"].width = (_baseWidth) + "px";
+      obj[".out_panel_top1"].width = (_baseWidth) + "px";
+      obj[".out_panel_top2"].width = (_baseWidth) + "px";
+      obj[".out_panel_bottom1"].width = (_baseWidth) + "px";
+      obj[".out_panel_bottom2"].width = (_baseWidth) + "px";
+      obj[".out_border_1"].width = (_baseWidth - 34) + "px";
+      obj[".company-list_panel"].width = (_baseWidth - 68) + "px";
       cssResult.update();
     }
 
