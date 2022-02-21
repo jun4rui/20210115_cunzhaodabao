@@ -1777,6 +1777,41 @@ return _msgTime > _activityTime;
         behavior: 'smooth',
       });
     },
+
+    //下载当前聊天记录
+    downloadChatLog: function () {
+      var _chatLog = '';
+      mainModel.offlineConversations.map(function (item) {
+        item.msgs.map(function (item2) {
+          // console.log(
+          //   /*item2.content,*/
+          //   moment(item2.content.create_time).format('YYYY-MM-DD hh:mm:ss'),
+          //   item2.content.from_name,
+          //   '发给',
+          //   item2.content.target_name,
+          //   item2.content.msg_body.text
+          // );
+          _chatLog +=
+            moment(item2.content.create_time).format('YYYY-MM-DD hh:mm:ss') +
+            ',' +
+            item2.content.from_name +
+            ' 发给 ' +
+            item2.content.target_name +
+            '\n' +
+            item2.content.msg_body.text +
+            '\n\n';
+        });
+
+        var _dom = document.createElement('a');
+        _dom.setAttribute(
+          'href',
+          'data:text/plain;charset=utf-8,' + encodeURIComponent(_chatLog)
+        );
+        _dom.setAttribute('download', '聊天记录.txt');
+        _dom.style.display = 'none';
+        _dom.click();
+      });
+    },
   },
   created: function () {
     //如果有参数mode，则根据mode的值来获取用户信息
