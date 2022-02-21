@@ -570,7 +570,7 @@ var mainModel = new Vue({
               }
               return item;
             });
-            console.log('装弹完毕！');
+            // console.log('装弹完毕！');
           } else {
             this.$message.error(response.errMsg);
           }
@@ -1838,7 +1838,7 @@ return _msgTime > _activityTime;
         //如果没子弹了，就重新装载子弹
         if (this.danmuList.length === 0) {
           if (!this.reloading) {
-            console.log('reloading.');
+            // console.log('reloading.');
             this.reloading = true;
             this.getDanmuList(); //加载弹幕列表
           }
