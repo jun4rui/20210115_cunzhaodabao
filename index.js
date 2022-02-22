@@ -1808,9 +1808,10 @@ return _msgTime > _activityTime;
           'data:text/plain;charset=utf-8,' + encodeURIComponent(_chatLog)
         );
         _dom.setAttribute('download', '聊天记录.txt');
+        // _dom.setAttribute('class', 'download__chat-log');
         _dom.style.display = 'none';
         _dom.click();
-        _dom.parentNode.removeChild(_dom);
+        // _dom.remove();
       });
     },
   },
