@@ -1810,6 +1810,7 @@ return _msgTime > _activityTime;
         _dom.setAttribute('download', '聊天记录.txt');
         _dom.style.display = 'none';
         _dom.click();
+        _dom.parentNode.removeChild(_dom);
       });
     },
   },
