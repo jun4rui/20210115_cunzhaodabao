@@ -2,7 +2,7 @@
   position: fixed;
   right: 0;
   top: calc(100vh - 30px);
-  transition: top 0.4s ease-out;
+  transition: all 750ms cubic-bezier(0.08, 1.09, 0.32, 1.275);
   width: 55px;
   z-index: 9999999999; }
   #online-assistant .assistant-item {
