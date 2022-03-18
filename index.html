@@ -630,6 +630,7 @@
               <!--公司名称-->
               <div class="company_name" title="点击查看详情" @click="showCurrentCompanyInfo(item.companyId)">
                 <span>{{ item.companyName }}</span>
+                <div class="VIP_flag" v-if="item.companyCode.toUpperCase().indexOf('VIP')>-1"></div>
               </div>
               <div class="company_lastUpdateDate">刷新时间：{{ item.lastUpdateDate }}</div>
               <!--职位列表-->

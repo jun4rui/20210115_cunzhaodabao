@@ -597,6 +597,14 @@ ul, li {
       padding-right: 20px;
       text-overflow: ellipsis;
       white-space: nowrap; }
+    .company-item .company_name .VIP_flag {
+      background: url(../images/icon_vip.png) no-repeat center center;
+      background-size: contain;
+      height: 32px;
+      position: absolute;
+      right: 0;
+      top: 5px;
+      width: 32px; }
     .company-item .company_name:before {
       background: url(../images/company_item_title_icon.png) no-repeat center center;
       background-size: 100%;
