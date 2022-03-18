@@ -357,7 +357,8 @@ var mainModel = new Vue({
     },
     //获得距离展会结束时间还有多久
     getEndTime: function () {
-      var _startTime = this.activityInfo.holdingTime;
+      // var _startTime = this.activityInfo.holdingTime;
+      var _startTime = this.activityInfo.startDate;
       //考虑到如果有holdingZone，则使用
       var _holdingZone = this.activityInfo.holdingZone;
       if (
@@ -367,7 +368,7 @@ var mainModel = new Vue({
         _startTime =
           _startTime.substr(0, 10) + ' ' + _holdingZone.split('-')[0] + ':00';
       }
-      // console.log('startTime:', _startTime);
+      console.log('startTime:', _startTime);
 
       //判断活动是否开始
       if (moment.duration(moment(_startTime) - moment()).asMinutes() > 0) {
