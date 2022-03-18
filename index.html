@@ -156,8 +156,8 @@
           <!--/登录区-->
           <!--倒计时区-->
           <div id="countdown_panel">
-            <div v-if="activityAlreadyStarted" class="title">会议结束倒计时</div>
-            <div v-if="!activityAlreadyStarted" class="title">会议开始倒计时</div>
+            <div v-if="activityAlreadyStarted" class="title">招聘会结束倒计时</div>
+            <div v-if="!activityAlreadyStarted" class="title">招聘会开始倒计时</div>
             <div v-if="activityEndTime" id="countdown_time" class="cj-block">
               <span v-if="activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
               <span v-if="!activityAlreadyStarted" class="time">{{ activityEndTime.day }}</span>
