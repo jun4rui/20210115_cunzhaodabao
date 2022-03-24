@@ -569,13 +569,15 @@ ul, li {
   height: 435px;
   margin-bottom: 20px;
   margin-right: 10px;
+  overflow: hidden;
   position: relative;
   width: 320px; }
   .company-item:hover .hr,
   .company-item:hover .table,
   .company-item:hover .job-seeker,
   .company-item:hover .chair {
-    opacity: 0.1; }
+    opacity: 0.1;
+    top: 500px; }
   .company-item .company_name {
     align-items: center;
     background: #FFF url(../images/company_item_title_bg.png) no-repeat center center;

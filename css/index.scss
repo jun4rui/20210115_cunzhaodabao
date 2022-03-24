@@ -198,6 +198,7 @@
   height:        435px;
   margin-bottom: 20px;
   margin-right:  10px;
+  overflow:      hidden;
   position:      relative;
   width:         320px;
 
@@ -207,6 +208,7 @@
     .job-seeker,
     .chair {
       opacity: 0.1;
+      top:     500px;
     }
   }
 
