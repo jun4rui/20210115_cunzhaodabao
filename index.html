@@ -195,7 +195,7 @@
           <li>{{ currentRecruitInfo.salary }}</li>
           <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
           <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
-          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+          <li>招{{ currentRecruitInfo.recruitPersons === 0 ? "若干" : currentRecruitInfo.recruitPersons }}人</li>
         </ul>
         <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
         <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
@@ -383,7 +383,7 @@
                       经验{{ recruitItem.workYears }}
                     </li>
                     <li>
-                      招{{ recruitItem.persons }}人
+                      招{{ recruitItem.persons === 0 ? "若干" : recruitItem.persons }}人
                     </li>
                   </ul>
                   <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
@@ -747,7 +747,7 @@
           <li>{{ currentRecruitInfo.salary }}</li>
           <li v-if="currentRecruitInfo.location">{{ currentRecruitInfo.location }}</li>
           <li v-if="currentRecruitInfo.lowerEdu">{{ currentRecruitInfo.lowerEdu }}</li>
-          <li>招{{ currentRecruitInfo.recruitPersons }}人</li>
+          <li>招{{ currentRecruitInfo.recruitPersons === 0 ? "若干" : currentRecruitInfo.recruitPersons }}人</li>
         </ul>
         <div class="cri-company-name">{{ currentRecruitInfo.companyName }}</div>
         <div v-if="currentRecruitInfo.welfare" class="cri_subtitle">职位福利</div>
@@ -843,7 +843,7 @@
                 经验{{ recruitItem.workYears }}
               </li>
               <li>
-                招{{ recruitItem.persons }}人
+                招{{ recruitItem.persons === 0 ? "若干" : recruitItem.persons }}人
               </li>
             </ul>
             <!--TODO 现场接口中没有这个字段，无法显示，需要后端加上-->
