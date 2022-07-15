@@ -22,6 +22,9 @@
   <script src="//pv.sohu.com/cityjson?ie=utf-8"></script>
   <!--热键功能-->
   <script src="node_modules/hotkeys-js/dist/hotkeys.min.js"></script>
+  <script>
+    Vue.config.devtools = true;
+  </script>
 </head>
 <body>
 <!--主内容-->
@@ -130,11 +133,11 @@
               <!--无头像-->
               <div v-if="!personUserInfo.photoLink"
                    :style="'background-image:url(images/avatar_'+(personUserInfo.genderCode==='01'?'man':'woman')+'_'+(personUserInfo.personId%4+1)+'.png)'"
-                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+                   class="avatar" onClick="window.open('https://qz.hnrcsc.com/pweb/#/positionB/userinfo')"></div>
               <!--有头像-->
               <div v-if="personUserInfo.photoLink"
                    :style="'background-image:url(//www.hnrcsc.com/share/'+personUserInfo.photoLink+')'"
-                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/seekjob/home.action')"></div>
+                   class="avatar" onClick="window.open('https://qz.hnrcsc.com/pweb/#/positionB/userinfo')"></div>
             </el-tooltip>
             <a class="name">{{ personUserInfo.personName }}</a>
             <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
@@ -144,10 +147,10 @@
             <el-tooltip class="item" content="点击访问企业后台" effect="dark" placement="top">
               <div v-if="!companyUserInfo.logoUrl"
                    :style="'background-image:url(images/icon_login_company@2x.png)'" class="avatar"
-                   onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+                   onClick="window.open('https://qz.hnrcsc.com/gweb/#/home')"></div>
               <div v-if="companyUserInfo.logoUrl"
                    :style="'background-image:url(//www.hnrcsc.com'+companyUserInfo.logoUrl+')'"
-                   class="avatar" onClick="window.open('//www.hnrcsc.com/web/recruit/home.action')"></div>
+                   class="avatar" onClick="window.open('https://qz.hnrcsc.com/gweb/#/home')"></div>
             </el-tooltip>
             <a class="name">{{ companyUserInfo.userName }}</a>
             <div class="view-message" @click="viewMessage">消息<span>{{ unreadMsgCount }}</span></div>
@@ -1092,7 +1095,7 @@
   <!-- /区域内放置Dialog -->
 </div>
 <!--/主内容-->
-<script src="index.js?v=20220318"></script>
+<script src="index.js"></script>
 <script>
   //根据浏览器窗口宽度计算内容框体宽度
   (function() {

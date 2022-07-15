@@ -901,36 +901,41 @@ var mainModel = new Vue({
     //登陆
     userLogin: function (inMode) {
       if (inMode === 'person') {
-        window.localStorage.setItem(
-          'backurl',
-          window.location.href.indexOf('?') > -1
-            ? window.location.href.substr(
-                0,
-                window.location.href.indexOf('?')
-              ) + '?mode=person'
-            : window.location.href + '?mode=person'
-        );
-        window.location.href = 'http://www.hnrcsc.com/web/seekjob/login.action';
+        window.location.href = 'https://qz.hnrcsc.com/pweb/#/login?register=3&backurl=' + window.location.origin + window.location.pathname;
         return false;
       }
       if (inMode === 'company') {
-        window.localStorage.setItem(
-          'backurl',
-          window.location.href.indexOf('?') > -1
-            ? window.location.href.substr(
-                0,
-                window.location.href.indexOf('?')
-              ) + '?mode=company'
-            : window.location.href + '?mode=company'
-        );
-        window.location.href = 'http://www.hnrcsc.com/web/recruit/login.action';
+        window.location.href = 'https://qz.hnrcsc.com/pweb/#/login?register=1&backurl=' + window.location.origin + window.location.pathname;
         return false;
       }
     }, //自动登录（用获取个人和企业登陆状态接口，看哪个能返回已登录信息来判断）
     autoLogin: function () {
+      getUserLogin(function(res) {
+        console.log('res:', res);
+        if(res.code==='0000'){
+          //首先清空个人用户和企业用户（感觉其实也没必要）
+          this.personUserInfo = this.companyUserInfo = null;
+          if (res.type==='person'){
+            this.$message.success('正在加载个人账户信息……');
+            this.loginMode = 'person';
+            this.personUserInfo = res.info.data;
+          }
+          if (res.type==='company'){
+            this.$message.success('正在加载企业账户信息……');
+            this.loginMode = 'company';
+            this.companyUserInfo = res.info.data;
+            this.getJobSeekerList(); //重新加载求职责信息，用来获取是否投递过简历
+          }
+        }
+      }.bind(this))
+
+
+
+
+
       //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
       //如果前端标记了退出状态，则不要自动登录
-      if (window.sessionStorage.getItem('online_exit') !== '1') {
+      /*if (window.sessionStorage.getItem('online_exit') !== '1') {
         //个人登录判断
         $.post(
           'http://www.hnrcsc.com/web/seekjob/video!personLogin.action',
@@ -960,7 +965,7 @@ var mainModel = new Vue({
             }
           }.bind(this)
         );
-      }
+      }*/
     }, //TODO DEBUG 用户登录
     debugCompanyUserInfo: function () {
       //{"agreementState":1,"backend":false,"companyId":1458,"companyName":"湖南人才网","email":"125493680@qq.com","emailVerifyFlag":"N","enCompanyId":"82FC3F6BF4CF7CAC","expireTime":"2022-02-17T19:23:17","flexEndDate":null,"flexStartDate":null,"isFlexable":false,"lastLoginDate":"2022-02-17T17:23:17","loginIp":"161.117.249.226","loginTimes":555,"logoUrl":null,"maxDownload":6000,"maxRecruitment":500,"maxSmInterview":1000,"maxSmInvitation":0,"maxVideoInterview":2000,"mbrEndDate":"2022-08-26T00:00:00","mbrStartDate":"2021-08-26T00:00:00","memberState":1,"orderId":136569,"password":"","remainVideoInterview":2000,"salesId":0,"stars":0,"usedVideoInterview":0,"userName":"hnrcw"}
@@ -1096,7 +1101,15 @@ var mainModel = new Vue({
       );
     }, //退出登陆
     logout: function () {
-      window.sessionStorage.setItem('online_exit', '1');
+      window.localStorage.removeItem('personInfo');
+      window.localStorage.removeItem('companyInfo');
+      setTimeout(function () {
+        window.location.href = window.location.href.substr(
+          0,
+          window.location.href.indexOf('?')
+        );
+      }, 1000);
+      /*window.sessionStorage.setItem('online_exit', '1');
       //TODO 因为企业登出接口现在302而且没有返回值，暂时先调用后1000ms再刷新页面
       $.post('//www.hnrcsc.com/web/recruit/logout.action');
       $.post('//www.hnrcsc.com/web/seekjob/logout!json.action');
@@ -1105,7 +1118,7 @@ var mainModel = new Vue({
           0,
           window.location.href.indexOf('?')
         );
-      }, 1000);
+      }, 1000);*/
     }, //个人查看消息（打开聊天窗口）
     viewMessage: function () {
       //如果没有对话列表，则提示并返回
@@ -1817,12 +1830,13 @@ return _msgTime > _activityTime;
     },
   },
   created: function () {
+    this.autoLogin();
     //如果有参数mode，则根据mode的值来获取用户信息
-    this.loginMode = getParameterValue(window.location.href, 'mode');
-    if (this.loginMode === 'person') this.getPersonUserInfo();
-    if (this.loginMode === 'company') this.getCompanyUserInfo();
+    // this.loginMode = getParameterValue(window.location.href, 'mode');
+    // if (this.loginMode === 'person') this.getPersonUserInfo();
+    // if (this.loginMode === 'company') this.getCompanyUserInfo();
     //没有mode参数，则使用autoLogin帮助已经登录的用户自动登录
-    if (this.loginMode === '') this.autoLogin();
+    // if (this.loginMode === '') this.autoLogin();
 
     this.getActivityId(); //获取场次ID
     this.addCounter(); //调用计数器

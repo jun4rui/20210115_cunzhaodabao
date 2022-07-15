@@ -225,3 +225,171 @@ function nl2br (str, is_xhtml) {
 
   return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 }
+
+//用户登录逻辑处理
+//需要getParameterValue函数
+function getUserLogin(callback) {
+  console.log(`进入`);
+  var _auth = getParameterValue(window.location.href, 'Auth');
+  var _enPersonId = getParameterValue(window.location.href, 'enPersonId');
+  var _enCompanyId = getParameterValue(window.location.href, 'enCompanyId');
+  var _personInfo = null;
+  var _companyInfo = null;
+
+  //url参数里面有auth，则进入用户登录判断
+  if (_auth && (_enCompanyId || _enPersonId)) {
+    //是企业用户
+    if (_enCompanyId) {
+      $.ajax({
+        url:         'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getCompanyInfo',
+        type:        'POST',
+        data:        JSON.stringify({enCompanyId: _enCompanyId, loginStatus: 1}),
+        contentType: 'application/json;charset=UTF-8',
+        success:     function(response) {
+          if (response.code === '0000') {
+            console.log('企业登录：', response);
+
+            //继续查询详细信息
+            $.ajax({
+              url:         'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo/',
+              type:        'POST',
+              data:        JSON.stringify({companyId: '123'}),//TODO 临时用一下的
+              headers:     {
+                userId:        _enCompanyId,
+                companyId:     _enCompanyId,
+                requestSource: 2,
+                authorization: _auth,
+                userType:      2
+              },
+              contentType: 'application/json;charset=UTF-8',
+              success:     function(response2) {
+                if (response2.code === '0000') {
+                  response2.data.enCompanyId = _enCompanyId;
+                  console.log('response2:', response2);
+                  window.localStorage.setItem('auth', _auth);
+                  window.localStorage.setItem('companyInfo', JSON.stringify(response2.data));
+                  //企业登录成功则清空个人缓存信息
+                  window.localStorage.removeItem('personInfo');
+                  callback({code: '0000', type: 'company', info: response2, msg: '获取信息成功'});
+                } else {
+                  callback({code: '0001', type: 'company', info: response2, msg: '获取信息失败'});
+                }
+              }
+            });
+          } else {
+            callback({code: '0001', type: 'company', info: response, msg: '获取信息失败'});
+          }
+        }
+      });
+    }
+    //是个人用户
+    if (_enPersonId) {
+      $.ajax({
+        url:         'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getPersonInfo',
+        type:        'POST',
+        data:        JSON.stringify({enPersonId: _enPersonId, loginStatus: 1}),
+        contentType: 'application/json;charset=UTF-8',
+        success:     function(response) {
+          if (response.code === '0000') {
+            console.log('个人登录：', response);
+
+            //继续查询详细信息
+            $.ajax({
+              url:         'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' + response.data.personId,
+              type:        'POST',
+              data:        JSON.stringify({personId: '123'}),//TODO 临时用一下的
+              headers:     {
+                userId:        _enPersonId,
+                requestSource: 2,
+                userType:      1,
+                authorization: _auth
+              },
+              contentType: 'application/json;charset=UTF-8',
+              success:     function(response2) {
+                if (response2.code === '0000') {
+                  response2.data.enPersonId = _enPersonId;
+                  console.log('response2:', response2);
+                  window.localStorage.setItem('auth', _auth);
+                  window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
+                  //个人登录成功则清空企业缓存信息
+                  window.localStorage.removeItem('companyInfo');
+                  callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
+                } else {
+                  callback({code: '0001', type: 'person', info: response2, msg: '获取信息失败'});
+                }
+              }
+            });
+          } else {
+            callback({code: '0001', type: 'person', info: response, msg: '获取信息失败'});
+          }
+        }
+      });
+    }
+  } else {
+    console.log('没有auth参数的分支');
+    //判断localStorage中是否有auth和personInfo或者companyInfo
+    _auth = window.localStorage.getItem('auth');
+    _personInfo = JSON.parse(window.localStorage.getItem('personInfo'));
+    _companyInfo = JSON.parse(window.localStorage.getItem('companyInfo'));
+
+    //是企业用户
+    if (_companyInfo) {
+      //继续查询详细信息
+      $.ajax({
+        url:         'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo',
+        type:        'POST',
+        data:        JSON.stringify({companyId: '123'}),//TODO 临时用一下的
+        headers:     {
+          userId:        _companyInfo.enCompanyId,
+          companyId:     _companyInfo.enCompanyId,
+          requestSource: 2,
+          authorization: _auth,
+          userType:      2
+        },
+        contentType: 'application/json;charset=UTF-8',
+        success:     function(response2) {
+          if (response2.code === '0000') {
+            console.log('response2:', response2);
+            response2.data.enCompanyId = _enCompanyId.enCompanyId;
+            window.localStorage.setItem('companyInfo', JSON.stringify(response2.data));
+            callback({code: '0000', type: 'company', info: response2, msg: '获取信息成功'});
+          } else {
+            callback({code: '0001', type: 'company', info: response2, msg: '获取信息失败'});
+          }
+        }
+      });
+    }
+    //是个人用户
+    if (_personInfo) {
+      console.log('进入个人用户', _personInfo);
+      //继续查询详细信息
+      $.ajax({
+        url:         'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' + _personInfo.personId,
+        type:        'POST',
+        data:        JSON.stringify({personId: '123'}),//TODO 临时用一下的
+        headers:     {
+          userId:        _personInfo.enPersonId,
+          requestSource: 2,
+          userType:      1,
+          authorization: _auth
+        },
+        contentType: 'application/json;charset=UTF-8',
+        success:     function(response2) {
+          console.log('person 2');
+          if (response2.code === '0000') {
+            console.log('response2:', response2);
+            response2.data.enPersonId = _personInfo.enPersonId;
+            window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
+            callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
+          } else {
+            callback({code: '0001', type: 'person', info: response2, msg: '获取信息失败'});
+          }
+        }
+      });
+    }
+    //没有任何数据的
+    if (!_companyInfo && !_personInfo) {
+      callback({code: '0002', type: null, info: null, msg: '用户未登录'});
+    }
+  }
+}
