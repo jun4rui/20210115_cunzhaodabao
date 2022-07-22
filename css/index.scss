@@ -754,6 +754,10 @@
           display: block;
         }
       }
+
+      .view-chat {
+        background: linear-gradient(275.28deg, #ACACAC 0%, #D0D0D0 100%);
+      }
     }
 
     &.posted {
@@ -851,6 +855,23 @@
       text-align:    center;
       top:           141px;
       width:         120px;
+    }
+
+    .view-chat {
+      background:    linear-gradient(95.28deg, #2E97F9 0%, #0E5FE8 100%);
+      border-radius: 5px;
+      color:         #FFF;
+      cursor:        pointer;
+      font-size:     16px;
+      font-weight:   bold;
+      height:        34px;
+      left:          20px;
+      line-height:   34px;
+      position:      absolute;
+
+      text-align:    center;
+      top:           141px;
+      width:         280px;
     }
 
     .online_status {
@@ -1847,9 +1868,10 @@
     }
 
     > .text {
-      width:  256px;
-      margin: 0 auto;
+      width:       256px;
+      margin:      0 auto;
       padding-top: 1em;
+
       span {
         color: #F00;
       }

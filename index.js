@@ -1228,7 +1228,26 @@ var mainModel = new Vue({
             });
         }.bind(this)
       );
-    }, //开始和个人聊天 只有企业登陆以后才能调用
+    },
+    viewAndChat:function(inEnPersonId){
+      if (!this.checkDateTime()) {
+        this.$message.error('本场招聘会还未开始，无法进行联系。');
+        //TODO return false;//DEBUG 注释这里可无限制chat
+      }
+      if (this.companyUserInfo === null) {
+        // this.$message.error('请登陆企业账号，并确认已参加该场招聘会。');
+        this.$notify.error({
+          title: '错误',
+          dangerouslyUseHTMLString: true,
+          duration: 0,
+          message:
+            '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
+        });
+        return false;
+      }
+      window.open('https://qz.hnrcsc.com/gweb/#/operationLog?personId='+inEnPersonId,'_blank');
+    },
+    //开始和个人聊天 只有企业登陆以后才能调用
     chatToPerson: function (inPersonName, inPersonId) {
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
       if (!this.checkDateTime()) {
@@ -1243,7 +1262,7 @@ var mainModel = new Vue({
           dangerouslyUseHTMLString: true,
           duration: 0,
           message:
-            '需要<a href="javascript:void(0);" onClick="mainModel.userLogin(\'company\')">登陆企业账号</a>，并确认已参加该场招聘会方可使用该功能。',
+            '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
         });
         return false;
       }
@@ -1955,7 +1974,7 @@ return _msgTime > _activityTime;
         this.getActivityInfo(); //获取展会信息
         this.getJobSeekerList(); //获取求职者列表
         this.getListActivityCompany(); //加载企业和职位信息
-        this.checkLoginStatus(); //检查用户登录状态
+        //TODO 暂时去掉看看效果 this.checkLoginStatus(); //检查用户登录状态
       }.bind(this),
       15000
     );

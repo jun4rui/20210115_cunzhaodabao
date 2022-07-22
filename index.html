@@ -728,11 +728,13 @@
                 }}<br>
                 {{ item.workYears }}年工作经验
               </div>
-              <div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通
+              <!--<div class="chat-now online" @click="chatToPerson(item.personName, item.personId)">立即沟通
               </div>
               <div class="chat-now offline" @click="chatToPerson(item.personName, item.personId)">给TA留言
               </div>
-              <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>
+              <div class="view-resume" @click="viewResume(item.cvId)">查看简历</div>-->
+
+              <div class="view-chat" @click="viewAndChat(item.enPersonId)">查看和联系</div>
             </div>
           </div>
           <!-- /在线求职者列表 -->
