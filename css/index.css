@@ -696,7 +696,8 @@ ul, li {
     line-height: 36px;
     position: absolute;
     text-align: center;
-    width: 100%; }
+    width: 100%;
+    cursor: pointer; }
     .company-item .to-chat.offline {
       background: linear-gradient(180deg, #D8D8D8 0%, #B5B5B5 8.85%, #B5B5B5 52.08%, #B5B5B5 89.58%, #979797 100%);
       display: none; }
@@ -1729,3 +1730,16 @@ ul, li {
 
 .afk-customize-message .el-input-group__append {
   border-radius: 0 0 4px 0; }
+
+#qrcode2Company_dialog #qrcode2Company__panel #qrcode2Company {
+  margin: 0 auto;
+  text-align: center; }
+  #qrcode2Company_dialog #qrcode2Company__panel #qrcode2Company img {
+    margin: 0 auto; }
+
+#qrcode2Company_dialog #qrcode2Company__panel > .text {
+  width: 256px;
+  margin: 0 auto;
+  padding-top: 1em; }
+  #qrcode2Company_dialog #qrcode2Company__panel > .text span {
+    color: #F00; }

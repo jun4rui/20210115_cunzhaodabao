@@ -1,3 +1,5 @@
+Vue.config.devtools = true;
+
 var mainModel = new Vue({
   el: '#main',
   data: {
@@ -22,6 +24,8 @@ var mainModel = new Vue({
     recruitInfoDialog: false, //职位详情显示开关
     resumeInfoDialog: false, //简历信息显示开关
     loginDialog: false, //登录提示显示开关
+    qrcode2CompanyDialog: false, //和企业聊天的二维码
+    qrcode2CompanyUrl: null, //聊天用的企业二维码URl
     companyList: null, //企业列表（包括职位）
     danmuList: [], //弹幕列表
     danmuNum: 50, //每次加载弹幕数量
@@ -630,7 +634,28 @@ var mainModel = new Vue({
           }
         }.bind(this)
       );
-    }, //获取指定企业详情到当前企业信息
+    },
+    //2022新版获取指定企业详情到当前企业信息
+    getCurrentCompanyInfo2: function (inEnCompanyId) {
+      //首先清空原来的当前企业信息
+      this.currentCompanyInfo = null;
+      $.postJSON(
+        'https://qz.hnrcsc.com/hnrcwzp/auth-service/homePage/getCompanyInfo',
+        {
+          enCompanyId: inEnCompanyId,
+          loginStatus: '0',
+        },
+        function (response) {
+          if (response.code === '0000') {
+            this.currentCompanyInfo = response.data;
+          } else {
+            this.$message.error('获取企业信息发生错误');
+          }
+        }.bind(this)
+      );
+    },
+    //获取指定企业详情到当前企业信息
+    //将被放弃
     getCurrentCompanyInfo: function (inCompanyId) {
       //首先清空原来的当前企业信息
       this.currentCompanyInfo = null;
@@ -650,7 +675,28 @@ var mainModel = new Vue({
           }
         }.bind(this)
       );
-    }, //获取制定企业的招聘职位列表
+    },
+    //2022新版对应获取企业招聘职位列表接口
+    getRecruitList2: function (inEnCompanyId) {
+      //首先清空原来的当前企业职位列表
+      this.currentRecruitList = null;
+
+      //设置接口参数 老系统：1-网络 2-现场 3-校招，外包新系统：0-现场 1-校招 2-网络
+      $.postJSON(
+        'https://qz.hnrcsc.com/hnrcwzp/auth-service/homePage/getCompanyRecruit',
+        {
+          enCompanyId: inEnCompanyId,
+          type: [99, 2, 0, 1][this.activityInfo.activityPattern],
+        },
+        function (response) {
+          console.log(response);
+          if (response.code === '0000') {
+            this.currentRecruitList = response.data.data.list;
+          }
+        }.bind(this)
+      );
+    },
+    //获取制定企业的招聘职位列表
     getRecruitList: function (inCompanyId) {
       //首先清空原来的当前企业职位列表
       this.currentRecruitList = null;
@@ -692,8 +738,14 @@ var mainModel = new Vue({
         }.bind(this)
       );
     },
-
+    //2022年新版 展示当前企业详情信息
+    showCurrentCompanyInfo2: function (inEnCompanyId) {
+      this.getCurrentCompanyInfo2(inEnCompanyId);
+      this.getRecruitList2(inEnCompanyId);
+      this.companyInfoDialog = true;
+    },
     //展示当前企业详情信息
+    //即将淘汰
     showCurrentCompanyInfo: function (inCompanyId) {
       //console.log('showCurrentCompanyInfo:', inCompanyId);
       this.getCurrentCompanyInfo(inCompanyId);
@@ -901,37 +953,41 @@ var mainModel = new Vue({
     //登陆
     userLogin: function (inMode) {
       if (inMode === 'person') {
-        window.location.href = 'https://qz.hnrcsc.com/pweb/#/login?register=3&backurl=' + window.location.origin + window.location.pathname;
+        window.location.href =
+          'https://qz.hnrcsc.com/pweb/#/login?register=3&backurl=' +
+          window.location.origin +
+          window.location.pathname;
         return false;
       }
       if (inMode === 'company') {
-        window.location.href = 'https://qz.hnrcsc.com/pweb/#/login?register=1&backurl=' + window.location.origin + window.location.pathname;
+        window.location.href =
+          'https://qz.hnrcsc.com/pweb/#/login?register=1&backurl=' +
+          window.location.origin +
+          window.location.pathname;
         return false;
       }
     }, //自动登录（用获取个人和企业登陆状态接口，看哪个能返回已登录信息来判断）
     autoLogin: function () {
-      getUserLogin(function(res) {
-        console.log('res:', res);
-        if(res.code==='0000'){
-          //首先清空个人用户和企业用户（感觉其实也没必要）
-          this.personUserInfo = this.companyUserInfo = null;
-          if (res.type==='person'){
-            this.$message.success('正在加载个人账户信息……');
-            this.loginMode = 'person';
-            this.personUserInfo = res.info.data;
+      getUserLogin(
+        function (res) {
+          console.log('res:', res);
+          if (res.code === '0000') {
+            //首先清空个人用户和企业用户（感觉其实也没必要）
+            this.personUserInfo = this.companyUserInfo = null;
+            if (res.type === 'person') {
+              this.$message.success('正在加载个人账户信息……');
+              this.loginMode = 'person';
+              this.personUserInfo = res.info.data;
+            }
+            if (res.type === 'company') {
+              this.$message.success('正在加载企业账户信息……');
+              this.loginMode = 'company';
+              this.companyUserInfo = res.info.data;
+              this.getJobSeekerList(); //重新加载求职责信息，用来获取是否投递过简历
+            }
           }
-          if (res.type==='company'){
-            this.$message.success('正在加载企业账户信息……');
-            this.loginMode = 'company';
-            this.companyUserInfo = res.info.data;
-            this.getJobSeekerList(); //重新加载求职责信息，用来获取是否投递过简历
-          }
-        }
-      }.bind(this))
-
-
-
-
+        }.bind(this)
+      );
 
       //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
       //如果前端标记了退出状态，则不要自动登录
@@ -1205,7 +1261,26 @@ var mainModel = new Vue({
         }.bind(this),
         200
       );
-    }, //开始和企业聊天 只有个人登陆以后才可以调用
+    },
+    makeCompanyQrcode: function () {
+      //因为qrcode2Company只有在dialog出现后才会存在，不好预先画好二维码，所以采用这种方式直接删掉老的再重新生成
+      $('#qrcode2Company__panel>#qrcode2Company').remove();
+      $('#qrcode2Company__panel').prepend('<div id="qrcode2Company"></div>');
+      new QRCode(document.getElementById('qrcode2Company'), {
+        text: this.qrcode2CompanyUrl,
+        width: 256,
+        height: 256,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+      console.log(this.qrcode2CompanyUrl);
+    },
+    showQrcode2Company: function (inEnCompanyId) {
+      this.qrcode2CompanyDialog = true;
+      this.qrcode2CompanyUrl = 'https://qz.hnrcsc.com/chat?id=' + inEnCompanyId;
+    },
+    //开始和企业聊天 只有个人登陆以后才可以调用
     chatToCompany: function (inCompanyName, inCompanyId) {
       console.log(
         `开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`
