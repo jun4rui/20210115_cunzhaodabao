@@ -394,6 +394,14 @@ function getUserLogin(callback) {
   }
 }
 
+//获取加密ID
+function getEnCode(inCode,callback){
+  $.postJSON('https://qz.hnrcsc.com/hnrcwzp/person-service/encrypt/encode',{content:inCode},function(response){
+    // console.log('getEnCode:', response);
+    callback(response);
+  });
+}
+
 if (window.jQuery){
   $.postJSON = function(url, data, callback) {
     return jQuery.ajax({
