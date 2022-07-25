@@ -33,6 +33,7 @@ var mainModel = new Vue({
 
     loginMode: null, //用户登陆带入mode参数的值
     personUserInfo: null, //个人用户登陆信息
+    enPersonId: null, //加密用户ID
     companyUserInfo: null, //企业用户登陆信息
 
     currentCompanyInfo: null, //当前企业（信息）
@@ -978,6 +979,14 @@ var mainModel = new Vue({
               this.$message.success('正在加载个人账户信息……');
               this.loginMode = 'person';
               this.personUserInfo = res.info.data;
+
+              //获取个人加密ID
+              getEnCode(res.info.data.personId,function(res){
+                if (res.code==='0000'){
+                  this.enPersonId = res.data;
+                  console.log(res.data,this.enPersonId);
+                }
+              }.bind(this));
             }
             if (res.type === 'company') {
               this.$message.success('正在加载企业账户信息……');
@@ -1229,7 +1238,7 @@ var mainModel = new Vue({
         }.bind(this)
       );
     },
-    viewAndChat:function(inEnPersonId){
+    viewAndChat: function (inEnPersonId) {
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
         //TODO return false;//DEBUG 注释这里可无限制chat
@@ -1240,12 +1249,14 @@ var mainModel = new Vue({
           title: '错误',
           dangerouslyUseHTMLString: true,
           duration: 0,
-          message:
-            '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
+          message: '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
         });
         return false;
       }
-      window.open('https://qz.hnrcsc.com/gweb/#/operationLog?personId='+inEnPersonId,'_blank');
+      window.open(
+        'https://qz.hnrcsc.com/gweb/#/operationLog?personId=' + inEnPersonId,
+        '_blank'
+      );
     },
     //开始和个人聊天 只有企业登陆以后才能调用
     chatToPerson: function (inPersonName, inPersonId) {
@@ -1261,8 +1272,7 @@ var mainModel = new Vue({
           title: '错误',
           dangerouslyUseHTMLString: true,
           duration: 0,
-          message:
-            '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
+          message: '需要登陆企业账号，并确认已参加该场招聘会方可使用该功能。',
         });
         return false;
       }
