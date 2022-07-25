@@ -760,6 +760,15 @@ var mainModel = new Vue({
       this.recruitListDialog = true;
     },
 
+    //2022展示职位详情（传入职位ID）
+    showRecruitInfo2:function(inRecruitId){
+      getEnCode('inRecruitId',function(response){
+        if (response.code==='0000'){
+          window.open('https://qz.hnrcsc.com/pweb/#/positionB/jobDetails?id='+response.data,'_blank');
+        }
+      });
+    },
+
     //展示职位详情（传入职位ID）
     showRecruitInfo: function (inRecruitId) {
       this.getCurrentRecuitInfo(inRecruitId);
@@ -981,12 +990,15 @@ var mainModel = new Vue({
               this.personUserInfo = res.info.data;
 
               //获取个人加密ID
-              getEnCode(res.info.data.personId,function(res){
-                if (res.code==='0000'){
-                  this.enPersonId = res.data;
-                  console.log(res.data,this.enPersonId);
-                }
-              }.bind(this));
+              getEnCode(
+                res.info.data.personId,
+                function (res) {
+                  if (res.code === '0000') {
+                    this.enPersonId = res.data;
+                    console.log(res.data, this.enPersonId);
+                  }
+                }.bind(this)
+              );
             }
             if (res.type === 'company') {
               this.$message.success('正在加载企业账户信息……');
@@ -1306,6 +1318,12 @@ var mainModel = new Vue({
       console.log(this.qrcode2CompanyUrl);
     },
     showQrcode2Company: function (inEnCompanyId) {
+      //检查个人用户是否登录
+      if(!this.personUserInfo){
+        this.$message.error('请您先登录湖南人才网');
+        return false;
+      }
+
       this.qrcode2CompanyDialog = true;
       this.qrcode2CompanyUrl = 'https://qz.hnrcsc.com/chat?id=' + inEnCompanyId;
     },
@@ -1815,7 +1833,35 @@ return _msgTime > _activityTime;
       $('#chat-area_other .video-chat.model').addClass('active');
     },
 
-    //投递简历
+    //投递简历接口2022
+    postResume2: function (inRecruitId) {
+      console.log('投递简历2:', inRecruitId);
+      $.ajax({
+        url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/deliveryDetail/insertRecruitFolder',
+        type: 'POST',
+        data: JSON.stringify({
+          userType: 1,
+          recruitId: inRecruitId,
+          personId: this.enPersonId,
+        }),
+        headers: {
+          authorization: window.localStorage.getItem('auth'),
+          userType: 1,
+          userId: this.enPersonId,
+          requestSource: 2,
+        },
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success:function(response){
+          console.log(response);
+          if(response.code==='0000'){
+            this.$message.success('投递简历成功！');
+          }
+        }.bind(this)
+      });
+    },
+
+    //投递简历 待废弃
     postResume: function (inRecruitId) {
       if (!this.personUserInfo) {
         this.$message.error('您登陆以后才可以投递简历');

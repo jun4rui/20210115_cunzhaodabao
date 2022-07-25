@@ -215,7 +215,7 @@
           </div>
         </div>
         <!--投递职位按钮-->
-        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <div class="post-resume" @click="postResume2(currentRecruitInfo.recruitId)">投递简历</div>
         <!--/投递职位按钮-->
         <!--
         address: "长沙市望城区雷锋大道1389号"
@@ -362,7 +362,7 @@
               <!--职位列表-->
               <div class="company-info-recruit-list">
                 <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
-                  <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
+                  <div class="job-title" @click="showRecruitInfo2(recruitItem.recruitId)">
                     {{ recruitItem.recruitName }}
                   </div>
                   <ul class="recruit-other-info split">
@@ -393,7 +393,7 @@
                   </ul>
                   <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
                   <div v-if="recruitItem.welfare" class="welfare">{{ recruitItem.welfare }}</div>
-                  <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
+                  <div class="post-resume" @click="postResume2(recruitItem.recruitId)">投递简历</div>
                 </div>
               </div>
               <!--/职位列表-->
@@ -772,7 +772,7 @@
           </div>
         </div>
         <!--投递职位按钮-->
-        <div class="post-resume" @click="postResume(currentRecruitInfo.recruitId)">投递简历</div>
+        <div class="post-resume" @click="postResume2(currentRecruitInfo.recruitId)">投递简历</div>
         <!--/投递职位按钮-->
         <!--
         address: "长沙市望城区雷锋大道1389号"
@@ -828,7 +828,7 @@
         <!--职位列表-->
         <div class="company-info-recruit-list">
           <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
-            <div class="job-title" @click="showRecruitInfo(recruitItem.recruitId)">
+            <div class="job-title" @click="showRecruitInfo2(recruitItem.recruitId)">
               {{ recruitItem.jobTitle }}
             </div>
             <ul class="recruit-other-info split">
@@ -853,7 +853,7 @@
             <div v-if="recruitItem.welfare" class="welfare">
               {{ recruitItem.welfare }}
             </div>
-            <div class="post-resume" @click="postResume(recruitItem.recruitId)">投递简历</div>
+            <div class="post-resume" @click="postResume2(recruitItem.recruitId)">投递简历</div>
           </div>
         </div>
         <!--/职位列表-->
