@@ -762,7 +762,7 @@ var mainModel = new Vue({
 
     //2022展示职位详情（传入职位ID）
     showRecruitInfo2:function(inRecruitId){
-      getEnCode('inRecruitId',function(response){
+      getEnCode(inRecruitId,function(response){
         if (response.code==='0000'){
           window.open('https://qz.hnrcsc.com/pweb/#/positionB/jobDetails?id='+response.data,'_blank');
         }
