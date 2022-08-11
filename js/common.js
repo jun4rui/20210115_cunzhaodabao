@@ -414,3 +414,56 @@ if (window.jQuery){
     });
   };
 }
+
+//2022 获取简历信息接口
+function getResumeInfo(inEnPersonId, inPersonId, inAuth, callback) {
+  $.ajax({
+    url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' +
+      inPersonId,
+    type: 'POST',
+    // data:        JSON.stringify({personId: '123'}),
+    headers: {
+      userId: inEnPersonId,
+      requestSource: 2,
+      userType: 1,
+      authorization: inAuth,
+    },
+    contentType: 'application/json;charset=UTF-8',
+    success: function(response) {
+      callback && callback({code: '0000', data: response});
+    },
+    error: function(error) {
+      callback && callback({code: '0001', data: error});
+    },
+  });
+}
+
+//2022 投递在线职位接口
+function postResumeOnline(inRecruitId, inEnPersonId, callback) {
+  $.ajax({
+    url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/deliveryDetail/insertRecruitFolder',
+    type: 'POST',
+    data: JSON.stringify({
+      userType: 1,
+      recruitId: inRecruitId,
+      personId: inEnPersonId,
+    }),
+    headers: {
+      authorization: window.localStorage.getItem('auth'),
+      userType: 1,
+      userId: inEnPersonId,
+      requestSource: 2,
+    },
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: function(response) {
+      callback && callback({code: '0000', data: response});
+    }.bind(this),
+    error: function(error) {
+      callback && callback({code: '0001', data: error});
+    },
+  });
+}
+
+//2022 投递离线（线下、校招）简历接口
+function postResumeOnsite() {}
