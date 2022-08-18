@@ -538,7 +538,7 @@ function postResumeOnline(inRecruitId, inEnPersonId, callback) {
 }
 
 //2022 投递离线（线下、校招）简历接口
-function postResumeOnsite(inEnPersonId, inRecruitId, inCvId, inCompanyId, inType) {
+function postResumeOnsite(inEnPersonId, inRecruitId, inCvId, inCompanyId, inType, callback) {
   $.ajax({
     url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/conftitle/recruitFolder',
     type: 'POST',
