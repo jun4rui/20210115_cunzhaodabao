@@ -36,41 +36,41 @@ function getParameterValue(inUrl/*输入Url*/, inName/*参数名*/) {
 //检查浏览器版本
 function checkBrowser() {
   var userAgent = navigator.userAgent,
-      rMsie     = /(msie\s|trident.*rv:)([\w.]+)/,
-      rFirefox  = /(firefox)\/([\w.]+)/,
-      rOpera    = /(opera).+version\/([\w.]+)/,
-      rChrome   = /(chrome)\/([\w.]+)/,
-      rSafari   = /version\/([\w.]+).*(safari)/;
+    rMsie = /(msie\s|trident.*rv:)([\w.]+)/,
+    rFirefox = /(firefox)\/([\w.]+)/,
+    rOpera = /(opera).+version\/([\w.]+)/,
+    rChrome = /(chrome)\/([\w.]+)/,
+    rSafari = /version\/([\w.]+).*(safari)/;
   var browser;
   var version;
-  var ua        = userAgent.toLowerCase();
+  var ua = userAgent.toLowerCase();
 
   function uaMatch(ua) {
     var match = rMsie.exec(ua);
     if (match != null) {
-      return {browser: "IE", version: match[2] || "0"};
+      return {browser: 'IE', version: match[2] || '0'};
     }
     var match = rFirefox.exec(ua);
     if (match != null) {
-      return {browser: match[1] || "", version: match[2] || "0"};
+      return {browser: match[1] || '', version: match[2] || '0'};
     }
     var match = rOpera.exec(ua);
     if (match != null) {
-      return {browser: match[1] || "", version: match[2] || "0"};
+      return {browser: match[1] || '', version: match[2] || '0'};
     }
     var match = rChrome.exec(ua);
     if (match != null) {
-      return {browser: match[1] || "", version: match[2] || "0"};
+      return {browser: match[1] || '', version: match[2] || '0'};
     }
     var match = rSafari.exec(ua);
     if (match != null) {
-      return {browser: match[2] || "", version: match[1] || "0"};
+      return {browser: match[2] || '', version: match[1] || '0'};
     }
     /* 微信下面会报错导致后续的js都无法执行，Fuck！只能再无法解析后强制返回一个参数
      if (match != null) {
      return {browser: "", version: "0"};
      }*/
-    return {browser: "", version: "0"};
+    return {browser: '', version: '0'};
   }
 
   var browserMatch = uaMatch(userAgent.toLowerCase());
@@ -80,41 +80,42 @@ function checkBrowser() {
   }
 
   return {
-    "browser": browser,
-    "version": version
+    'browser': browser,
+    'version': version,
   };
 }
 
-(function(){
+(function() {
   //首先检查用户浏览器
   //根据浏览器结果判断是否调用提醒信息的函数
   var _browser = checkBrowser();
-  if (_browser.browser==='IE' && parseInt(_browser.version)<8) {
-    $('body').append('<div style="position: fixed;top: 0;left: 0;width: 100%;background-color: #FFD100;color: #4A4A4A;text-align: center;z-index: 9999999999;box-shadow: 0 1px 3px #CCC;opacity:0.9; line-height:28px;height:28px;">hi，您当前的浏览器版本过低，可能有安全风险，建议升级浏览器：<a href="https://www.google.cn/intl/zh-CN/chrome/browser/desktop/" target="_blank" style="color:#F00;opacity: 0.9;">谷歌Chrome</a> 或 <a href="http://www.uc.cn/ucbrowser/download/" target="_blank" style="color:#F00;">UC浏览器</a></div>');
+  if (_browser.browser === 'IE' && parseInt(_browser.version) < 8) {
+    $('body').
+      append(
+        '<div style="position: fixed;top: 0;left: 0;width: 100%;background-color: #FFD100;color: #4A4A4A;text-align: center;z-index: 9999999999;box-shadow: 0 1px 3px #CCC;opacity:0.9; line-height:28px;height:28px;">hi，您当前的浏览器版本过低，可能有安全风险，建议升级浏览器：<a href="https://www.google.cn/intl/zh-CN/chrome/browser/desktop/" target="_blank" style="color:#F00;opacity: 0.9;">谷歌Chrome</a> 或 <a href="http://www.uc.cn/ucbrowser/download/" target="_blank" style="color:#F00;">UC浏览器</a></div>');
   }
 })();
 
 // 加载百度计数器
-(function () {
+(function() {
   // 百度计数器脚本
   var _hmt = _hmt || [];
-  (function () {
-    var hm = document.createElement("script");
-    hm.src = "//hm.baidu.com/hm.js?d54225656d7eaddee0c32a6b5e36eee8";
-    var s  = document.getElementsByTagName("script")[0];
+  (function() {
+    var hm = document.createElement('script');
+    hm.src = '//hm.baidu.com/hm.js?d54225656d7eaddee0c32a6b5e36eee8';
+    var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(hm, s);
   })();
 })();
-
 
 /**
  * 页面卷动到指定位置的函数
  * inSelector: String 选择器
  */
-var scrollTo = function (inSelector) {
-  if (typeof($) === 'function') {
+var scrollTo = function(inSelector) {
+  if (typeof ($) === 'function') {
     $('html,body').animate({
-      scrollTop: $(inSelector).offset().top
+      scrollTop: $(inSelector).offset().top,
     });
   }
 };
@@ -126,15 +127,15 @@ var scrollTo = function (inSelector) {
  * inReplaceNum: 替换字符个数
  * inChar: 用来替换的字符
  */
-function strReplaceChar(inStr, inStartPos, inReplaceNum, inChar){
+function strReplaceChar(inStr, inStartPos, inReplaceNum, inChar) {
   // 先判断输入是不是有值
-  if (inStr==='' || inChar==='') return inStr;
+  if (inStr === '' || inChar === '') return inStr;
   // 如果位置和长度大于字符串长度，则自动缩减到字符串末尾
   var _strList = inStr.split('');
   var _counter = 0;
-  for (var i=0; i<_strList.length;i++){
+  for (var i = 0; i < _strList.length; i++) {
     //console.log(_strList[i], inStartPos, inReplaceNum);
-    if (i>inStartPos && _counter<inReplaceNum){
+    if (i > inStartPos && _counter < inReplaceNum) {
       _strList[i] = inChar;
       _counter++;
     }
@@ -143,43 +144,43 @@ function strReplaceChar(inStr, inStartPos, inReplaceNum, inChar){
 }
 
 // 加载header
-function addHeader(){
-  $(document).ready(function () {
-    $('body').prepend('<div id="header-section"></div>')
+function addHeader() {
+  $(document).ready(function() {
+    $('body').prepend('<div id="header-section"></div>');
     $('#header-section').load('header.html');
   });
 }
 
 // 加载footer
-function addFooter(){
-  $(document).ready(function () {
+function addFooter() {
+  $(document).ready(function() {
     $('body').append('<div id="footer-section"></div>');
     $('#footer-section').load('footer.html');
   });
 }
 
 // 加载assistant
-function addAssistant(){
-  $(document).ready(function () {
+function addAssistant() {
+  $(document).ready(function() {
     $('body').append('<div id="assistant-section"></div>');
     $('#assistant-section').load('assistant.html');
   });
 }
 
 // 跳转到页面顶部
-function toPageTop(){
-  requirejs(['jquery'], function ($) {
-    $('body,html').animate({scrollTop:0},1000);
+function toPageTop() {
+  requirejs(['jquery'], function($) {
+    $('body,html').animate({scrollTop: 0}, 1000);
   });
 }
 
 // 将表单数据JSON化
 // formID: 表单的ID
-function getFormData(formID){
-  var unindexed_array = $('#'+formID).serializeArray();
+function getFormData(formID) {
+  var unindexed_array = $('#' + formID).serializeArray();
   var indexed_array = {};
 
-  for (var i=0;i<unindexed_array.length;i++){
+  for (var i = 0; i < unindexed_array.length; i++) {
     indexed_array[unindexed_array[i]['name']] = unindexed_array[i]['value'];
   }
   return indexed_array;
@@ -187,7 +188,7 @@ function getFormData(formID){
 
 // 加入CSS样式
 // css: 等于style语法文本，例如: 'a {color:red;}'
-function addcss(css){
+function addcss(css) {
   var head = document.getElementsByTagName('head')[0];
   var s = document.createElement('style');
   s.setAttribute('type', 'text/css');
@@ -201,10 +202,11 @@ function addcss(css){
 
 // 验证车牌号码
 function isLicensePlate(str) {
-  return /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/.test(str);
+  return /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/.test(
+    str);
 }
 
-function nl2br (str, is_xhtml) {
+function nl2br(str, is_xhtml) {
   // http://kevin.vanzonneveld.net
   // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
   // +   improved by: Philip Peterson
@@ -221,9 +223,12 @@ function nl2br (str, is_xhtml) {
   // *     returns 2: '<br>\nOne<br>\nTwo<br>\n<br>\nThree<br>\n'
   // *     example 3: nl2br("\nOne\nTwo\n\nThree\n", true);
   // *     returns 3: '<br />\nOne<br />\nTwo<br />\n<br />\nThree<br />\n'
-  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br ' + '/>' : '<br>'; // Adjust comment to avoid issue on phpjs.org display
+  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined')
+    ? '<br ' + '/>'
+    : '<br>'; // Adjust comment to avoid issue on phpjs.org display
 
-  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+    '$1' + breakTag + '$2');
 }
 
 //用户登录逻辑处理
@@ -233,7 +238,7 @@ function getUserLogin(callback) {
   var _auth = getParameterValue(window.location.href, 'Auth');
   var _enPersonId = getParameterValue(window.location.href, 'enPersonId');
   var _enCompanyId = getParameterValue(window.location.href, 'enCompanyId');
-  var _cvId = getParameterValue(window.location.href,'cvId');
+  var _cvId = getParameterValue(window.location.href, 'cvId');
   var _personInfo = null;
   var _companyInfo = null;
 
@@ -242,89 +247,123 @@ function getUserLogin(callback) {
     //是企业用户
     if (_enCompanyId) {
       $.ajax({
-        url:         'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getCompanyInfo',
-        type:        'POST',
-        data:        JSON.stringify({enCompanyId: _enCompanyId, loginStatus: 1}),
+        url: 'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getCompanyInfo',
+        type: 'POST',
+        data: JSON.stringify({enCompanyId: _enCompanyId, loginStatus: 1}),
         contentType: 'application/json;charset=UTF-8',
-        success:     function(response) {
+        success: function(response) {
           if (response.code === '0000') {
             console.log('企业登录：', response);
 
             //继续查询详细信息
             $.ajax({
-              url:         'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo/',
-              type:        'POST',
-              data:        JSON.stringify({companyId: '123'}),//TODO 临时用一下的
-              headers:     {
-                userId:        _enCompanyId,
-                companyId:     _enCompanyId,
+              url: 'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo/',
+              type: 'POST',
+              data: JSON.stringify({companyId: '123'}),//TODO 临时用一下的
+              headers: {
+                userId: _enCompanyId,
+                companyId: _enCompanyId,
                 requestSource: 2,
                 authorization: _auth,
-                userType:      2
+                userType: 2,
               },
               contentType: 'application/json;charset=UTF-8',
-              success:     function(response2) {
+              success: function(response2) {
                 if (response2.code === '0000') {
                   response2.data.enCompanyId = _enCompanyId;
                   console.log('response2:', response2);
                   window.localStorage.setItem('auth', _auth);
-                  window.localStorage.setItem('companyInfo', JSON.stringify(response2.data));
+                  window.localStorage.setItem('companyInfo',
+                    JSON.stringify(response2.data));
                   //企业登录成功则清空个人缓存信息
                   window.localStorage.removeItem('personInfo');
-                  callback({code: '0000', type: 'company', info: response2, msg: '获取信息成功'});
+                  callback({
+                    code: '0000',
+                    type: 'company',
+                    info: response2,
+                    msg: '获取信息成功',
+                  });
                 } else {
-                  callback({code: '0001', type: 'company', info: response2, msg: '获取信息失败'});
+                  callback({
+                    code: '0001',
+                    type: 'company',
+                    info: response2,
+                    msg: '获取信息失败',
+                  });
                 }
-              }
+              },
             });
           } else {
-            callback({code: '0001', type: 'company', info: response, msg: '获取信息失败'});
+            callback({
+              code: '0001',
+              type: 'company',
+              info: response,
+              msg: '获取信息失败',
+            });
           }
-        }
+        },
       });
     }
     //是个人用户
     if (_enPersonId) {
       $.ajax({
-        url:         'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getPersonInfo',
-        type:        'POST',
-        data:        JSON.stringify({enPersonId: _enPersonId, loginStatus: 1}),
+        url: 'https://qz.hnrcsc.com/temp-hnrcwzp/auth-service/homePage/getPersonInfo',
+        type: 'POST',
+        data: JSON.stringify({enPersonId: _enPersonId, loginStatus: 1}),
         contentType: 'application/json;charset=UTF-8',
-        success:     function(response) {
+        success: function(response) {
           if (response.code === '0000') {
             console.log('个人登录：', response);
 
             //继续查询详细信息
             $.ajax({
-              url:         'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' + response.data.personId,
-              type:        'POST',
-              data:        JSON.stringify({personId: '123'}),//TODO 临时用一下的
-              headers:     {
-                userId:        _enPersonId,
+              url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' +
+                response.data.personId,
+              type: 'POST',
+              data: JSON.stringify({personId: '123'}),//TODO 临时用一下的
+              headers: {
+                userId: _enPersonId,
                 requestSource: 2,
-                userType:      1,
-                authorization: _auth
+                userType: 1,
+                authorization: _auth,
               },
               contentType: 'application/json;charset=UTF-8',
-              success:     function(response2) {
+              success: function(response2) {
                 if (response2.code === '0000') {
                   response2.data.enPersonId = _enPersonId;
                   console.log('response2:', response2);
                   window.localStorage.setItem('auth', _auth);
-                  window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
-                  window.localStorage.setItem(_enPersonId.toString()+'CVID',_cvId);
+                  window.localStorage.setItem('personInfo',
+                    JSON.stringify(response2.data));
+                  window.localStorage.setItem(_enPersonId.toString() + 'CVID',
+                    _cvId);
                   //个人登录成功则清空企业缓存信息
                   window.localStorage.removeItem('companyInfo');
-                  callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
+                  callback({
+                    code: '0000',
+                    type: 'person',
+                    info: response2,
+                    msg: '获取信息成功',
+                  });
                 } else {
-                  callback({code: '0001', type: 'person', info: response2, msg: '获取信息失败'});
+                  callback({
+                    code: '0001',
+                    type: 'person',
+                    info: response2,
+                    msg: '获取信息失败',
+                  });
                 }
-              }
+              },
             });
           } else {
-            callback({code: '0001', type: 'person', info: response, msg: '获取信息失败'});
+            callback({
+              code: '0001',
+              type: 'person',
+              info: response,
+              msg: '获取信息失败',
+            });
           }
-        }
+        },
       });
     }
   } else {
@@ -338,27 +377,38 @@ function getUserLogin(callback) {
     if (_companyInfo) {
       //继续查询详细信息
       $.ajax({
-        url:         'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo',
-        type:        'POST',
-        data:        JSON.stringify({companyId: '123'}),//TODO 临时用一下的
-        headers:     {
-          userId:        _companyInfo.enCompanyId,
-          companyId:     _companyInfo.enCompanyId,
+        url: 'https://qz.hnrcsc.com/hnrcwzp/company-service/company/getInfo',
+        type: 'POST',
+        data: JSON.stringify({companyId: '123'}),//TODO 临时用一下的
+        headers: {
+          userId: _companyInfo.enCompanyId,
+          companyId: _companyInfo.enCompanyId,
           requestSource: 2,
           authorization: _auth,
-          userType:      2
+          userType: 2,
         },
         contentType: 'application/json;charset=UTF-8',
-        success:     function(response2) {
+        success: function(response2) {
           if (response2.code === '0000') {
             console.log('response2:', response2);
             response2.data.enCompanyId = _enCompanyId.enCompanyId;
-            window.localStorage.setItem('companyInfo', JSON.stringify(response2.data));
-            callback({code: '0000', type: 'company', info: response2, msg: '获取信息成功'});
+            window.localStorage.setItem('companyInfo',
+              JSON.stringify(response2.data));
+            callback({
+              code: '0000',
+              type: 'company',
+              info: response2,
+              msg: '获取信息成功',
+            });
           } else {
-            callback({code: '0001', type: 'company', info: response2, msg: '获取信息失败'});
+            callback({
+              code: '0001',
+              type: 'company',
+              info: response2,
+              msg: '获取信息失败',
+            });
           }
-        }
+        },
       });
     }
     //是个人用户
@@ -366,29 +416,42 @@ function getUserLogin(callback) {
       console.log('进入个人用户', _personInfo);
       //继续查询详细信息
       $.ajax({
-        url:         'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' + _personInfo.personId,
-        type:        'POST',
-        data:        JSON.stringify({personId: '123'}),//TODO 临时用一下的
-        headers:     {
-          userId:        _personInfo.enPersonId,
+        url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' +
+          _personInfo.personId,
+        type: 'POST',
+        data: JSON.stringify({personId: '123'}),//TODO 临时用一下的
+        headers: {
+          userId: _personInfo.enPersonId,
           requestSource: 2,
-          userType:      1,
-          authorization: _auth
+          userType: 1,
+          authorization: _auth,
         },
         contentType: 'application/json;charset=UTF-8',
-        success:     function(response2) {
+        success: function(response2) {
           console.log('person 2');
           if (response2.code === '0000') {
             console.log('response2:', response2);
             response2.data.enPersonId = _personInfo.enPersonId;
-            window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
-            var _cvId = window.localStorage.getItem(_personInfo.enPersonId.toString()+'CVID1');
-            if(!_cvId) console.log('未找到用户cvId');
-            callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
+            window.localStorage.setItem('personInfo',
+              JSON.stringify(response2.data));
+            var _cvId = window.localStorage.getItem(
+              _personInfo.enPersonId.toString() + 'CVID1');
+            if (!_cvId) console.log('未找到用户cvId');
+            callback({
+              code: '0000',
+              type: 'person',
+              info: response2,
+              msg: '获取信息成功',
+            });
           } else {
-            callback({code: '0001', type: 'person', info: response2, msg: '获取信息失败'});
+            callback({
+              code: '0001',
+              type: 'person',
+              info: response2,
+              msg: '获取信息失败',
+            });
           }
-        }
+        },
       });
     }
     //没有任何数据的
@@ -399,14 +462,15 @@ function getUserLogin(callback) {
 }
 
 //获取加密ID
-function getEnCode(inCode,callback){
-  $.postJSON('https://qz.hnrcsc.com/hnrcwzp/person-service/encrypt/encode',{content:inCode},function(response){
-    // console.log('getEnCode:', response);
-    callback(response);
-  });
+function getEnCode(inCode, callback) {
+  $.postJSON('https://qz.hnrcsc.com/hnrcwzp/person-service/encrypt/encode',
+    {content: inCode}, function(response) {
+      // console.log('getEnCode:', response);
+      callback(response);
+    });
 }
 
-if (window.jQuery){
+if (window.jQuery) {
   $.postJSON = function(url, data, callback) {
     return jQuery.ajax({
       'type': 'POST',
@@ -414,7 +478,7 @@ if (window.jQuery){
       'contentType': 'application/json; charset=utf-8',
       'data': JSON.stringify(data),
       'dataType': 'json',
-      'success': callback
+      'success': callback,
     });
   };
 }
@@ -461,7 +525,11 @@ function postResumeOnline(inRecruitId, inEnPersonId, callback) {
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
     success: function(response) {
-      callback && callback({code: '0000', data: response});
+      if (response.code === '0000') {
+        callback && callback({code: '0000', data: response});
+      } else {
+        callback && callback({code: '0002', data: response});
+      }
     }.bind(this),
     error: function(error) {
       callback && callback({code: '0001', data: error});
@@ -470,4 +538,33 @@ function postResumeOnline(inRecruitId, inEnPersonId, callback) {
 }
 
 //2022 投递离线（线下、校招）简历接口
-function postResumeOnsite() {}
+function postResumeOnsite(inEnPersonId, inRecruitId, inCvId, inCompanyId, inType) {
+  $.ajax({
+    url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/conftitle/recruitFolder',
+    type: 'POST',
+    data: JSON.stringify({
+      recruitId: inRecruitId,
+      cvId: inCvId,
+      companyId: inCompanyId,
+      folderType: inType,//1:现场，4:校招
+    }),
+    headers: {
+      authorization: window.localStorage.getItem('auth'),
+      userType: 1,
+      userId: inEnPersonId,
+      requestSource: 2,
+    },
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: function(response) {
+      if (response.code === '0000') {
+        callback && callback({code: '0000', data: response});
+      } else {
+        callback && callback({code: '0002', data: response});
+      }
+    }.bind(this),
+    error: function(error) {
+      callback && callback({code: '0001', data: error});
+    },
+  });
+}
