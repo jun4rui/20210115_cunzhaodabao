@@ -507,7 +507,7 @@ function getResumeInfo(inEnPersonId, inPersonId, inAuth, callback) {
 }
 
 //2022 投递在线职位接口
-function postResumeOnline(inRecruitId, inEnPersonId, callback) {
+function postResumeOnline(inEnPersonId, inRecruitId, callback) {
   $.ajax({
     url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/deliveryDetail/insertRecruitFolder',
     type: 'POST',
