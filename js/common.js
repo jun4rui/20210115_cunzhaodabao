@@ -233,6 +233,7 @@ function getUserLogin(callback) {
   var _auth = getParameterValue(window.location.href, 'Auth');
   var _enPersonId = getParameterValue(window.location.href, 'enPersonId');
   var _enCompanyId = getParameterValue(window.location.href, 'enCompanyId');
+  var _cvId = getParameterValue(window.location.href,'cvId');
   var _personInfo = null;
   var _companyInfo = null;
 
@@ -311,6 +312,7 @@ function getUserLogin(callback) {
                   console.log('response2:', response2);
                   window.localStorage.setItem('auth', _auth);
                   window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
+                  window.localStorage.setItem(_enPersonId.toString()+'CVID',_cvId);
                   //个人登录成功则清空企业缓存信息
                   window.localStorage.removeItem('companyInfo');
                   callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
@@ -380,6 +382,8 @@ function getUserLogin(callback) {
             console.log('response2:', response2);
             response2.data.enPersonId = _personInfo.enPersonId;
             window.localStorage.setItem('personInfo', JSON.stringify(response2.data));
+            var _cvId = window.localStorage.getItem(_personInfo.enPersonId.toString()+'CVID1');
+            if(!_cvId) console.log('未找到用户cvId');
             callback({code: '0000', type: 'person', info: response2, msg: '获取信息成功'});
           } else {
             callback({code: '0001', type: 'person', info: response2, msg: '获取信息失败'});
@@ -418,7 +422,7 @@ if (window.jQuery){
 //2022 获取简历信息接口
 function getResumeInfo(inEnPersonId, inPersonId, inAuth, callback) {
   $.ajax({
-    url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getInfo/' +
+    url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/person/getPersonInfoStatus/' +
       inPersonId,
     type: 'POST',
     // data:        JSON.stringify({personId: '123'}),
