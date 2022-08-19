@@ -79,11 +79,11 @@ var mainModel = new Vue({
   },
   computed: {
     //获得未读消息总数
-    unreadMsgCount: function () {
+    unreadMsgCount: function() {
       var _unreadMsgCount = 0;
       var _unreadList = [];
       var _diff = 0; //消息相差
-      var _offMsg = this.offlineConversations.map(function (item) {
+      var _offMsg = this.offlineConversations.map(function(item) {
         return {
           key: item.key,
           unread_msg_count: item.unread_msg_count,
@@ -91,7 +91,7 @@ var mainModel = new Vue({
           mtime: null,
         };
       });
-      var _onMsg = this.conversations.map(function (item) {
+      var _onMsg = this.conversations.map(function(item) {
         return {
           key: item.key,
           unread_msg_count: item.unread_msg_count,
@@ -105,7 +105,7 @@ var mainModel = new Vue({
       });
 
       //判断在线消息中需要自动回复的
-      _onMsg.map(function (item) {
+      _onMsg.map(function(item) {
         //在设置为离线的时候，将时间大于afkTime的未读消息推送到afkComMessage去
         // console.log('检测自动回复：', mainModel.afkMode, item.mtime, mainModel.afkTime, item.unread_msg_count);
         if (
@@ -126,7 +126,7 @@ var mainModel = new Vue({
 
       _unreadList = _.uniqBy(_unreadList.concat(_onMsg, _offMsg), 'key');
       // console.log('_unreadList:', _unreadList);
-      _unreadList.map(function (item) {
+      _unreadList.map(function(item) {
         _unreadMsgCount += item.unread_msg_count;
       });
 
@@ -139,17 +139,17 @@ var mainModel = new Vue({
       this.oldUnreadMsgCount = _unreadMsgCount;
       return _unreadMsgCount;
     }, //获取target的id
-    targetId: function () {
+    targetId: function() {
       return this.targetUser.id.replace(/^[c|p]/g, '').replace(/test$/g, '');
     } /*聊天相关*/,
-    currentMsg: function () {
+    currentMsg: function() {
       //如果没有当前用户名，就返回空数组
       console.log(
-        `Computed 当前用户是 ${this.targetUser.name} ${this.targetUser.id}`
+        `Computed 当前用户是 ${this.targetUser.name} ${this.targetUser.id}`,
       );
       if (this.targetUser.id === '') {
         console.log(
-          `currentMsg 返回空数组，因为没有当前目标用户名 ${this.targetUser.id}`
+          `currentMsg 返回空数组，因为没有当前目标用户名 ${this.targetUser.id}`,
         );
         return [];
       }
@@ -160,7 +160,7 @@ var mainModel = new Vue({
       for (let item of this.offlineConversations) {
         if (item.from_username === this.targetUser.id) {
           //内层循环，将所有和该用户的对话push到_offline中
-          _offline = item.msgs.map(function (msgItem, index) {
+          _offline = item.msgs.map(function(msgItem, index) {
             //console.log(`${msgItem.content.from_name} ${index}`);
             return {
               from_username: msgItem.content.from_name,
@@ -208,7 +208,7 @@ var mainModel = new Vue({
        }
        }.bind(this));*/
       this.sendMessageList.map(
-        function (msgItem, index) {
+        function(msgItem, index) {
           if (msgItem.target_username === this.targetUser.name) {
             console.log(`_sendMsg有`, index, msgItem.from_username);
             _sendMsg.push({
@@ -219,7 +219,7 @@ var mainModel = new Vue({
               timestamp: msgItem.timestamp,
             });
           }
-        }.bind(this)
+        }.bind(this),
       );
       console.log(`currentMsg`, _recMsg.length, _recMsg);
 
@@ -231,20 +231,20 @@ var mainModel = new Vue({
       //合并数据
       return _msg;
     },
-    chatDiaglogVisible: function () {
+    chatDiaglogVisible: function() {
       return this.targetUser.id !== '';
     },
     /*~聊天相关*/
   },
   methods: {
     //检查登录状态
-    checkLoginStatus: function () {
+    checkLoginStatus: function() {
       console.info('Enter checkLoginStatus.');
       //check personUserInfo branch
       if (this.personUserInfo) {
         $.post(
           'http://www.hnrcsc.com/web/seekjob/video!personLogin.action',
-          function (response) {
+          function(response) {
             if (response.map.status !== '00') {
               this.$notify.error({
                 title: '错误',
@@ -254,14 +254,14 @@ var mainModel = new Vue({
               });
               this.personUserInfo = null;
             }
-          }.bind(this)
+          }.bind(this),
         );
       }
       //check companyUserInfo branch
       if (this.companyUserInfo) {
         $.post(
           'http://www.hnrcsc.com/web/recruit/login!checkLogin.action',
-          function (response) {
+          function(response) {
             if (response.map.status !== '00') {
               this.$notify.error({
                 title: '错误',
@@ -271,15 +271,15 @@ var mainModel = new Vue({
               });
               this.companyUserInfo = null;
             }
-          }.bind(this)
+          }.bind(this),
         );
       }
     },
     //自动回复消息
-    autoResponse: function () {
+    autoResponse: function() {
       if (this.afkComeMessage.length === 0) return false;
       this.afkComeMessage.map(
-        function (item, index) {
+        function(item, index) {
           if (!item.responseStatus) {
             JIM.sendSingleMsg({
               // 'target_username': this.targetUsername,
@@ -287,7 +287,7 @@ var mainModel = new Vue({
               content: '离线自动回复：' + mainModel.afkMessage,
               appkey: mainModel.chatInfo.appkey,
             }).onSuccess(
-              function (data, msg) {
+              function(data, msg) {
                 console.log('自动回复成功', item, data, msg);
 
                 this.sendMessageList.push({
@@ -297,12 +297,12 @@ var mainModel = new Vue({
                   message: '离线自动回复：' + mainModel.afkMessage,
                   timestamp: new Date().getTime(),
                 });
-              }.bind(this)
+              }.bind(this),
             );
             this.afkComeMessage[index].responseStatus = true;
             // console.log('auto response:', this.afkComeMessage[index]);
           }
-        }.bind(this)
+        }.bind(this),
       );
 
       //循环将消息发送
@@ -319,34 +319,34 @@ var mainModel = new Vue({
       // }
     },
     //设置afk
-    setAfkON: function (inMessage) {
+    setAfkON: function(inMessage) {
       this.afkMessage = inMessage;
       this.afkMode = true;
       this.afkTime = new Date().getTime();
     },
-    setAfkOFF: function () {
+    setAfkOFF: function() {
       this.afkMessage = '';
       this.afkMode = false;
       this.afkTime = 0;
       this.afkComeMessage = []; //清空回复列表
     },
-    setCustomizeMessage: function () {
+    setCustomizeMessage: function() {
       this.afkMessage = this.afkCustomizeMessage;
       this.afkMode = true;
       this.afkTime = new Date().getTime();
       this.$refs.afkChat.doClose();
     },
     //检查当前时间，是不是在活动开始和结束时间范围内。结束时间（因为默认是最后一天0点）按照时间+1天计算（用来表示第二天0点）
-    checkDateTime: function () {
+    checkDateTime: function() {
       //如果当前没有获得招聘会信息，则默认返回false
       if (!this.activityInfo) {
         return false;
       } else {
         var _currentDateTime = moment().valueOf();
         var _startDateTime = moment(this.activityInfo.holdingTime).valueOf();
-        var _endDateTime = moment(this.activityInfo.holdingTime)
-          .add(1, 'days')
-          .valueOf();
+        var _endDateTime = moment(this.activityInfo.holdingTime).
+          add(1, 'days').
+          valueOf();
 
         console.log(_startDateTime, _currentDateTime, _endDateTime);
 
@@ -361,7 +361,7 @@ var mainModel = new Vue({
       }
     },
     //获得距离展会结束时间还有多久
-    getEndTime: function () {
+    getEndTime: function() {
       // var _startTime = this.activityInfo.holdingTime;
       var _startTime = this.activityInfo.startDate;
       //考虑到如果有holdingZone，则使用
@@ -384,12 +384,12 @@ var mainModel = new Vue({
 
       //默认计算时间是开始时间
       var _tempTime = parseInt(
-        moment.duration(moment(_startTime) - moment()).asMinutes()
+        moment.duration(moment(_startTime) - moment()).asMinutes(),
       );
       //如果活动已经开始，则计算时间换算为结束时间
       if (this.activityAlreadyStarted) {
         _tempTime = parseInt(
-          moment.duration(moment(this.activityTime) - moment()).asMinutes()
+          moment.duration(moment(this.activityTime) - moment()).asMinutes(),
         );
       }
 
@@ -424,11 +424,11 @@ var mainModel = new Vue({
       }
     },
     //获取场次ID
-    getActivityId: function () {
+    getActivityId: function() {
       //算法：根据优先级别，首先从sessionStorage中获取activityid，然后再从url获取activityid，然后再判断是否获取到activityId
       var _tempActivityId = getParameterValue(
         window.location.href,
-        'activityid'
+        'activityid',
       )
         ? getParameterValue(window.location.href, 'activityid')
         : window.localStorage.getItem('activityid');
@@ -447,12 +447,12 @@ var mainModel = new Vue({
 
     //获取招聘会详情
     //获取会场信息
-    getActivityInfo: function () {
+    getActivityInfo: function() {
       //调用接口获取展会详情
       $.post(
         _SERVER + '/activity/getActivityById',
         {activityId: this.activityId},
-        function (response) {
+        function(response) {
           // console.table(response.data);
           if (response.errCode === '00') {
             if (response.data === null) {
@@ -477,20 +477,20 @@ var mainModel = new Vue({
                   _holdingZone.split('-')[1] +
                   ':00';
               } else {
-                this.activityTime = moment(response.data.endDate)
-                  .set('hour', 23)
-                  .set('minute', 59)
-                  .set('second', 59)
-                  .format('YYYY-MM-DD HH:mm:ss');
+                this.activityTime = moment(response.data.endDate).
+                  set('hour', 23).
+                  set('minute', 59).
+                  set('second', 59).
+                  format('YYYY-MM-DD HH:mm:ss');
               }
 
               //然后立刻算出当前时间离结束时间还有多久
               this.getEndTime();
               setInterval(
-                function () {
+                function() {
                   this.getEndTime();
                 }.bind(this),
-                60000
+                60000,
               );
 
               if (response.data.wordpressId) {
@@ -501,12 +501,12 @@ var mainModel = new Vue({
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //获取参与公司和职位列表和状态
-    getListActivityCompany: function () {
+    getListActivityCompany: function() {
       $.post(
         _SERVER + '/activity/listActivityCompany',
         {
@@ -514,19 +514,19 @@ var mainModel = new Vue({
           // jobTitle:   ''
           // jobTitle:   this.searchKeyword
         },
-        function (response) {
+        function(response) {
           // console.log(response.data.length);
           if (response.errCode === '00') {
             this.companyList = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //加载求职者列表
-    getJobSeekerList: function () {
+    getJobSeekerList: function() {
       $.post(
         _SERVER + '/activity/getOnsiteAndInvestList',
         {
@@ -536,10 +536,10 @@ var mainModel = new Vue({
             : '', //TODO 如果传companyid，就要传holdtime，这里应该要做一个判断
           companyId: this.companyUserInfo ? this.companyUserInfo.companyId : '', //TODO 看看如果企业登陆没登陆对这个处理是否有影响
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             //测试数据里面personName有null导致程序异常，这里修复一下
-            response.data = response.data.map(function (item) {
+            response.data = response.data.map(function(item) {
               if (!item.personName) item.personName = '-无-';
               return item;
             });
@@ -548,25 +548,25 @@ var mainModel = new Vue({
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //加载弹幕
-    getDanmuList: function () {
+    getDanmuList: function() {
       $.post(
         _SERVER + '/activity/queryBarrage',
         {
           activityId: this.activityId, // activityId: 581,
           num: this.danmuNum,
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             //时间过滤，现在设置成过滤掉60分钟以上的
             response.data = response.data.filter(
-              (item) => parseInt(item.split(' ')[0]) < 60
+              (item) => parseInt(item.split(' ')[0]) < 60,
             );
-            this.danmuList = response.data.map(function (item) {
+            this.danmuList = response.data.map(function(item) {
               if (item.length > 30) {
                 var _tempItem = item.split(' ');
                 if (_tempItem.length === 3) {
@@ -581,27 +581,27 @@ var mainModel = new Vue({
             this.$message.error(response.errMsg);
           }
           this.reloading = false;
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //获取邀请函（新闻）详情
-    getHomeAdvertisement: function (inId) {
+    getHomeAdvertisement: function(inId) {
       $.post(
         _SERVER + '/listAdvert/advertise',
         {
           id: inId,
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.activityDesc = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     }, //调用计数器
-    addCounter: function () {
+    addCounter: function() {
       // 如果有activityId才需要调用计数器接口，如果是访客则不需要
       if (!this.activityId) {
         return false;
@@ -617,27 +617,27 @@ var mainModel = new Vue({
         ip: returnCitySN.cip,
         useragent: encodeURIComponent(navigator.userAgent),
       };
-      $.post(_SERVER + '/webBrowsing/add', _parameter, function (result) {
+      $.post(_SERVER + '/webBrowsing/add', _parameter, function(result) {
         /*...*/
       });
     }, //查询展会统计数据
-    queryWebsiteRecord: function () {
+    queryWebsiteRecord: function() {
       $.post(
         _SERVER + '/activity/queryWebSiteRecord',
         {
           activityId: this.activityId,
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.activityRecord = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
     //2022新版获取指定企业详情到当前企业信息
-    getCurrentCompanyInfo2: function (inEnCompanyId) {
+    getCurrentCompanyInfo2: function(inEnCompanyId) {
       //首先清空原来的当前企业信息
       this.currentCompanyInfo = null;
       $.postJSON(
@@ -646,18 +646,18 @@ var mainModel = new Vue({
           enCompanyId: inEnCompanyId,
           loginStatus: '0',
         },
-        function (response) {
+        function(response) {
           if (response.code === '0000') {
             this.currentCompanyInfo = response.data;
           } else {
             this.$message.error('获取企业信息发生错误');
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
     //获取指定企业详情到当前企业信息
     //将被放弃
-    getCurrentCompanyInfo: function (inCompanyId) {
+    getCurrentCompanyInfo: function(inCompanyId) {
       //首先清空原来的当前企业信息
       this.currentCompanyInfo = null;
       //获取新的当前企业信息，并放到当前企业信息变量中
@@ -668,17 +668,17 @@ var mainModel = new Vue({
           companyId: inCompanyId,
           personId: '0',
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.currentCompanyInfo = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
     //2022新版对应获取企业招聘职位列表接口
-    getRecruitList2: function (inEnCompanyId) {
+    getRecruitList2: function(inEnCompanyId) {
       //首先清空原来的当前企业职位列表
       this.currentRecruitList = null;
 
@@ -689,16 +689,16 @@ var mainModel = new Vue({
           enCompanyId: inEnCompanyId,
           type: [99, 2, 0, 1][this.activityInfo.activityPattern],
         },
-        function (response) {
+        function(response) {
           console.log(response);
           if (response.code === '0000') {
             this.currentRecruitList = response.data.data.list;
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
     //获取制定企业的招聘职位列表
-    getRecruitList: function (inCompanyId) {
+    getRecruitList: function(inCompanyId) {
       //首先清空原来的当前企业职位列表
       this.currentRecruitList = null;
 
@@ -714,40 +714,40 @@ var mainModel = new Vue({
       $.post(
         _SERVER + _portUrl,
         _postParams,
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.currentRecruitList = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     }, //获取指定职位详情到当前职位信息
-    getCurrentPositionInfo: function (inPositionId) {
+    getCurrentPositionInfo: function(inPositionId) {
       //首先清空原来的当前职位信息变量
       this.currentPositionInfo = null;
       //获取新的职位信息，并放到当前职位信息变量中
       $.post(
         _SERVER + '/wxCompany/wxRecruitMessage',
         {recruitId: inPositionId},
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.currentPositionInfo = response.data;
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
     //2022年新版 展示当前企业详情信息
-    showCurrentCompanyInfo2: function (inEnCompanyId) {
+    showCurrentCompanyInfo2: function(inEnCompanyId) {
       this.getCurrentCompanyInfo2(inEnCompanyId);
       this.getRecruitList2(inEnCompanyId);
       this.companyInfoDialog = true;
     },
     //展示当前企业详情信息
     //即将淘汰
-    showCurrentCompanyInfo: function (inCompanyId) {
+    showCurrentCompanyInfo: function(inCompanyId) {
       //console.log('showCurrentCompanyInfo:', inCompanyId);
       this.getCurrentCompanyInfo(inCompanyId);
       this.getRecruitList(inCompanyId);
@@ -755,29 +755,30 @@ var mainModel = new Vue({
     },
 
     //展示特定（用当前职位接口）公司的职位信息
-    showRecruitList: function (inCompanyId) {
+    showRecruitList: function(inCompanyId) {
       this.getRecruitList(inCompanyId);
       this.recruitListDialog = true;
     },
 
     //2022展示职位详情（传入职位ID）
-    showRecruitInfo2:function(inRecruitId){
-      getEnCode(inRecruitId,function(response){
-        if (response.code==='0000'){
-          window.open('https://qz.hnrcsc.com/pweb/#/positionB/jobDetails?id='+response.data,'_blank');
+    showRecruitInfo2: function(inRecruitId) {
+      getEnCode(inRecruitId, function(response) {
+        if (response.code === '0000') {
+          window.open('https://qz.hnrcsc.com/pweb/#/positionB/jobDetails?id=' +
+            response.data, '_blank');
         }
       });
     },
 
     //展示职位详情（传入职位ID）
-    showRecruitInfo: function (inRecruitId) {
+    showRecruitInfo: function(inRecruitId) {
       this.getCurrentRecuitInfo(inRecruitId);
       this.recruitInfoDialog = true;
       console.log('showRecruitInfo: ', inRecruitId);
     },
 
     //获取当前职位详情
-    getCurrentRecuitInfo: function (inRecruitId) {
+    getCurrentRecuitInfo: function(inRecruitId) {
       if (!inRecruitId) {
         return false;
       }
@@ -797,7 +798,7 @@ var mainModel = new Vue({
           recruitId: inRecruitId,
           recruitDate: this.activityInfo.holdingTime.substr(0, 10),
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             //两个接口的数据格式不同，以前是按照网络职位的格式设置的，所以这里需要对现场招聘会转一下数据格式
             if (this.activityInfo.activityPattern === 1)
@@ -831,12 +832,12 @@ var mainModel = new Vue({
           } else {
             this.$message.error(response.errMsg);
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //在弹出职位列表Dialog窗口投递简历
-    recruitListSubmit: function () {
+    recruitListSubmit: function() {
       //检查用户是否登陆，登陆以后才能投递职位
       if (!this.personUserInfo) {
         this.$message.error('请您先登陆，然后才能投递简历。');
@@ -852,7 +853,7 @@ var mainModel = new Vue({
     },
 
     //查看用户简历
-    viewResume: function (inCvId) {
+    viewResume: function(inCvId) {
       console.log('DEBUG 暂时不调用这个接口');
       console.log('viewResume', inCvId);
       //先检查cvid是不是传了
@@ -875,9 +876,9 @@ var mainModel = new Vue({
       //这个是原来的老接口 $.post(_SERVER + '/personCenter/listPersonCvInfo', {cvId: inCvId}, function(response) {
       $.post(
         '//www.hnrcsc.com/web' +
-          '/recruit/view/cvJsonList.action?cvId=' +
-          inCvId,
-        function (response) {
+        '/recruit/view/cvJsonList.action?cvId=' +
+        inCvId,
+        function(response) {
           console.log('resume data', response);
           if (response.map.status === '00') {
             this.currentResumeInfo = response.map;
@@ -890,25 +891,25 @@ var mainModel = new Vue({
                 companyId: this.companyUserInfo.companyId,
                 personId: response.map.jobPersonReg.personId,
               },
-              function (response2) {
+              function(response2) {
                 if (response2.errCode === '00') {
                   // console.log('用户投递历史：', response2);
                   this.currentResumeInfo.postHistory = response2.data;
                 } else {
                   this.$message.warning('获取该求职者投递历史错误');
                 }
-              }.bind(this)
+              }.bind(this),
             );
           } else {
             this.$message.error(response.map.errorMessage);
             this.resumeInfoDialog = false;
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //获取用户简历
-    getResume: function (inCvId) {
+    getResume: function(inCvId) {
       //先检查cvid是不是传了
       if (!inCvId) {
         this.$message.error('未找到该简历');
@@ -928,9 +929,9 @@ var mainModel = new Vue({
       //PS: 这个接口是不同的所以不能用_SERVER
       $.post(
         '//www.hnrcsc.com/web' +
-          '/recruit/view/cvJsonList.action?cvId=' +
-          inCvId,
-        function (response) {
+        '/recruit/view/cvJsonList.action?cvId=' +
+        inCvId,
+        function(response) {
           console.log('resume data', response);
           if (response.map.status === '00') {
             this.currentResumeInfo = response.map;
@@ -943,25 +944,25 @@ var mainModel = new Vue({
                 companyId: this.companyUserInfo.companyId,
                 personId: response.map.jobPersonReg.personId,
               },
-              function (response2) {
+              function(response2) {
                 if (response2.errCode === '00') {
                   // console.log('用户投递历史：', response2);
                   this.currentResumeInfo.postHistory = response2.data;
                 } else {
                   this.$message.warning('获取该求职者投递历史错误');
                 }
-              }.bind(this)
+              }.bind(this),
             );
           } else {
             this.$message.error(response.map.errorMessage);
             this.resumeInfoDialog = false;
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //登陆
-    userLogin: function (inMode) {
+    userLogin: function(inMode) {
       if (inMode === 'person') {
         window.location.href =
           'https://qz.hnrcsc.com/pweb/#/login?register=3&backurl=' +
@@ -977,9 +978,9 @@ var mainModel = new Vue({
         return false;
       }
     }, //自动登录（用获取个人和企业登陆状态接口，看哪个能返回已登录信息来判断）
-    autoLogin: function () {
+    autoLogin: function() {
       getUserLogin(
-        function (res) {
+        function(res) {
           console.log('res:', res);
           if (res.code === '0000') {
             //首先清空个人用户和企业用户（感觉其实也没必要）
@@ -992,12 +993,12 @@ var mainModel = new Vue({
               //获取个人加密ID
               getEnCode(
                 res.info.data.personId,
-                function (res) {
+                function(res) {
                   if (res.code === '0000') {
                     this.enPersonId = res.data;
                     console.log(res.data, this.enPersonId);
                   }
-                }.bind(this)
+                }.bind(this),
               );
             }
             if (res.type === 'company') {
@@ -1007,7 +1008,7 @@ var mainModel = new Vue({
               this.getJobSeekerList(); //重新加载求职责信息，用来获取是否投递过简历
             }
           }
-        }.bind(this)
+        }.bind(this),
       );
 
       //后端确认，个人登录和企业登录状态是互斥的，同时只有一个状态存在
@@ -1044,7 +1045,7 @@ var mainModel = new Vue({
         );
       }*/
     }, //TODO DEBUG 用户登录
-    debugCompanyUserInfo: function () {
+    debugCompanyUserInfo: function() {
       //{"agreementState":1,"backend":false,"companyId":1458,"companyName":"湖南人才网","email":"125493680@qq.com","emailVerifyFlag":"N","enCompanyId":"82FC3F6BF4CF7CAC","expireTime":"2022-02-17T19:23:17","flexEndDate":null,"flexStartDate":null,"isFlexable":false,"lastLoginDate":"2022-02-17T17:23:17","loginIp":"161.117.249.226","loginTimes":555,"logoUrl":null,"maxDownload":6000,"maxRecruitment":500,"maxSmInterview":1000,"maxSmInvitation":0,"maxVideoInterview":2000,"mbrEndDate":"2022-08-26T00:00:00","mbrStartDate":"2021-08-26T00:00:00","memberState":1,"orderId":136569,"password":"","remainVideoInterview":2000,"salesId":0,"stars":0,"usedVideoInterview":0,"userName":"hnrcw"}
       this.companyUserInfo = {
         agreementState: 1,
@@ -1086,7 +1087,7 @@ var mainModel = new Vue({
       //企业登录后Tab默认切换到求职大厅的人才列表处
       this.currentTab = 1;
     },
-    debugPersonUserInfo: function () {
+    debugPersonUserInfo: function() {
       //{"agreementState":1,"clickedTimes":683,"createDt":"2012-08-03T00:00:00","cvComplete":true,"eduComplete":true,"email":"ju*************om","emailVerifyFlag":"false","enPersonId":"92D9F6E2013EC15C","genderCode":"01","lastLoginDt":"2022-02-17T10:44:02","lastLoginIp":"192.168.3.192","loginTimes":0,"map":{"applyNum":0,"siteApplyNum":11,"noticeNum":0,"viewAndVideoAddCounts":0,"isElite":false,"cvCount":3,"reservNum":0},"oldPassword":"12345678","password":"","personComplete":true,"personId":1685117,"personName":"曹珺1","photoLink":"photos\/2020\/1685117.jpg","recentClickedTimes":78,"tipFlag":"true","userName":"jun4rui"}
       window.sessionStorage.removeItem('online_exit');
       this.personUserInfo = this.companyUserInfo = null;
@@ -1130,14 +1131,14 @@ var mainModel = new Vue({
       //个人登录后Tab默认切换到招聘大厅的企业列表处
       this.currentTab = 0;
     }, //获取个人用户登陆信息
-    getPersonUserInfo: function () {
+    getPersonUserInfo: function() {
       //清除自动登录标记
       window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
       this.personUserInfo = this.companyUserInfo = null;
       $.post(
         'http://www.hnrcsc.com/web/seekjob/video!personLogin.action',
-        function (response) {
+        function(response) {
           if (response.map.status === '00') {
             this.personUserInfo = response.map.user;
             console.log('个人用户已登录！');
@@ -1150,10 +1151,10 @@ var mainModel = new Vue({
           } else {
             this.$message.error('个人账号登陆失败！');
           }
-        }.bind(this)
+        }.bind(this),
       );
     }, //获取企业用户登陆信息
-    getCompanyUserInfo: function () {
+    getCompanyUserInfo: function() {
       //清除自动登录标记
       window.sessionStorage.removeItem('online_exit');
       //首先清空个人用户和企业用户（感觉其实也没必要）
@@ -1161,7 +1162,7 @@ var mainModel = new Vue({
       this.personUserInfo = this.companyUserInfo = null;
       $.post(
         'http://www.hnrcsc.com/web/recruit/login!checkLogin.action',
-        function (response) {
+        function(response) {
           if (response.map.status === '00') {
             this.companyUserInfo = response.map.user;
             console.log('企业用户已登录！');
@@ -1174,16 +1175,16 @@ var mainModel = new Vue({
           } else {
             this.$message.error('企业账号登陆失败！');
           }
-        }.bind(this)
+        }.bind(this),
       );
     }, //退出登陆
-    logout: function () {
+    logout: function() {
       window.localStorage.removeItem('personInfo');
       window.localStorage.removeItem('companyInfo');
-      setTimeout(function () {
+      setTimeout(function() {
         window.location.href = window.location.href.substr(
           0,
-          window.location.href.indexOf('?')
+          window.location.href.indexOf('?'),
         );
       }, 1000);
       /*window.sessionStorage.setItem('online_exit', '1');
@@ -1197,7 +1198,7 @@ var mainModel = new Vue({
         );
       }, 1000);*/
     }, //个人查看消息（打开聊天窗口）
-    viewMessage: function () {
+    viewMessage: function() {
       //如果没有对话列表，则提示并返回
       if (!this.conversations || this.conversations.length === 0) {
         this.$message.warning('抱歉，您没有任何对话消息。');
@@ -1208,49 +1209,47 @@ var mainModel = new Vue({
       if (this.personUserInfo) {
         this.chatToCompany(
           _tempTo.nickName,
-          _tempTo.name.replace(/(^c|p)|(test$)/g, '')
+          _tempTo.name.replace(/(^c|p)|(test$)/g, ''),
         );
       }
       if (this.companyUserInfo) {
         this.chatToPerson(
           _tempTo.nickName,
-          _tempTo.name.replace(/(^c|p)|(test$)/g, '')
+          _tempTo.name.replace(/(^c|p)|(test$)/g, ''),
         );
       }
     },
 
     //聊天(用来拦截以前函数的调用)
-    toChat: function (inId, inName) {
+    toChat: function(inId, inName) {
       console.log(`toChat: ${inId} ${inName}`);
     },
 
     /*聊天相关*/
     // 聊天初始化
-    chatInit: function () {
+    chatInit: function() {
       console.log(`Do init.`);
       $.post(
         _SERVER + '/appointment/getAuthPayload',
-        function (response) {
+        function(response) {
           console.log(response);
           response.data.flag = 1; //开启漫游
           //初始化
-          JIM.init(response.data)
-            .onSuccess(
-              function (data) {
-                console.log('初始化成功:' + JSON.stringify(data));
-                this.chatInfo = response.data; //将信息保存到info中
+          JIM.init(response.data).onSuccess(
+            function(data) {
+              console.log('初始化成功:' + JSON.stringify(data));
+              this.chatInfo = response.data; //将信息保存到info中
 
-                this.register(); //初始化成功以后先注册
-                this.login(); //初始化成功后立刻登录
-              }.bind(this)
-            )
-            .onFail(function (data) {
-              console.log('初始化失败:' + JSON.stringify(data));
-            });
-        }.bind(this)
+              this.register(); //初始化成功以后先注册
+              this.login(); //初始化成功后立刻登录
+            }.bind(this),
+          ).onFail(function(data) {
+            console.log('初始化失败:' + JSON.stringify(data));
+          });
+        }.bind(this),
       );
     },
-    viewAndChat: function (inEnPersonId) {
+    viewAndChat: function(inEnPersonId) {
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
         //TODO return false;//DEBUG 注释这里可无限制chat
@@ -1267,11 +1266,11 @@ var mainModel = new Vue({
       }
       window.open(
         'https://qz.hnrcsc.com/gweb/#/operationLog?personId=' + inEnPersonId,
-        '_blank'
+        '_blank',
       );
     },
     //开始和个人聊天 只有企业登陆以后才能调用
-    chatToPerson: function (inPersonName, inPersonId) {
+    chatToPerson: function(inPersonName, inPersonId) {
       console.log(`开始聊天（企业），企业ID：${inPersonName} ${inPersonId}`);
       if (!this.checkDateTime()) {
         this.$message.error('本场招聘会还未开始，无法进行联系。');
@@ -1297,13 +1296,13 @@ var mainModel = new Vue({
 
       //如果不延迟200ms，则消息不一定能获取到
       setTimeout(
-        function () {
+        function() {
           this.chatViewPersonResume();
         }.bind(this),
-        200
+        200,
       );
     },
-    makeCompanyQrcode: function () {
+    makeCompanyQrcode: function() {
       //因为qrcode2Company只有在dialog出现后才会存在，不好预先画好二维码，所以采用这种方式直接删掉老的再重新生成
       $('#qrcode2Company__panel>#qrcode2Company').remove();
       $('#qrcode2Company__panel').prepend('<div id="qrcode2Company"></div>');
@@ -1317,9 +1316,9 @@ var mainModel = new Vue({
       });
       console.log(this.qrcode2CompanyUrl);
     },
-    showQrcode2Company: function (inEnCompanyId) {
+    showQrcode2Company: function(inEnCompanyId) {
       //检查个人用户是否登录
-      if(!this.personUserInfo){
+      if (!this.personUserInfo) {
         this.$message.error('请您先登录湖南人才网');
         return false;
       }
@@ -1328,9 +1327,9 @@ var mainModel = new Vue({
       this.qrcode2CompanyUrl = 'https://qz.hnrcsc.com/chat?id=' + inEnCompanyId;
     },
     //开始和企业聊天 只有个人登陆以后才可以调用
-    chatToCompany: function (inCompanyName, inCompanyId) {
+    chatToCompany: function(inCompanyName, inCompanyId) {
       console.log(
-        `开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`
+        `开始聊天（求职者），企业ID：${inCompanyName} ${inCompanyId}`,
       );
 
       if (!this.checkDateTime()) {
@@ -1351,62 +1350,56 @@ var mainModel = new Vue({
       this.getCurrentCompanyInfo(inCompanyId.toString());
       this.getRecruitList(inCompanyId.toString());
     }, // 聊天用户注册
-    register: function () {
+    register: function() {
       console.log('开始注册用户：', this.selfUser);
-      JIM.register(this.selfUser)
-        .onSuccess(function (data) {
-          //data.code 返回码
-          //data.message 描述
-          console.log('注册成功', data.code, data.message);
-        })
-        .onFail(function (data) {
-          // 同上
-          console.log('注册失败', data.code, data.message);
-        });
+      JIM.register(this.selfUser).onSuccess(function(data) {
+        //data.code 返回码
+        //data.message 描述
+        console.log('注册成功', data.code, data.message);
+      }).onFail(function(data) {
+        // 同上
+        console.log('注册失败', data.code, data.message);
+      });
     }, // 聊天用户登陆
-    login: function () {
+    login: function() {
       console.log('用户登录', this.selfUser);
       this.selfUser.password = '88888888';
-      JIM.login(this.selfUser)
-        .onSuccess(
-          function (data) {
+      JIM.login(this.selfUser).onSuccess(
+        function(data) {
+          //data.code 返回码
+          //data.message 描述
+          //data.online_list[] 在线设备列表
+          //data.online_list[].platform  Android,ios,pc,web
+          //data.online_list[].mtime 最近一次登录时间
+          //data.online_list[].isOnline 是否在线 true or false
+          //data.online_list[].isLogin 是否登录 true or false
+          //data.online_list[].flag 该设备是否被当前登录设备踢出 true or false
+          console.log(`登陆成功 ${data.code} ${data.message}`);
+
+          //用户登陆成功以后，更新用户信息
+          JIM.updateSelfInfo({
+            nickname: this.selfUser.nickname,
+          }).onSuccess(function(data) {
             //data.code 返回码
             //data.message 描述
-            //data.online_list[] 在线设备列表
-            //data.online_list[].platform  Android,ios,pc,web
-            //data.online_list[].mtime 最近一次登录时间
-            //data.online_list[].isOnline 是否在线 true or false
-            //data.online_list[].isLogin 是否登录 true or false
-            //data.online_list[].flag 该设备是否被当前登录设备踢出 true or false
-            console.log(`登陆成功 ${data.code} ${data.message}`);
+            console.log('更新用户信息成功');
+          }).onFail(function(data) {
+            //同上
+            console.log('更新用户信息失败');
+          });
 
-            //用户登陆成功以后，更新用户信息
-            JIM.updateSelfInfo({
-              nickname: this.selfUser.nickname,
-            })
-              .onSuccess(function (data) {
-                //data.code 返回码
-                //data.message 描述
-                console.log('更新用户信息成功');
-              })
-              .onFail(function (data) {
-                //同上
-                console.log('更新用户信息失败');
-              });
-
-            //调用获取会话列表
-            this.getConversation();
-            this.onSyncConversation();
-          }.bind(this)
-        )
-        .onFail(function (data) {
-          //同上
-          console.log(`登陆失败 ${data.code}`);
-        });
+          //调用获取会话列表
+          this.getConversation();
+          this.onSyncConversation();
+        }.bind(this),
+      ).onFail(function(data) {
+        //同上
+        console.log(`登陆失败 ${data.code}`);
+      });
     }, // 监控业务事件
-    onEventNotification: function () {
+    onEventNotification: function() {
       JIM.onEventNotification(
-        function (data) {
+        function(data) {
           console.log(`业务事件监听：`, data);
           var _errMsg = '';
           switch (data.event_type.toString()) {
@@ -1427,10 +1420,10 @@ var mainModel = new Vue({
               duration: 0,
             });
           }
-        }.bind(this)
+        }.bind(this),
       );
     }, // 聊天发送消息comp`
-    sendMessage: function (inMsgStr, inExtras) {
+    sendMessage: function(inMsgStr, inExtras) {
       console.log('对方的ID:', this.targetUser.id);
       if (this.targetUser.id === '') {
         alert('请选择一个用户');
@@ -1439,7 +1432,7 @@ var mainModel = new Vue({
       //检测是否在线
       if (!JIM.isConnect()) {
         this.$message.error(
-          '和对话服务器的网络连接已断开，无法发送消息。您可以刷新页面或者重新登陆后再发送。'
+          '和对话服务器的网络连接已断开，无法发送消息。您可以刷新页面或者重新登陆后再发送。',
         );
         return false;
       }
@@ -1447,7 +1440,7 @@ var mainModel = new Vue({
       //检测是否登陆
       if (!JIM.isLogin()) {
         this.$message.error(
-          '可能因为账号在其它地方登陆所致您已退出登录，无法发送信息。您可以刷新页面或者重新登陆后再发送。'
+          '可能因为账号在其它地方登陆所致您已退出登录，无法发送信息。您可以刷新页面或者重新登陆后再发送。',
         );
         return false;
       }
@@ -1467,107 +1460,103 @@ var mainModel = new Vue({
         content: inMsgStr,
         appkey: this.chatInfo.appkey,
         extras: inExtras ? inExtras : '',
-      })
-        .onSuccess(
-          function (data, msg) {
-            console.log(
-              '发送消息',
-              data.code,
-              data.message,
-              data.target_username
-            );
-            //data.code 返回码
-            //data.message 描述
-            //data.msg_id 发送成功后的消息 id
-            //data.ctime_ms 消息生成时间,毫秒
-            //data.appkey 用户所属 appkey
-            //data.target_username 用户名
-            //msg.content 发送成功消息体,见下面消息体详情
-            this.sendMessageList.push({
-              from_username: this.selfUser.nickname,
-              from_id: this.selfUser.id,
-              target_username: this.targetUser.name,
-              message: inMsgStr,
-              extras: inExtras ? inExtras : '',
-              timestamp: new Date().getTime(),
-            });
-            setTimeout(
-              function () {
-                this.scroll2bottom();
-              }.bind(this),
-              500
-            );
-          }.bind(this)
-        )
-        .onFail(
-          function (data) {
-            //data.code 返回码
-            //data.message 描述
-            console.log(`发送消息失败： ${data.code} ${data.message}`);
-            var _errMsg = '发送消失失败，可能是对方未上线';
-            switch (data.code.toString()) {
-              case '882004':
-                _errMsg =
-                  '对话功能授权失败，可能该账号在其它地方登录导致被踢，您可以刷新重新使用对话功能。';
-                break;
-              default:
-                break;
-            }
-            this.$message.error(_errMsg);
-          }.bind(this)
-        );
+      }).onSuccess(
+        function(data, msg) {
+          console.log(
+            '发送消息',
+            data.code,
+            data.message,
+            data.target_username,
+          );
+          //data.code 返回码
+          //data.message 描述
+          //data.msg_id 发送成功后的消息 id
+          //data.ctime_ms 消息生成时间,毫秒
+          //data.appkey 用户所属 appkey
+          //data.target_username 用户名
+          //msg.content 发送成功消息体,见下面消息体详情
+          this.sendMessageList.push({
+            from_username: this.selfUser.nickname,
+            from_id: this.selfUser.id,
+            target_username: this.targetUser.name,
+            message: inMsgStr,
+            extras: inExtras ? inExtras : '',
+            timestamp: new Date().getTime(),
+          });
+          setTimeout(
+            function() {
+              this.scroll2bottom();
+            }.bind(this),
+            500,
+          );
+        }.bind(this),
+      ).onFail(
+        function(data) {
+          //data.code 返回码
+          //data.message 描述
+          console.log(`发送消息失败： ${data.code} ${data.message}`);
+          var _errMsg = '发送消失失败，可能是对方未上线';
+          switch (data.code.toString()) {
+            case '882004':
+              _errMsg =
+                '对话功能授权失败，可能该账号在其它地方登录导致被踢，您可以刷新重新使用对话功能。';
+              break;
+            default:
+              break;
+          }
+          this.$message.error(_errMsg);
+        }.bind(this),
+      );
     }, // 聊天未读会话数清零
-    resetUnreadCount: function (inUsername) {
+    resetUnreadCount: function(inUsername) {
       JIM.resetUnreadCount({
         username: inUsername,
       });
     }, // 聊天获取会话列表
-    getConversation: function () {
+    getConversation: function() {
       if (!JIM.isLogin()) {
         console.log('尚未登陆，放弃getConversation');
         return false;
       }
 
-      JIM.getConversation()
-        .onSuccess(
-          function (data) {
-            // console.log(`会话列表: ${data.code} ${data.message}`);
-            // console.log(data);
-            // this.conversations = data.conversations;
-            this.conversations = _.reverse(
-              _.sortBy(data.conversations, ['unread_msg_count'])
-            );
-            //20200921 更新，过滤掉该场展会之前的消息
-            /*TODO 测试期间因为没有数据，所以暂时就不做过滤了
+      JIM.getConversation().onSuccess(
+        function(data) {
+          // console.log(`会话列表: ${data.code} ${data.message}`);
+          // console.log(data);
+          // this.conversations = data.conversations;
+          this.conversations = _.reverse(
+            _.sortBy(data.conversations, ['unread_msg_count']),
+          );
+          //20200921 更新，过滤掉该场展会之前的消息
+          /*TODO 测试期间因为没有数据，所以暂时就不做过滤了
 this.conversations = mainModel.conversations.filter(item => {
 let _msgTime      = new Date(item.mtime).getTime();
 let _activityTime = new Date(mainModel.activityInfo.holdingTime).getTime();
 return _msgTime > _activityTime;
 });*/
-            //data.code 返回码
-            //data.message 描述
-            //data.conversations[] 会话列表，属性如下示例
-            //data.conversations[0].extras 附加字段
-            //data.conversations[0].unread_msg_count 消息未读数
-            //data.conversations[0].name  会话名称
-            //data.conversations[0].appkey  appkey(单聊)
-            //data.conversations[0].username  用户名(单聊)
-            //data.conversations[0].nickname  用户昵称(单聊)
-            //data.conversations[0].avatar  头像 media_id
-            //data.conversations[0].mtime 会话最后的消息时间戳
-            //data.conversations[0].gid 群 id(群聊)
-            //data.conversations[0].type  会话类型(3 代表单聊会话类型，4 代表群聊会话类型)
-          }.bind(this)
-        )
-        .onFail(function (data) {
           //data.code 返回码
           //data.message 描述
-          // console.log(`会话列表: ${data.code} ${data.message}`);
-        });
+          //data.conversations[] 会话列表，属性如下示例
+          //data.conversations[0].extras 附加字段
+          //data.conversations[0].unread_msg_count 消息未读数
+          //data.conversations[0].name  会话名称
+          //data.conversations[0].appkey  appkey(单聊)
+          //data.conversations[0].username  用户名(单聊)
+          //data.conversations[0].nickname  用户昵称(单聊)
+          //data.conversations[0].avatar  头像 media_id
+          //data.conversations[0].mtime 会话最后的消息时间戳
+          //data.conversations[0].gid 群 id(群聊)
+          //data.conversations[0].type  会话类型(3 代表单聊会话类型，4 代表群聊会话类型)
+        }.bind(this),
+      ).onFail(function(data) {
+        //data.code 返回码
+        //data.message 描述
+        // console.log(`会话列表: ${data.code} ${data.message}`);
+      });
     }, // 聊天离线消息同步监听
-    onSyncConversation: function () {
+    onSyncConversation: function() {
       JIM.onSyncConversation(
-        function (data) {
+        function(data) {
           console.log(`离线消息同步监听`);
           console.log(data);
           console.log(data[0]);
@@ -1595,10 +1584,10 @@ return _msgTime > _activityTime;
           // data[].msgs[].custom_notification.title
           // data[].msgs[].custom_notification.alert
           // data[].msgs[].custom_notification.at_prefix
-        }.bind(this)
+        }.bind(this),
       );
     }, // 聊天读取信息
-    readMsg: function (inUsername, inUserId) {
+    readMsg: function(inUsername, inUserId) {
       console.log(`读取信息： ${inUsername} ${inUserId}`, event.target);
       this.targetUser = {
         name: inUsername,
@@ -1616,13 +1605,13 @@ return _msgTime > _activityTime;
         this.chatViewPersonResume();
       }
     }, // 聊天启动步骤
-    chatStartup: function () {
+    chatStartup: function() {
       // window.JIM = new JMessage({debug: true});
       window.JIM = new JMessage({debug: false});
 
       //异常断线监听
       JIM.onDisconnect(
-        function () {
+        function() {
           console.log('连接断线');
           this.$notify.warning({
             title: '警告',
@@ -1632,39 +1621,39 @@ return _msgTime > _activityTime;
             duration: 0,
           });
           //this.login(); //重新连接
-        }.bind(this)
+        }.bind(this),
       );
 
       //接收消息
       JIM.onMsgReceive(
-        function (data) {
+        function(data) {
           for (let item of data.messages) {
             this.receiveMessageList.push(item);
           }
           console.log('收到消息:', data, JSON.stringify(data));
           // console.log(data);
-        }.bind(this)
+        }.bind(this),
       );
 
       //不停刷新会话列表
       setInterval(
-        function () {
+        function() {
           this.getConversation();
         }.bind(this),
-        5000
+        5000,
       );
 
       //调用初始化
       this.chatInit();
     }, //清空当前聊天对象
-    clearChatTargetUser: function () {
+    clearChatTargetUser: function() {
       this.targetUser = {
         name: '',
         id: '',
       };
     }, //点击发送按钮，发送聊天消息
     //调用导致堆栈溢出，暂时注释掉
-    sendChatMessage: function () {
+    sendChatMessage: function() {
       if (this.chatMessage !== '') {
         this.sendMessage(this.chatMessage);
         this.chatMessage = '';
@@ -1672,7 +1661,7 @@ return _msgTime > _activityTime;
         this.$message.error('请不要发送空信息');
       }
     }, //点击了选项卡
-    mainTabClick: function () {
+    mainTabClick: function() {
       //如果从“在线沟通”切换出去，就记录下当前收到消息的数量
       if (this.tabName !== 'chat') {
         this.messageRecordNum = this.receiveMessageList.length;
@@ -1680,7 +1669,7 @@ return _msgTime > _activityTime;
     } /*~聊天相关*/,
 
     //新增的，用来自动获取取得用户类型，并确定用哪种方式启动聊天。函数在用户登陆成功后调用
-    readyChat: function () {
+    readyChat: function() {
       //如果聊天没有初始化（根据是否有selfUser.nickname判断），则调用聊天初始化
       if (this.selfUser.nickname === null) {
         //设置聊天账号
@@ -1707,7 +1696,7 @@ return _msgTime > _activityTime;
     },
 
     //个人签到
-    personSign: function () {
+    personSign: function() {
       //检查信息是否齐全
       if (this.personUserInfo === null || this.activityId === null) {
         console.log('个人签到失败，参数不全');
@@ -1720,17 +1709,17 @@ return _msgTime > _activityTime;
           personId: this.personUserInfo.personId,
           activityId: this.activityId,
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             console.log('个人签到成功！', response);
           } else {
             this.$message.error('签到失败！' + response.errMsg);
             //个人失败是否要清空个人登陆信息？
           }
-        }
+        },
       );
     }, //企业签到
-    companySign: function () {
+    companySign: function() {
       //检查信息是否齐全
       if (this.companyUserInfo === null || this.activityId === null) {
         console.log('企业签到失败，参数不全');
@@ -1745,7 +1734,7 @@ return _msgTime > _activityTime;
           companyId: this.companyUserInfo.companyId,
           sceneType: 1 /*1是签到模式*/,
         },
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             //签到成功操作暂不处理
             console.log('企业签到成功！', response);
@@ -1753,12 +1742,12 @@ return _msgTime > _activityTime;
             this.$message.error('企业签到失败！' + response.errMsg);
             // this.companyUserInfo = null; //签到失败，就清空企业信息 //DEBUG 关闭这里
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //聊天用查看公司详情
-    chatViewCompanyInfo: function () {
+    chatViewCompanyInfo: function() {
       //设定当前企业为target企业
       this.getCurrentCompanyInfo(this.targetId);
       this.getRecruitList(this.targetId);
@@ -1767,12 +1756,12 @@ return _msgTime > _activityTime;
       $('#chat-area_other .model').removeClass('active');
       $('#chat-area_other .company-info.model').addClass('active');
     }, //聊天用查看个人简历
-    chatViewPersonResume: function () {
+    chatViewPersonResume: function() {
       //获取用户简历列表
       $.post(
         _SERVER + '/personCenter/listPersonCv',
         {personId: this.targetId},
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             //获取用户默认简历ID
             var _tempCvId = 0;
@@ -1791,31 +1780,31 @@ return _msgTime > _activityTime;
             this.$message.error(response.errMsg);
             return false;
           }
-        }.bind(this)
+        }.bind(this),
       );
 
       $('#chat-area_other .video-chat').attr('src', ''); //为了节省资源和保证企业聊天离线完成，一定要清空聊天iframe
       $('#chat-area_other .model').removeClass('active');
       $('#chat-area_other .person-resume.model').addClass('active');
     }, //接受对方的视频邀请
-    accept2videoChat: function () {
+    accept2videoChat: function() {
       this.chatViewVideo();
     }, //邀请对方进行视频聊天
-    invite2videoChat: function () {
+    invite2videoChat: function() {
       //邀请对方进入视频聊天室的系统消息
       this.sendMessage('-', {type: '0002', msg: ''});
       this.chatViewVideo();
     }, //聊天用打开视频聊天
-    chatViewVideo: function () {
+    chatViewVideo: function() {
       //区分当前账号是个人还是公司
       //个人方式
       if (this.personUserInfo !== null) {
         //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/client.html?personid=' + this.personUserInfo.personId + '&companyid=' + (this.targetId));
         window.open(
           'https://www.hnrcsc.com/videochat/client.html?personid=' +
-            this.personUserInfo.personId +
-            '&companyid=' +
-            this.targetId
+          this.personUserInfo.personId +
+          '&companyid=' +
+          this.targetId,
         );
       }
       //企业方式
@@ -1823,9 +1812,9 @@ return _msgTime > _activityTime;
         //iframe不支持https暂时用窗口打开方式取代 $('#chat-area_other .video-chat').attr('src', 'https://www.hnrcsc.com/videochat/hr.html?companyid=' + this.companyUserInfo.companyId + '&orderid=' + this.companyUserInfo.orderId);
         window.open(
           'https://www.hnrcsc.com/videochat/hr.html?companyid=' +
-            this.companyUserInfo.companyId +
-            '&orderid=' +
-            this.companyUserInfo.orderId
+          this.companyUserInfo.companyId +
+          '&orderid=' +
+          this.companyUserInfo.orderId,
         );
       }
 
@@ -1834,35 +1823,96 @@ return _msgTime > _activityTime;
     },
 
     //投递简历接口2022
-    postResume2: function (inRecruitId) {
-      console.log('投递简历2:', inRecruitId);
-      $.ajax({
-        url: 'https://qz.hnrcsc.com/hnrcwzp/person-service/deliveryDetail/insertRecruitFolder',
-        type: 'POST',
-        data: JSON.stringify({
-          userType: 1,
-          recruitId: inRecruitId,
-          personId: this.enPersonId,
-        }),
-        headers: {
-          authorization: window.localStorage.getItem('auth'),
-          userType: 1,
-          userId: this.enPersonId,
-          requestSource: 2,
-        },
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        success:function(response){
-          console.log(response);
-          if(response.code==='0000'){
-            this.$message.success('投递简历成功！');
+    //该接口只支持线上招聘会，如果支持线下和校招需要对方法进行扩充
+    postResume2: function(inRecruitId, inCompanyId) {
+      //DEBUG
+      console.log('投递简历2:', inRecruitId, inCompanyId);
+
+      //检查用户简历状态
+      getResumeInfo(this.personUserInfo.enPersonId,
+        this.personUserInfo.personId, window.localStorage.getItem('auth'),
+        function(res) {
+          //接口返回成功
+          if (res.code === '0000') {
+            //检查简历状态
+            if (res.data.data.cvStatus > 0 && res.data.data.eduStatus > 0 &&
+              res.data.data.jobHistStatus > 0 &&
+              res.data.data.personInfoStatus > 0) {
+              //简历完整
+
+              //如果是线上招聘会
+              if (this.activityInfo.activityPattern === 1) {
+                //执行线上职位投递
+                postResumeOnline(this.personUserInfo.enPersonId, inRecruitId,
+                  function(res2) {
+                    if (res2.code === '0000') {
+                      this.$message.success('简历投递成功');
+                    }
+                    //TODO 接口返回error的错误没有处理，因为暂时没发现
+                    if (res2.code === '0001') {
+                      this.$message.error('接口错误');
+                    }
+                    if(res2.code==='0002'){
+                      res2.data.code==='9999'?this.$message.error('通常错误'):this.$message.error(res2.data.msg);
+                    }
+                  }.bind(this));
+              }
+              //如果是线下招聘会（2现场，3校招）
+              if (this.activityInfo.activityPattern === 2 ||
+                this.activityInfo.activityPattern === 3) {
+                var _inType = this.activityInfo.activityPattern===2?1:2;
+                //调用接口开搞
+                postResumeOnsite(this.personUserInfo.enPersonId,inRecruitId,res.data.data.cv.cvId,inCompanyId,_inType,function(res3){
+                  console.log(res3);
+                  if(res3.code==='0000'){
+                    this.$message.success('投递成功');
+                  }else{
+                    this.$message.error(res3.data.msg);
+                  }
+                }.bind(this));
+              }
+            } else {
+              this.$message.error('您的简历不完整，无法投递。');
+              return false;
+            }
+          } else {
+            this.$message.error(res.msg);
           }
-        }.bind(this)
-      });
+        }.bind(this));
+
+      //线上招聘的分支
+      /*if (this.activityInfo.activityPattern === 1) {
+        $.ajax({
+          url: "https://qz.hnrcsc.com/hnrcwzp/person-service/deliveryDetail/insertRecruitFolder",
+          type: "POST",
+          data: JSON.stringify({
+            userType: 1,
+            recruitId: inRecruitId,
+            personId: this.enPersonId,
+          }),
+          headers: {
+            authorization: window.localStorage.getItem("auth"),
+            userType: 1,
+            userId: this.enPersonId,
+            requestSource: 2,
+          },
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          success: function(response) {
+            console.log(response);
+            if (response.code === "0000") {
+              this.$message.success("投递简历成功！");
+            }
+          }.bind(this),
+        });
+      }*/
+
+      //线下招聘的分支
+      //校园招聘暂不考虑
     },
 
     //投递简历 待废弃
-    postResume: function (inRecruitId) {
+    postResume: function(inRecruitId) {
       if (!this.personUserInfo) {
         this.$message.error('您登陆以后才可以投递简历');
         return false;
@@ -1883,7 +1933,7 @@ return _msgTime > _activityTime;
       $.post(
         _SERVER + _interface,
         _params,
-        function (response) {
+        function(response) {
           if (response.errCode === '00') {
             this.$message.success('简历投递成功');
           } else {
@@ -1904,26 +1954,26 @@ return _msgTime > _activityTime;
               this.$message.error(response.errMsg);
             }
           }
-        }.bind(this)
+        }.bind(this),
       );
     },
 
     //折叠 or 展开企业详情
-    doFold: function (inParentDom) {
+    doFold: function(inParentDom) {
       console.log($(inParentDom).find('.company-info_desc').prop('class'));
       if (
-        $(inParentDom)
-          .find('.company-info_desc')
-          .prop('class')
-          .indexOf('cj-ellipsis-multiline') > -1
+        $(inParentDom).
+          find('.company-info_desc').
+          prop('class').
+          indexOf('cj-ellipsis-multiline') > -1
       ) {
-        $(inParentDom)
-          .find('.company-info_desc')
-          .removeClass('cj-ellipsis-multiline');
+        $(inParentDom).
+          find('.company-info_desc').
+          removeClass('cj-ellipsis-multiline');
       } else {
-        $(inParentDom)
-          .find('.company-info_desc')
-          .addClass('cj-ellipsis-multiline');
+        $(inParentDom).
+          find('.company-info_desc').
+          addClass('cj-ellipsis-multiline');
       }
       //原生写法兼容性较差，暂时不用
       // if(event.target.parentElement.classList.value.indexOf('cj-ellipsis-multiline')>-1){
@@ -1934,7 +1984,7 @@ return _msgTime > _activityTime;
     },
 
     //滚动对话框到最底部
-    scroll2bottom: function () {
+    scroll2bottom: function() {
       let _ele = document.querySelector('#chat-message');
       _ele.scrollTo({
         top: _ele.scrollHeight - _ele.clientHeight,
@@ -1943,10 +1993,10 @@ return _msgTime > _activityTime;
     },
 
     //下载当前聊天记录
-    downloadChatLog: function () {
+    downloadChatLog: function() {
       var _chatLog = '';
-      mainModel.offlineConversations.map(function (item) {
-        item.msgs.map(function (item2) {
+      mainModel.offlineConversations.map(function(item) {
+        item.msgs.map(function(item2) {
           // console.log(
           //   /*item2.content,*/
           //   moment(item2.content.create_time).format('YYYY-MM-DD hh:mm:ss'),
@@ -1969,7 +2019,7 @@ return _msgTime > _activityTime;
         var _dom = document.createElement('a');
         _dom.setAttribute(
           'href',
-          'data:text/plain;charset=utf-8,' + encodeURIComponent(_chatLog)
+          'data:text/plain;charset=utf-8,' + encodeURIComponent(_chatLog),
         );
         _dom.setAttribute('download', '聊天记录.txt');
         // _dom.setAttribute('class', 'download__chat-log');
@@ -1979,7 +2029,7 @@ return _msgTime > _activityTime;
       });
     },
   },
-  created: function () {
+  created: function() {
     this.autoLogin();
     //如果有参数mode，则根据mode的值来获取用户信息
     // this.loginMode = getParameterValue(window.location.href, 'mode');
@@ -1998,10 +2048,10 @@ return _msgTime > _activityTime;
     this.reloading = true;
     this.getDanmuList(); //加载弹幕列表
   },
-  mounted: function () {
+  mounted: function() {
     //全自动弹幕发射机器
     setInterval(
-      function () {
+      function() {
         //如果没子弹了，就重新装载子弹
         if (this.danmuList.length === 0) {
           if (!this.reloading) {
@@ -2018,12 +2068,12 @@ return _msgTime > _activityTime;
           });
         }
       }.bind(this),
-      3000
+      3000,
     );
 
     //定时操作
     setInterval(
-      function () {
+      function() {
         if (this.companyUserInfo) this.companySign(); //刷新企业在线状态
         if (this.personUserInfo) this.personSign(); //刷新个人在线状态
 
@@ -2032,11 +2082,11 @@ return _msgTime > _activityTime;
         this.getListActivityCompany(); //加载企业和职位信息
         //TODO 暂时去掉看看效果 this.checkLoginStatus(); //检查用户登录状态
       }.bind(this),
-      15000
+      15000,
     );
 
     //注册快捷键处理
-    hotkeys.filter = function (event) {
+    hotkeys.filter = function(event) {
       return true;
     };
     hotkeys(
@@ -2044,9 +2094,9 @@ return _msgTime > _activityTime;
       {
         element: document.getElementById('input-message'),
       },
-      function () {
+      function() {
         this.sendChatMessage();
-      }.bind(this)
+      }.bind(this),
     );
   },
 });

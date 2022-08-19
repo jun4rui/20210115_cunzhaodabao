@@ -190,9 +190,9 @@
   </div>
   <!-- /Banner -->
   <!--消息对话框Dialog-->
-  <el-dialog id="chat-dialog" :title="targetUser.name" :visible.sync="chatDiaglogVisible" center
+  <!--<el-dialog id="chat-dialog" :title="targetUser.name" :visible.sync="chatDiaglogVisible" center
              @close="clearChatTargetUser">
-    <!--职位详情子Dialog-->
+    &lt;!&ndash;职位详情子Dialog&ndash;&gt;
     <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
       <div v-if="currentRecruitInfo">
         <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
@@ -214,10 +214,10 @@
           <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
           </div>
         </div>
-        <!--投递职位按钮-->
+        &lt;!&ndash;投递职位按钮&ndash;&gt;
         <div class="post-resume" @click="postResume2(currentRecruitInfo.recruitId)">投递简历</div>
-        <!--/投递职位按钮-->
-        <!--
+        &lt;!&ndash;/投递职位按钮&ndash;&gt;
+        &lt;!&ndash;
         address: "长沙市望城区雷锋大道1389号"
         companyId: "2144184"
         companyIdStr: "D889B54CAA4B8485"
@@ -244,13 +244,13 @@
         salary: "1000元以下"
         welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
         workYears: "不限"
-        -->
+        &ndash;&gt;
       </div>
     </el-dialog>
-    <!--/职位详情子Dialog-->
-    <!--聊天区域面板-->
+    &lt;!&ndash;/职位详情子Dialog&ndash;&gt;
+    &lt;!&ndash;聊天区域面板&ndash;&gt;
     <div id="chat-dialog_panel">
-      <!--对话列表-->
+      &lt;!&ndash;对话列表&ndash;&gt;
       <div id="conversations_panel">
         <ul>
           <li v-for="item in conversations" :class="{active:item.nickName==targetUser.name}" class="cj-block"
@@ -261,19 +261,19 @@
           </li>
         </ul>
       </div>
-      <!--/对话列表-->
-      <!--对话框-->
+      &lt;!&ndash;/对话列表&ndash;&gt;
+      &lt;!&ndash;对话框&ndash;&gt;
       <div id="chat-area_panel">
         <ul id="chat-message">
           <li v-for="item in currentMsg" :class="{self: item.from_id!==mainModel.targetUser.id}">
             <span class="avatar">{{ item.from_username.substr(0, 1) }}</span>
             <div class="chat-info">
               <span class="name">{{ item.from_username }}</span>
-              <!--普通文字消息-->
+              &lt;!&ndash;普通文字消息&ndash;&gt;
               <span v-if="item.extras===''" class="message">{{ item.message }}</span>
-              <!--系统信息消息-->
+              &lt;!&ndash;系统信息消息&ndash;&gt;
               <span v-if="item.extras!==''" class="info">
-                <!--视频面试的-->
+                &lt;!&ndash;视频面试的&ndash;&gt;
                 <div v-if="item.extras.type==='0002'" class="cj-block cj-text-center">
                   {{ item.from_id === mainModel.targetUser.id ? "对方向您发起视频面试邀请" : "您邀请对方进行视频面试" }}
                   <div v-if="item.from_id === mainModel.targetUser.id">
@@ -282,7 +282,7 @@
                                @click="sendMessage('-',{type:'0003',msg:''});">拒绝</el-button>
                   </div>
                 </div>
-                <!--拒绝视频面试的-->
+                &lt;!&ndash;拒绝视频面试的&ndash;&gt;
                 <div v-if="item.extras.type==='0003'" class="cj-block cj-text-center">
                   {{ item.from_id === mainModel.targetUser.id ? "对方拒绝了您的视频面试邀请" : "您拒绝了对方的视频面试邀请" }}
                 </div>
@@ -294,14 +294,14 @@
           </li>
         </ul>
         <span class="chat-message_footer">
-              <!--聊天功能菜单-->
+              &lt;!&ndash;聊天功能菜单&ndash;&gt;
               <div id="chat-function_menu">
-                <!--<div v-if="personUserInfo" class="cj-inline-block" @click="chatViewCompanyInfo">-->
-                <!--  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>-->
-                <!--</div>-->
-                <!--<div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">-->
-                <!--  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>-->
-                <!--</div>-->
+                &lt;!&ndash;<div v-if="personUserInfo" class="cj-inline-block" @click="chatViewCompanyInfo">&ndash;&gt;
+                &lt;!&ndash;  <el-button icon="el-icon-office-building" plain size="mini" type="primary">公司详情</el-button>&ndash;&gt;
+                &lt;!&ndash;</div>&ndash;&gt;
+                &lt;!&ndash;<div v-if="companyUserInfo" class="cj-inline-block" @click="chatViewPersonResume">&ndash;&gt;
+                &lt;!&ndash;  <el-button icon="el-icon-user-solid" plain size="mini" type="primary">查看简历</el-button>&ndash;&gt;
+                &lt;!&ndash;</div>&ndash;&gt;
                 <div class="cj-inline-block" @click="invite2videoChat">
                   <el-button icon="el-icon-video-camera-solid" plain size="mini" type="primary">视频沟通</el-button>
                 </div>
@@ -320,25 +320,25 @@
                 </el-popover>
                 <el-button v-if="afkMode" plain size="mini" type="danger" @click="setAfkOFF">当前离线</el-button>
               </div>
-          <!--/聊天功能菜单-->
-          <!--消息发送-->
+          &lt;!&ndash;/聊天功能菜单&ndash;&gt;
+          &lt;!&ndash;消息发送&ndash;&gt;
               <div id="chat-input">
                   <el-input id="input-message" v-model="chatMessage" :rows="5" placeholder="请输入内容，可用CTRL+ENTER发送信息"
                             type="textarea"></el-input>
                   <div class="cj-flex cj-flex-nowrap cj-align-items-center"
                        style="justify-content: flex-end;padding-top: 10px">
-                      <!--<el-button @click="clearChatTargetUser" type="warning" slot="prepend" icon="el-icon-close">离开</el-button>-->
+                      &lt;!&ndash;<el-button @click="clearChatTargetUser" type="warning" slot="prepend" icon="el-icon-close">离开</el-button>&ndash;&gt;
                       <el-button slot="append" icon="el-icon-upload2" type="primary"
                                  @click="sendChatMessage">发送</el-button>
                   </div>
               </div>
-          <!--/消息发送-->
+          &lt;!&ndash;/消息发送&ndash;&gt;
           </span>
       </div>
-      <!--/对话框-->
-      <!--其他信息区域-->
+      &lt;!&ndash;/对话框&ndash;&gt;
+      &lt;!&ndash;其他信息区域&ndash;&gt;
       <div id="chat-area_other">
-        <!--企业信息模块-->
+        &lt;!&ndash;企业信息模块&ndash;&gt;
         <div class="company-info model active">
           <div v-if="currentCompanyInfo">
             <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
@@ -359,7 +359,7 @@
             </div>
             <div class="company-info_subtitle">招聘职位</div>
             <div class="company-info_content">
-              <!--职位列表-->
+              &lt;!&ndash;职位列表&ndash;&gt;
               <div class="company-info-recruit-list">
                 <div v-for="recruitItem in currentRecruitList" class="company-info-recruit_item">
                   <div class="job-title" @click="showRecruitInfo2(recruitItem.recruitId)">
@@ -391,23 +391,23 @@
                       招{{ recruitItem.persons === 0 ? "若干" : recruitItem.persons }}人
                     </li>
                   </ul>
-                  <!--TODO 现场招聘会这个接口没有值，所以没法显示-->
+                  &lt;!&ndash;TODO 现场招聘会这个接口没有值，所以没法显示&ndash;&gt;
                   <div v-if="recruitItem.welfare" class="welfare">{{ recruitItem.welfare }}</div>
                   <div class="post-resume" @click="postResume2(recruitItem.recruitId)">投递简历</div>
                 </div>
               </div>
-              <!--/职位列表-->
+              &lt;!&ndash;/职位列表&ndash;&gt;
             </div>
           </div>
         </div>
-        <!--/企业信息模块-->
-        <!--在线聊天模块-->
+        &lt;!&ndash;/企业信息模块&ndash;&gt;
+        &lt;!&ndash;在线聊天模块&ndash;&gt;
         <iframe class="video-chat model" frameborder="0"></iframe>
-        <!--/在线聊天模块-->
-        <!--个人简历模块-->
+        &lt;!&ndash;/在线聊天模块&ndash;&gt;
+        &lt;!&ndash;个人简历模块&ndash;&gt;
         <div class="person-resume model">
-          <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume--history">
-            <!--有投递职位的-->
+          <div v-if="currentResumeInfo && currentResumeInfo.postHistory" class="person-resume&#45;&#45;history">
+            &lt;!&ndash;有投递职位的&ndash;&gt;
             <div v-if="currentResumeInfo.postHistory.length>0">
               <span>已投递公司职位：</span>
               <el-tag v-for="item in currentResumeInfo.postHistory" class="person-resume__history__item"
@@ -415,14 +415,14 @@
                 {{ item }}
               </el-tag>
             </div>
-            <!--没有投递过职位的-->
+            &lt;!&ndash;没有投递过职位的&ndash;&gt;
             <div v-if="currentResumeInfo.postHistory.length===0">
               <el-tag size="mini" type="danger">该求职者未投递公司职位</el-tag>
             </div>
           </div>
           <div v-if="currentResumeInfo" class="resume-detail">
             <div class="cj-flex cj-flex-nowrap cj-align-items-center cj-justify-content-around">
-              <!--头像-->
+              &lt;!&ndash;头像&ndash;&gt;
               <a :href="'http://www.hnrcsc.com/web/view/view-cv/id/'+currentResumeInfo.enCvId+'.html'"
                  class="resume_download" target="_blank">
                 <i class="el-icon-download"></i>&nbsp;下载简历
@@ -435,48 +435,48 @@
                    class="photoLinkDsp"></div>
               <div class="resume-detail_info cj-flex">
                 <div class="cj-flex cj-flex-nowrap cj-justify-content-start cj-align-items-center">
-                  <!--姓名-->
+                  &lt;!&ndash;姓名&ndash;&gt;
                   <div class="personName cj-inline-block">{{
                       currentResumeInfo.jobPerson.personName
                     }}
                   </div>
-                  <!--社会在职-->
+                  &lt;!&ndash;社会在职&ndash;&gt;
                   <div class="personTypeDsp cj-inline-block">
                     {{ currentResumeInfo.jobPerson.personTypeDsp }}
                   </div>
                 </div>
                 <ul class="resume-other_info split">
                   <li>
-                    <!--性别-->
+                    &lt;!&ndash;性别&ndash;&gt;
                     {{ currentResumeInfo.jobPerson.genderDsp }}
                   </li>
                   <li>
-                    <!--年龄-->
+                    &lt;!&ndash;年龄&ndash;&gt;
                     {{ currentResumeInfo.jobPerson.age }}
                   </li>
                   <li>
-                    <!--工作年限-->
+                    &lt;!&ndash;工作年限&ndash;&gt;
                     {{ currentResumeInfo.jobPerson.workYears }}年工作经验
                   </li>
                   <li>
-                    <!--学历-->
+                    &lt;!&ndash;学历&ndash;&gt;
                     {{ currentResumeInfo.jobPerson.highestEduDsp }}
                   </li>
                 </ul>
                 <div class="resume-detail_concat">
-                  <!--手机号码-->
+                  &lt;!&ndash;手机号码&ndash;&gt;
                   <div class="mobilePhone cj-inline-block">{{
                       currentResumeInfo.jobPerson.mobilePhone
                     }}
                   </div>
-                  <!--电子邮箱-->
+                  &lt;!&ndash;电子邮箱&ndash;&gt;
                   <div class="email cj-inline-block">{{
                       currentResumeInfo.jobPerson.email
                         ? currentResumeInfo.jobPerson.email
                         : "-未填-"
                     }}
                   </div>
-                  <!--现居地-->
+                  &lt;!&ndash;现居地&ndash;&gt;
                   <div class="currLocDsp cj-inline-block">{{
                       currentResumeInfo.jobPerson.currLocDsp
                     }}
@@ -484,7 +484,7 @@
                 </div>
               </div>
             </div>
-            <!--教育经历-->
+            &lt;!&ndash;教育经历&ndash;&gt;
             <div v-if="currentResumeInfo.personEduList" class="jobPersonEduList">
               <div class="resume-detail_subtitle">教育经历</div>
               <div class="resume-detail_content">
@@ -495,24 +495,24 @@
               <ul>
               </ul>
             </div>
-            <!--期待岗位-->
+            &lt;!&ndash;期待岗位&ndash;&gt;
             <div class="position">
               <div class="resume-detail_subtitle">意向岗位</div>
               <div class="resume-detail_content">
-                <!--意向岗位-->
+                &lt;!&ndash;意向岗位&ndash;&gt;
                 <div class="positionDsp">求职岗位：{{ currentResumeInfo.jobPersonCv.positionDsp }}</div>
-                <!--工作性质-->
+                &lt;!&ndash;工作性质&ndash;&gt;
                 <div class="jobTypeDsp">工作性质：{{ currentResumeInfo.jobPersonCv.jobTypeDsp }}</div>
-                <!--工作地点-->
+                &lt;!&ndash;工作地点&ndash;&gt;
                 <div class="locationDsp">工作地点：{{ currentResumeInfo.jobPersonCv.locationDsp }}</div>
-                <!--从事行业-->
+                &lt;!&ndash;从事行业&ndash;&gt;
                 <div class="industryDsp">从事行业：{{ currentResumeInfo.jobPersonCv.industryDsp }}</div>
-                <!--期待月薪-->
+                &lt;!&ndash;期待月薪&ndash;&gt;
                 <div class="salaryRangeDsp">期待月薪：{{
                     currentResumeInfo.jobPersonCv.salaryRangeDsp
                   }}
                 </div>
-                <!--到岗时间-->
+                &lt;!&ndash;到岗时间&ndash;&gt;
                 <div class="availableInDaysDsp">到岗时间：{{
                     currentResumeInfo.jobPersonCv.availableInDaysDsp
                   }}
@@ -526,7 +526,7 @@
               <div class="resume-detail_subtitle">其他说明</div>
               <div class="resume-detail_content" v-html="currentResumeInfo.jobPersonCv.remark4Disp"></div>
             </div>
-            <!--工作经验-->
+            &lt;!&ndash;工作经验&ndash;&gt;
             <div v-if="currentResumeInfo.personJobHistList">
               <div class="resume-detail_subtitle">工作经验</div>
               <div class="resume-detail_content">
@@ -546,7 +546,7 @@
                 </div>
               </div>
             </div>
-            <!--项目经验-->
+            &lt;!&ndash;项目经验&ndash;&gt;
             <div v-if="currentResumeInfo.personProjectList">
               <div class="resume-detail_subtitle">项目经验</div>
               <div class="resume-detail_content">
@@ -567,7 +567,7 @@
                 </div>
               </div>
             </div>
-            <!--技能-->
+            &lt;!&ndash;技能&ndash;&gt;
             <div v-if="currentResumeInfo.personItSkillList">
               <div class="resume-detail_subtitle">技能</div>
               <div class="resume-detail_content">
@@ -576,7 +576,7 @@
                 </div>
               </div>
             </div>
-            <!--资格证书-->
+            &lt;!&ndash;资格证书&ndash;&gt;
             <div v-if="currentResumeInfo.personProCertList">
               <div class="resume-detail_subtitle">资格证书</div>
               <div class="resume-detail_content">
@@ -585,7 +585,7 @@
                 </div>
               </div>
             </div>
-            <!--职业教育培训-->
+            &lt;!&ndash;职业教育培训&ndash;&gt;
             <div v-if="currentResumeInfo.trainingList">
               <div class="resume-detail_subtitle">职业教育培训</div>
               <div class="resume-detail_content">
@@ -608,12 +608,12 @@
             </div>
           </div>
         </div>
-        <!--/个人简历模块-->
+        &lt;!&ndash;/个人简历模块&ndash;&gt;
       </div>
-      <!--/其他信息区域-->
+      &lt;!&ndash;/其他信息区域&ndash;&gt;
     </div>
-    <!--/聊天区域面板-->
-  </el-dialog>
+    &lt;!&ndash;/聊天区域面板&ndash;&gt;
+  </el-dialog>-->
   <!--/消息对话框Dialog-->
   <!-- Tab容器 -->
   <div id="tab_content">
@@ -750,7 +750,7 @@
   <!-- 企业详情Dialog -->
   <el-dialog id="company-info" :visible.sync="companyInfoDialog" class="company-info" title="公司详情" width="600px">
     <!--职位详情子Dialog-->
-    <el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
+    <!--<el-dialog :visible.sync="recruitInfoDialog" append-to-body class="recruit-info" title="职位详情" width="600px">
       <div v-if="currentRecruitInfo">
         <div class="cri-recruit-name">{{ currentRecruitInfo.recruitName }}</div>
         <ul class="cri-recruit-info split">
@@ -771,10 +771,10 @@
           <div class="cri-detail" v-html="nl2br(currentRecruitInfo.detail)">
           </div>
         </div>
-        <!--投递职位按钮-->
+        &lt;!&ndash;投递职位按钮&ndash;&gt;
         <div class="post-resume" @click="postResume2(currentRecruitInfo.recruitId)">投递简历</div>
-        <!--/投递职位按钮-->
-        <!--
+        &lt;!&ndash;/投递职位按钮&ndash;&gt;
+        &lt;!&ndash;
         address: "长沙市望城区雷锋大道1389号"
         companyId: "2144184"
         companyIdStr: "D889B54CAA4B8485"
@@ -801,9 +801,9 @@
         salary: "1000元以下"
         welfare: "加班补贴,全勤奖,包吃,包住,房补,年终奖金,绩效奖金"
         workYears: "不限"
-        -->
+        &ndash;&gt;
       </div>
-    </el-dialog>
+    </el-dialog>-->
     <!--/职位详情子Dialog-->
     <div v-if="currentCompanyInfo">
       <div class="company-info_name">{{ currentCompanyInfo.companyName }}</div>
@@ -853,7 +853,7 @@
             <div v-if="recruitItem.welfare" class="welfare">
               {{ recruitItem.welfare }}
             </div>
-            <div class="post-resume" @click="postResume2(recruitItem.recruitId)">投递简历</div>
+            <div class="post-resume" @click="postResume2(recruitItem.recruitId, currentCompanyInfo.companyId)">投递简历</div>
           </div>
         </div>
         <!--/职位列表-->
